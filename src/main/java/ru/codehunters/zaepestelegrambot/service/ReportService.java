@@ -1,7 +1,6 @@
 package ru.codehunters.zaepestelegrambot.service;
 
 import ru.codehunters.zaepestelegrambot.model.Report;
-import ru.codehunters.zaepestelegrambot.model.TrialPeriod;
 
 import java.time.LocalDate;
 import java.util.List;
