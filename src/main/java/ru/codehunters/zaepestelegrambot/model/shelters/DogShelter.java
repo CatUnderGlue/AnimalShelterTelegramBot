@@ -1,6 +1,4 @@
 package ru.codehunters.zaepestelegrambot.model.shelters;
 
-import ru.codehunters.zaepestelegrambot.model.AnimalShelter;
-
-public class DogShelter extends AnimalShelter {
+public class DogShelter{
 }
