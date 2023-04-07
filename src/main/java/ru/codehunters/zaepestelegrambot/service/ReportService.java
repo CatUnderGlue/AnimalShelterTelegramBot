@@ -41,7 +41,7 @@ public interface ReportService {
 
     /**
      * Удаление полученного из бд отчёта
-     * @param report Полученный из бд отчёт
+     * @param report Отчёт, который уже есть в бд
      */
     void delete(Report report);
 

@@ -32,7 +32,7 @@ public interface TrialPeriodService {
 
     /**
      * Удаление полученного из бд испытательного срока
-     * @param trialPeriod Полученный из бд испытательный срок
+     * @param trialPeriod Испытательный срок, который уже есть в бд
      */
     void delete(TrialPeriod trialPeriod);
 
