@@ -61,6 +61,19 @@ public class TrialPeriodController {
         return ResponseEntity.ok(trialPeriodService.getAllByOwnerId(ownerId));
     }
 
+    @GetMapping("id")
+    @Operation(
+            summary = "Получение испытательного срока по id"
+    )
+    @Parameter(
+            name = "id",
+            description = "Id ипытательного срока",
+            example = "1"
+    )
+    public ResponseEntity<TrialPeriod> getById(@RequestParam Long id){
+        return ResponseEntity.ok(trialPeriodService.getById(id));
+    }
+
     @DeleteMapping()
     @Operation(
             summary = "Удаление испытательного срока"
