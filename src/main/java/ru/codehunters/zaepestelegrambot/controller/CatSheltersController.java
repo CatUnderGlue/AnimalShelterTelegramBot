@@ -41,7 +41,11 @@ public class CatSheltersController {
                                          @RequestParam @Parameter(description = "Способ связи с охраной") String security,
                                          @RequestParam @Parameter(description = "Рекомендации о технике безопасности на территории приюта") String safetyAdvice
     ) {
-        return ResponseEntity.ok().body(catShelterServiceImpl.addShelter(new CatShelter(name, location, timetable, aboutMe, security, safetyAdvice)));
+        try {
+            return ResponseEntity.ok().body(catShelterServiceImpl.addShelter(new CatShelter(name, location, timetable, aboutMe, security, safetyAdvice)));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PutMapping("/")

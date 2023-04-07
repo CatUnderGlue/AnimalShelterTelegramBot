@@ -41,6 +41,7 @@ public class EntityUtils {
                 }
             } catch (IllegalAccessException e) {
                 System.out.println("Что-то пошло не так");
+                System.out.println("Шайтана не работает");
             }
         }
         return null;
