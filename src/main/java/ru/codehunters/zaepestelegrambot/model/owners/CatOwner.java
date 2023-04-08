@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.codehunters.zaepestelegrambot.model.TrialPeriod;
 import ru.codehunters.zaepestelegrambot.model.User;
 import ru.codehunters.zaepestelegrambot.model.animals.Cat;
 
@@ -17,14 +18,21 @@ import java.util.List;
 public class CatOwner{
 
     @Id
-    @GeneratedValue
-    private Long id;
+    @Column
+    private Long telegramId;
 
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "telegramId")
-//    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
+    @Column
+    private String name;
+
+    @Column
+    private String lastName;
+
+    @Column
+    private String phone;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "ownerId")
-//    @JoinColumn(name = "id", referencedColumnName = "catOwner_id")
     private List<Cat> catList;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ownerId")
+    private List<TrialPeriod> trialPeriodList;
 }

@@ -12,16 +12,17 @@ import lombok.NoArgsConstructor;
 @Table(name = "users")
 public class User {
 
-//    private Long id;
-
     @Id
     @Column
-    private String telegramId;
+    private Long telegramId;
 
     @Column
     private String name;
 
     @Column
     private String lastName;
+
+    @Column
+    private String phone;
 
 }
