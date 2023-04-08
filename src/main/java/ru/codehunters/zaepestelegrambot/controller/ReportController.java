@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,18 +30,22 @@ public class ReportController {
     @Operation(
             summary = "Создать отчёт"
     )
-    @io.swagger.v3.oas.annotations.parameters.RequestBody(
-            description = "Отчёт в формате json",
-            content = {
-                    @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = Report.class)
-                    )
-            }
-    )
-    public ResponseEntity<Long> create(@RequestBody Report report) {
-        return ResponseEntity.ok(reportService.create(report));
+    @ApiResponse(responseCode = "200", description = "Отчёт срок создан")
+    @ApiResponse(responseCode = "400", description = "Параметры запроса отсутствуют или имеют некорректный формат")
+    @ApiResponse(responseCode = "500", description = "Произошла ошибка, не зависящая от вызывающей стороны")
+    public ResponseEntity<Long> create(@RequestParam @Parameter(description = "Id фотографии") String photoId,
+                                       @RequestParam @Parameter(description = "Рацион животного") String foodRation,
+                                       @RequestParam @Parameter(description = "Общее самочувствие и привыкание к новому месту") String generalHealth,
+                                       @RequestParam @Parameter(description = "Изменение в поведении") String behaviorChanges,
+                                       @RequestParam @Parameter(description = "Дата получения") LocalDate receiveDate,
+                                       @RequestParam @Parameter(description = "Id испытательного срока") Long trialPeriodId) {
+        try {
+            return ResponseEntity.ok(reportService.create(new Report(photoId, foodRation, generalHealth, behaviorChanges, receiveDate, trialPeriodId)));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
+
 
     @GetMapping()
     @Operation(
