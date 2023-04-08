@@ -14,7 +14,7 @@ import java.util.List;
 @Entity
 @Table(name = "trial_periods")
 public class TrialPeriod {
-    enum Result {
+    public enum Result {
         IN_PROGRESS,
         SUCCESSFUL,
         NOT_SUCCESSFUL,
@@ -34,7 +34,7 @@ public class TrialPeriod {
     @Column(name = "last_report_date")
     private LocalDate lastReportDate;
 
-    @OneToMany(mappedBy = "trialPeriodId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "trialPeriodId", cascade = CascadeType.ALL)
     private List<Report> reports;
 
     @Enumerated(EnumType.STRING)
