@@ -26,7 +26,7 @@ public class CatShelter {
    @Column (name ="about_me")
    private String aboutMe; // О приюте
    @OneToMany(cascade = CascadeType.ALL)
-   private List<Cat> catShelters; // Список животных в приюте
+   private List<Cat> list; // Список животных в приюте
    @Column
    private String security; // Способ связи с охраной
    @Column(name ="safety_advice")

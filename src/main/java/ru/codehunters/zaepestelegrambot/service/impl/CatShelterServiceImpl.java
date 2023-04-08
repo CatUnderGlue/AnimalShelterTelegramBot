@@ -39,7 +39,7 @@ public class CatShelterServiceImpl implements ShelterService<CatShelter, Cat> {
 
     @Override
     public List<Cat> giveAnimal(long id) {
-        return catRepo.getReferenceById(id).getCatShelters();
+        return catRepo.getReferenceById(id).getList();
     }
 
     @Override
@@ -49,13 +49,13 @@ public class CatShelterServiceImpl implements ShelterService<CatShelter, Cat> {
 
     @Override
     public CatShelter addAnimalList(Cat cat, long id) {
-        catRepo.getReferenceById(id).getCatShelters().add(cat);
+        catRepo.getReferenceById(id).getList().add(cat);
         return catRepo.save(catRepo.getReferenceById(id));
     }
 
     @Override
     public CatShelter delAnimalList(Cat cat, long id) {
-        catRepo.getReferenceById(id).getCatShelters().remove(cat);
+        catRepo.getReferenceById(id).getList().remove(cat);
         return catRepo.save(catRepo.getReferenceById(id));
     }
 

@@ -24,7 +24,7 @@ public class DogShelter {
     private String location; // Адрес и схема проезда
     @Column
     private String timetable; // Расписание
-    @Column
+    @Column(name = "about_me")
     private String aboutMe; // О приюте
     @OneToMany
     private List<Dog> list; // Список животных в приюте
