@@ -7,21 +7,29 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "cat")
-public class Cat  {
+public class Cat {
     @Id
     @GeneratedValue
     private Long id;
 
     @Column
-    String nameCat;
+    private String name;
 
-    public Cat(String nameCat) {
-        this.nameCat = nameCat;
-    }
+    @Column
+    private int age;
+
+    @Column
+    private boolean isHealthy;
+
+    @Column
+    private boolean vaccinated;
+
+    @Column
+    private Long ownerId;
+
 }
