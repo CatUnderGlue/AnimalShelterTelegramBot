@@ -17,9 +17,19 @@ public class Dog {
     private Long id;
 
     @Column
-    String name;
+    private String name;
 
-    public Dog(String name) {
-        this.name = name;
-    }
+    @Column
+    private int age;
+
+    @Column
+    private boolean isHealthy;
+
+    @Column
+    private boolean vaccinated;
+
+    @Column
+    private Long ownerId;
+
+
 }
