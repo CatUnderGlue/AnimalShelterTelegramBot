@@ -15,7 +15,7 @@ import java.util.List;
 @Table(name = "cat_Shelter")
 public class CatShelter {
    @Id
-   @GeneratedValue
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
    private Long id; // id для приюта
    @Column
    private String name; // Название приюта
