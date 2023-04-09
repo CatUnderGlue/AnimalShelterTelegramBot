@@ -5,19 +5,27 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.codehunters.zaepestelegrambot.exception.TrialPeriodNotFoundException;
 import ru.codehunters.zaepestelegrambot.model.TrialPeriod;
 import ru.codehunters.zaepestelegrambot.service.TrialPeriodService;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping("trialperiods")
 @Tag(name = "Испытательный срок", description = "CRUD-методы для работы с испытательными сроками")
+@ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Всё хорошо, запрос выполнился."),
+        @ApiResponse(responseCode = "400", description = "Есть ошибка в параметрах запроса."),
+        @ApiResponse(responseCode = "404", description = "URL неверный или такого действия нет в веб-приложении."),
+        @ApiResponse(responseCode = "500", description = "Во время выполнения запроса произошла ошибка на сервере.")
+})
 public class TrialPeriodController {
 
     private final TrialPeriodService trialPeriodService;
@@ -30,16 +38,13 @@ public class TrialPeriodController {
     @Operation(
             summary = "Создать испытательный срок"
     )
-    @ApiResponse(responseCode = "200", description = "Испытательный срок создан")
-    @ApiResponse(responseCode = "400", description = "Параметры запроса отсутствуют или имеют некорректный формат")
-    @ApiResponse(responseCode = "500", description = "Произошла ошибка, не зависящая от вызывающей стороны")
-    public ResponseEntity<Long> create(@RequestParam @Parameter(description = "Дата начала испытательного срока")LocalDate startDate,
-                                       @RequestParam @Parameter(description = "Дата окончания испытательного срока")LocalDate endDate,
-                                       @RequestParam @Parameter(description = "Состояние")TrialPeriod.Result result,
-                                       @RequestParam @Parameter(description = "Id хозяина животного")Long ownerId){
-        try{
+    public ResponseEntity<Long> create(@RequestParam @Parameter(description = "Дата начала испытательного срока") LocalDate startDate,
+                                       @RequestParam @Parameter(description = "Дата окончания испытательного срока") LocalDate endDate,
+                                       @RequestParam @Parameter(description = "Состояние") TrialPeriod.Result result,
+                                       @RequestParam @Parameter(description = "Id хозяина животного") Long ownerId) {
+        try {
             return ResponseEntity.ok(trialPeriodService.create(new TrialPeriod(startDate, endDate, startDate.plusDays(1), new ArrayList<>(), result, ownerId)));
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
     }
@@ -48,8 +53,12 @@ public class TrialPeriodController {
     @Operation(
             summary = "Получение всех испытательных сроков"
     )
-    public ResponseEntity<List<TrialPeriod>> getAll(){
-        return ResponseEntity.ok(trialPeriodService.getAll());
+    public ResponseEntity<Object> getAll() {
+        try {
+            return ResponseEntity.ok(trialPeriodService.getAll());
+        } catch (TrialPeriodNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @GetMapping("owner")
@@ -61,8 +70,12 @@ public class TrialPeriodController {
             description = "Id хозяина животного",
             example = "1"
     )
-    public ResponseEntity<List<TrialPeriod>> getAllByOwnerId(@RequestParam Long ownerId){
-        return ResponseEntity.ok(trialPeriodService.getAllByOwnerId(ownerId));
+    public ResponseEntity<Object> getAllByOwnerId(@RequestParam Long ownerId) {
+        try {
+            return ResponseEntity.ok(trialPeriodService.getAllByOwnerId(ownerId));
+        } catch (TrialPeriodNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @GetMapping("id")
@@ -74,8 +87,30 @@ public class TrialPeriodController {
             description = "Id ипытательного срока",
             example = "1"
     )
-    public ResponseEntity<TrialPeriod> getById(@RequestParam Long id){
-        return ResponseEntity.ok(trialPeriodService.getById(id));
+    public ResponseEntity<Object> getById(@RequestParam Long id) {
+        try {
+            return ResponseEntity.ok(trialPeriodService.getById(id));
+        } catch (TrialPeriodNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @PutMapping
+    @Operation(
+            summary = "Изменить испытательный срок"
+    )
+    public ResponseEntity<Object> update(@RequestParam @Parameter(description = "Id испытательного срока") Long id,
+                                              @RequestParam @Parameter(description = "Дата начала испытательного срока") LocalDate startDate,
+                                              @RequestParam @Parameter(description = "Дата окончания испытательного срока") LocalDate endDate,
+                                              @RequestParam @Parameter(description = "Состояние") TrialPeriod.Result result,
+                                              @RequestParam @Parameter(description = "Id хозяина животного") Long ownerId) {
+        try {
+            return ResponseEntity.ok(trialPeriodService.update(new TrialPeriod(id, startDate, endDate, startDate.plusDays(1), new ArrayList<>(), result, ownerId)));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (TrialPeriodNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @DeleteMapping()
@@ -92,8 +127,12 @@ public class TrialPeriodController {
             }
     )
     public ResponseEntity<String> delete(@RequestBody TrialPeriod trialPeriod) {
-        trialPeriodService.delete(trialPeriod);
-        return ResponseEntity.ok().build();
+        try {
+            trialPeriodService.delete(trialPeriod);
+            return ResponseEntity.ok().body("Испытательный срок успешно удалён");
+        } catch (TrialPeriodNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @DeleteMapping("id")
@@ -106,7 +145,11 @@ public class TrialPeriodController {
             example = "1"
     )
     public ResponseEntity<String> deleteById(@RequestParam Long id) {
-        trialPeriodService.deleteById(id);
-        return ResponseEntity.ok().build();
+        try {
+            trialPeriodService.deleteById(id);
+            return ResponseEntity.ok().body("Испытательный срок успешно удалён");
+        } catch (TrialPeriodNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 }
