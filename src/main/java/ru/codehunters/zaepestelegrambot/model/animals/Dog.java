@@ -31,5 +31,8 @@ public class Dog {
     @Column
     private Long ownerId;
 
+    @Column
+    private Long shelterId;
+
 
 }
