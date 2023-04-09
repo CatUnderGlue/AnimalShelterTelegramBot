@@ -22,7 +22,7 @@ public class DogOwner{
     private Long telegramId;
 
     @Column
-    private String name;
+    private String firstName;
 
     @Column
     private String lastName;
@@ -35,4 +35,11 @@ public class DogOwner{
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "ownerId")
     private List<TrialPeriod> trialPeriodList;
+
+    public DogOwner(User user){
+        this.telegramId = user.getTelegramId();
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
+        this.phone = user.getPhone();
+    }
 }

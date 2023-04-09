@@ -1,0 +1,53 @@
+package ru.codehunters.zaepestelegrambot.service;
+
+import ru.codehunters.zaepestelegrambot.model.User;
+import ru.codehunters.zaepestelegrambot.model.owners.CatOwner;
+
+import java.util.List;
+
+public interface CatOwnerService {
+
+    /**
+     * Создание и сохранение хозяина кота в бд
+     * @param catOwner Хозяин кота для сохранения в бд
+     * @return Сохранённый хозяин кота
+     */
+    CatOwner create(CatOwner catOwner);
+
+    /**
+     * Создание хозяина кота в бд из пользователя
+     * @param user Пользователь из бота для сохранения в бд в качестве хозяина кота
+     * @return Сохранённый хозяин кота
+     */
+    CatOwner create(User user);
+
+    /**
+     * Получение хозяина кота по id
+     * @param id Id хозяина кота
+     * @return Полученный из бд хозяин кота
+     */
+    CatOwner getById(Long id);
+
+    /**
+     * @return Список всех владельцев котов
+     */
+    List<CatOwner> getAll();
+
+    /**
+     * Изменение хозяина кота
+     * @param catOwner хозяин кота
+     * @return Изменённый хозяин кота
+     */
+    CatOwner update(CatOwner catOwner);
+
+    /**
+     * @param catOwner хозяин кота, который уже есть в бд
+     */
+    void delete(CatOwner catOwner);
+
+    /**
+     * Удаление хозяина кота по id
+     * @param id Id хозяина кота
+     */
+    void deleteById(Long id);
+}
