@@ -2,6 +2,7 @@ package ru.codehunters.zaepestelegrambot.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.codehunters.zaepestelegrambot.exception.CatNotFoundException;
 import ru.codehunters.zaepestelegrambot.exception.ShelterException;
 import ru.codehunters.zaepestelegrambot.model.animals.Cat;
 import ru.codehunters.zaepestelegrambot.model.shelters.CatShelter;
@@ -10,6 +11,7 @@ import ru.codehunters.zaepestelegrambot.service.ShelterService;
 import ru.codehunters.zaepestelegrambot.service.ShelterValidationService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,28 +21,27 @@ public class CatShelterServiceImpl implements ShelterService<CatShelter, Cat> {
     private final CatShelterRepo catRepo;
     private final ShelterValidationService valService;
 
-
     @Override
     public CatShelter addShelter(CatShelter catShelter) {
-        if (!valService.isCompleteRecord(catShelter)) {
+        if (valService.isCompleteRecord(catShelter)) {
             throw new ShelterException("Данные приюта не заполнены");
         }
         return catRepo.save(catShelter);
     }
 
     @Override
-    public CatShelter updateShelter(CatShelter catShelter) {
-        if (!valService.isCompleteRecord(catShelter)) {
+    public CatShelter updateShelter(CatShelter catShelter, long id) {
+        if (!catRepo.existsById(id)) {
+            throw new CatNotFoundException("Кошачий приют не найден");
+        }
+        if (valService.isCompleteRecord(catShelter)) {
             throw new ShelterException("Данные приюта не заполнены");
         }
         return catRepo.save(catShelter);
     }
 
 
-    @Override
-    public List<Cat> giveAnimal(long id) {
-        return catRepo.getReferenceById(id).getList();
-    }
+
 
     @Override
     public List<CatShelter> getShelter() {
@@ -48,19 +49,21 @@ public class CatShelterServiceImpl implements ShelterService<CatShelter, Cat> {
     }
 
     @Override
-    public CatShelter addAnimalList(Cat cat, long id) {
-        catRepo.getReferenceById(id).getList().add(cat);
-        return catRepo.save(catRepo.getReferenceById(id));
+    public List<Cat> getAnimal(long index) {
+        return catRepo.getReferenceById(index).getList();
     }
 
     @Override
-    public CatShelter delAnimalList(Cat cat, long id) {
-        catRepo.getReferenceById(id).getList().remove(cat);
-        return catRepo.save(catRepo.getReferenceById(id));
-    }
+    public String delShelter(long index) {
+        String result;
+        Optional<CatShelter> catShelter = catRepo.findById(index);
+        if (catShelter.isPresent()) {
+            catRepo.deleteById(index);
+            result = "Запись удалена";
+        } else {
+            throw new CatNotFoundException("Котятки остались без приюта. Не нашли приют");
+        }
+        return result;
 
-    @Override
-    public void delShelter(long index) {
-        catRepo.deleteById(index);
     }
 }

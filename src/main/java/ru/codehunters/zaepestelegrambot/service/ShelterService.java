@@ -18,14 +18,8 @@ public interface ShelterService<T, D> {
      * @param shelter объект приют
      * @return shelter объект приют
      */
-    T updateShelter(T shelter);
+    T updateShelter(T shelter, long id);
 
-    /**
-     * Выдача списка животных находящихся в приюте
-     *
-     * @return List со списком животных в приюте
-     */
-    List<D> giveAnimal(long id);
 
     /**
      * Выдача списка приютов
@@ -33,28 +27,18 @@ public interface ShelterService<T, D> {
      * @return List со списком приютов
      */
     List<T> getShelter();
-
     /**
-     * добавление объекта в список животных в приюте
-     *
-     * @param animal животное
-     * @param id     приюта
-     * @return animal
+     * Выдача списка животных приютов
+     * @param index индекс приюта
+     * @return List со списком приютов
      */
-    T addAnimalList(D animal, long id);
+    List<D> getAnimal(long index);
 
-    /**
-     * Удаление объекта из списка животных в приюте
-     *
-     * @param animal животное
-     * @return animal
-     */
-    T delAnimalList(D animal, long id);
 
     /**
      * Удаление приюта
      *
      * @param index номер
      */
-    void delShelter(long index);
+    String delShelter(long index);
 }

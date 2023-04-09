@@ -9,4 +9,8 @@ public class DogNotFoundException extends RuntimeException {
     public DogNotFoundException() {
         super("Пёс не найден!");
     }
+
+    public DogNotFoundException(String message) {
+        super(message);
+    }
 }

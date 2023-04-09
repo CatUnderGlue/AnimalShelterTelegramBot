@@ -11,20 +11,20 @@ public class ShelterValidationServiceImpl implements ShelterValidationService {
     @Override
     public boolean isCompleteRecord(CatShelter shelter) {
         return shelter.getName().isEmpty()
-                && shelter.getAboutMe().isEmpty()
-                && shelter.getLocation().isEmpty()
-                && shelter.getSafetyAdvice().isEmpty()
-                && shelter.getTimetable().isEmpty()
-                && shelter.getSecurity().isEmpty();
+                || shelter.getAboutMe().isEmpty()
+                || shelter.getLocation().isEmpty()
+                || shelter.getSafetyAdvice().isEmpty()
+                || shelter.getTimetable().isEmpty()
+                || shelter.getSecurity().isEmpty();
     }
 
     @Override
     public boolean isCompleteRecord(DogShelter shelter) {
         return shelter.getName().isEmpty()
-                && shelter.getAboutMe().isEmpty()
-                && shelter.getLocation().isEmpty()
-                && shelter.getSafetyAdvice().isEmpty()
-                && shelter.getTimetable().isEmpty()
-                && shelter.getSecurity().isEmpty();
+                || shelter.getAboutMe().isEmpty()
+                || shelter.getLocation().isEmpty()
+                || shelter.getSafetyAdvice().isEmpty()
+                || shelter.getTimetable().isEmpty()
+                || shelter.getSecurity().isEmpty();
     }
 }

@@ -9,4 +9,8 @@ public class CatNotFoundException extends RuntimeException {
     public CatNotFoundException() {
         super("Кот не найден!");
     }
+
+    public CatNotFoundException(String message) {
+        super(message);
+    }
 }

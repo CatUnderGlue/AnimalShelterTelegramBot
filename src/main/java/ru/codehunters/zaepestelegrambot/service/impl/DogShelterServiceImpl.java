@@ -2,6 +2,7 @@ package ru.codehunters.zaepestelegrambot.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.codehunters.zaepestelegrambot.exception.DogNotFoundException;
 import ru.codehunters.zaepestelegrambot.exception.ShelterException;
 import ru.codehunters.zaepestelegrambot.model.animals.Dog;
 import ru.codehunters.zaepestelegrambot.model.shelters.DogShelter;
@@ -10,6 +11,7 @@ import ru.codehunters.zaepestelegrambot.service.ShelterService;
 import ru.codehunters.zaepestelegrambot.service.ShelterValidationService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,25 +23,24 @@ public class DogShelterServiceImpl implements ShelterService<DogShelter, Dog> {
 
     @Override
     public DogShelter addShelter(DogShelter shelter) {
-        if (!valService.isCompleteRecord(shelter)) {
+        if (valService.isCompleteRecord(shelter)) {
             throw new ShelterException("Данные приюта не заполнены");
         }
         return dogRepo.save(shelter);
     }
 
     @Override
-    public DogShelter updateShelter(DogShelter shelter) {
-        if (!valService.isCompleteRecord(shelter)) {
+    public DogShelter updateShelter(DogShelter shelter, long id) {
+        if (!dogRepo.existsById(id)) {
+            throw new DogNotFoundException("Собачий приют не найден");
+        }
+        dogRepo.getReferenceById(id);
+        if (valService.isCompleteRecord(shelter)) {
             throw new ShelterException("Данные приюта не заполнены");
         }
         return dogRepo.save(shelter);
     }
 
-
-    @Override
-    public List<Dog> giveAnimal(long id) {
-        return dogRepo.getReferenceById(id).getList();
-    }
 
     @Override
     public List<DogShelter> getShelter() {
@@ -47,20 +48,21 @@ public class DogShelterServiceImpl implements ShelterService<DogShelter, Dog> {
     }
 
     @Override
-    public DogShelter addAnimalList(Dog animal, long id) {
-        dogRepo.getReferenceById(id).getList().add(animal);
-        return dogRepo.save(dogRepo.getReferenceById(id));
+    public List<Dog> getAnimal(long index) {
+        return dogRepo.getReferenceById(index).getList();
     }
 
-    @Override
-    public DogShelter delAnimalList(Dog animal, long id) {
-        dogRepo.getReferenceById(id).getList().remove(animal);
-
-        return dogRepo.save(dogRepo.getReferenceById(id));
-    }
 
     @Override
-    public void delShelter(long index) {
-        dogRepo.deleteById(index);
+    public String delShelter(long index) {
+        String result;
+        Optional<DogShelter> dogShelter = dogRepo.findById(index);
+        if (dogShelter.isPresent()) {
+            dogRepo.deleteById(index);
+            result = "Запись удалена";
+        } else {
+            throw new DogNotFoundException("Собачки без приюта. Мы его не нашли(");
+        }
+        return result;
     }
 }
