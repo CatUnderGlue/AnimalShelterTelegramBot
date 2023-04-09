@@ -31,6 +31,13 @@ public interface TrialPeriodService {
     List<TrialPeriod> getAllByOwnerId(Long ownerId);
 
     /**
+     * Изменение существующего испытательного срока
+     * @param trialPeriod Испытательный срок
+     * @return Обновлённый испытательный срок
+     */
+    TrialPeriod update(TrialPeriod trialPeriod);
+
+    /**
      * Удаление полученного из бд испытательного срока
      * @param trialPeriod Испытательный срок, который уже есть в бд
      */

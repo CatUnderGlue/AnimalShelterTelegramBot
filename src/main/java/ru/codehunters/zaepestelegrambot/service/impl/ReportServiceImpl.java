@@ -1,6 +1,7 @@
 package ru.codehunters.zaepestelegrambot.service.impl;
 
 import org.springframework.stereotype.Service;
+import ru.codehunters.zaepestelegrambot.exception.ReportNotFoundException;
 import ru.codehunters.zaepestelegrambot.model.Report;
 import ru.codehunters.zaepestelegrambot.repository.ReportRepo;
 import ru.codehunters.zaepestelegrambot.service.ReportService;
@@ -25,8 +26,8 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public Report getById(Long id) {
         Optional<Report> optionalReport = reportRepo.findById(id);
-        if (!optionalReport.isPresent()){
-            return null;
+        if (optionalReport.isEmpty()){
+            throw new ReportNotFoundException();
         }
         return optionalReport.get();
     }
@@ -34,29 +35,46 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public Report getByDateAndTrialId(LocalDate date, Long id) {
         Optional<Report> optionalReport = reportRepo.findByReceiveDateAndTrialPeriodId(date, id);
-        if (!optionalReport.isPresent()){
-            return null;
+        if (optionalReport.isEmpty()){
+            throw new ReportNotFoundException();
         }
         return optionalReport.get();
     }
 
     @Override
     public List<Report> getAll() {
-        return reportRepo.findAll();
+        List<Report> all = reportRepo.findAll();
+        if (all.isEmpty()) {
+            throw new ReportNotFoundException();
+        }
+        return all;
     }
 
     @Override
     public List<Report> gelAllByTrialPeriodId(Long id) {
-        return reportRepo.findAllByTrialPeriodId(id);
+        List<Report> allByTrialPeriodId = reportRepo.findAllByTrialPeriodId(id);
+        if (allByTrialPeriodId.isEmpty()) {
+            throw new ReportNotFoundException();
+        }
+        return allByTrialPeriodId;
+    }
+
+    @Override
+    public Report update(Report report) {
+        if (report.getId() == null || getById(report.getId()) == null) {
+            throw new ReportNotFoundException();
+        }
+        return reportRepo.save(report);
     }
 
     @Override
     public void delete(Report report) {
-        reportRepo.delete(report);
+        reportRepo.delete(getById(report.getId()));
     }
 
     @Override
     public void deleteById(Long id) {
-        reportRepo.deleteById(id);
+        reportRepo.deleteById(getById(id).getId());
+
     }
 }

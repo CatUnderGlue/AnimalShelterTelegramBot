@@ -40,6 +40,13 @@ public interface ReportService {
     List<Report> gelAllByTrialPeriodId(Long id);
 
     /**
+     * Изменение существующего отчёта
+     * @param report Отчёт
+     * @return Изменённый отчёт
+     */
+    Report update(Report report);
+
+    /**
      * Удаление полученного из бд отчёта
      * @param report Отчёт, который уже есть в бд
      */

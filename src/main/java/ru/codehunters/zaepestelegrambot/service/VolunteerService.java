@@ -13,12 +13,32 @@ public interface VolunteerService {
     Volunteer create(Volunteer volunteer);
 
     /**
+     * Получение волонтёра по id
+     * @param id Id волонтёра
+     * @return Полученный из бд волонтёр
+     */
+    Volunteer getById(Long id);
+
+    /**
      * @return Список всех волонтёров
      */
     List<Volunteer> getAll();
 
     /**
+     * Изменение волонтёра
+     * @param volunteer Волонтёр
+     * @return Изменённый волонтёр
+     */
+    Volunteer update(Volunteer volunteer);
+
+    /**
      * @param volunteer Волонтёр, который уже есть в бд
      */
     void delete(Volunteer volunteer);
+
+    /**
+     * Удаление волонтёра по id
+     * @param id Id волонтёра
+     */
+    void deleteById(Long id);
 }
