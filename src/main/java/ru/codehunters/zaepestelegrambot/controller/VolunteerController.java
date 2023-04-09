@@ -1,6 +1,5 @@
 package ru.codehunters.zaepestelegrambot.controller;
 
-import com.sun.net.httpserver.HttpsServer;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -11,13 +10,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.codehunters.zaepestelegrambot.exception.ReportNotFoundException;
 import ru.codehunters.zaepestelegrambot.exception.VolunteerNotFoundException;
-import ru.codehunters.zaepestelegrambot.model.Report;
 import ru.codehunters.zaepestelegrambot.model.Volunteer;
 import ru.codehunters.zaepestelegrambot.service.VolunteerService;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("volunteers")
