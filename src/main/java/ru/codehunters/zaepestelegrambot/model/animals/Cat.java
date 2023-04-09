@@ -32,4 +32,7 @@ public class Cat {
     @Column
     private Long ownerId;
 
+    @Column
+    private Long shelterId;
+
 }

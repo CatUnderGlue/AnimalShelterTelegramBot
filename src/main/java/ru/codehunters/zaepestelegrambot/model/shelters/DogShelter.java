@@ -26,7 +26,7 @@ public class DogShelter {
     private String timetable; // Расписание
     @Column(name = "about_me")
     private String aboutMe; // О приюте
-    @OneToMany
+    @OneToMany(mappedBy = "shelterId",cascade = CascadeType.ALL)
     private List<Dog> list; // Список животных в приюте
     @Column
     private String security; // Способ связи с охраной
