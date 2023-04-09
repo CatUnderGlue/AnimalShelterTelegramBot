@@ -31,22 +31,24 @@ create table reports
 
 create table cat
 (
-    id         bigserial not null primary key,
+    id         bigint not null primary key,
     name       varchar(255),
     age        integer,
     is_healthy boolean,
     vaccinated boolean,
-    owner_id   bigint
+    owner_id   bigint,
+    shelter_id bigint
 );
 
 create table dog
 (
-    id         bigserial not null primary key,
+    id         bigint not null primary key,
     name       varchar(255),
     age        integer,
     is_healthy boolean,
     vaccinated boolean,
-    owner_id   bigint
+    owner_id   bigint,
+    shelter_id bigint
 );
 
 create table users
@@ -71,4 +73,26 @@ create table dogowner
     name        varchar(255),
     last_name   varchar(255),
     phone       varchar(255)
+);
+
+create table cat_shelter
+(
+    id            bigint not null primary key,
+    about_me      varchar(255),
+    location      varchar(255),
+    name          varchar(255),
+    safety_advice varchar(255),
+    security      varchar(255),
+    timetable     varchar(255)
+);
+
+create table dog_shelter
+(
+    id_shelter    bigint not null primary key,
+    about_me      varchar(255),
+    location      varchar(255),
+    name          varchar(255),
+    safety_advice varchar(255),
+    security      varchar(255),
+    timetable     varchar(255)
 );
