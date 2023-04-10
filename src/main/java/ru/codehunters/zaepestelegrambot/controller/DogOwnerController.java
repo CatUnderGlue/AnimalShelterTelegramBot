@@ -10,7 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.codehunters.zaepestelegrambot.exception.DogOwnerNotFoundException;
+import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.User;
 import ru.codehunters.zaepestelegrambot.model.owners.DogOwner;
 import ru.codehunters.zaepestelegrambot.service.DogOwnerService;
@@ -66,7 +66,7 @@ public class DogOwnerController {
     public ResponseEntity<Object> getAll() {
         try {
             return ResponseEntity.ok(dogOwnerService.getAll());
-        } catch (DogOwnerNotFoundException e) {
+        } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
@@ -84,7 +84,7 @@ public class DogOwnerController {
         try {
             DogOwner dogOwner = dogOwnerService.getById(dogOwnerId);
             return ResponseEntity.ok().body(dogOwner);
-        } catch (DogOwnerNotFoundException e) {
+        } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
@@ -102,7 +102,7 @@ public class DogOwnerController {
                     null, null)));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
-        } catch (DogOwnerNotFoundException e) {
+        } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
@@ -124,7 +124,7 @@ public class DogOwnerController {
         try {
             dogOwnerService.delete(dogOwner);
             return ResponseEntity.ok().body("Владелец собаки успешно удалён");
-        } catch (DogOwnerNotFoundException e) {
+        } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
@@ -142,7 +142,7 @@ public class DogOwnerController {
         try {
             dogOwnerService.deleteById(dogOwnerId);
             return ResponseEntity.ok().body("Владелец собаки успешно удалён");
-        } catch (DogOwnerNotFoundException e) {
+        } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }

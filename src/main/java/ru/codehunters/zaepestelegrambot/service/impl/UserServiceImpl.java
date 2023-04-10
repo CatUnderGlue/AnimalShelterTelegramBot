@@ -2,7 +2,7 @@ package ru.codehunters.zaepestelegrambot.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.codehunters.zaepestelegrambot.exception.UserNotFoundException;
+import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.User;
 import ru.codehunters.zaepestelegrambot.repository.UserRepo;
 import ru.codehunters.zaepestelegrambot.service.UserService;
@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
     public User getById(Long id) {
         Optional<User> optionalUser = userRepo.findById(id);
         if (optionalUser.isEmpty()) {
-            throw new UserNotFoundException();
+            throw new NotFoundException("Пользователь не найден!");
         }
         return optionalUser.get();
     }
@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
     public List<User> getAll() {
         List<User> all = userRepo.findAll();
         if (all.isEmpty()) {
-            throw new UserNotFoundException();
+            throw new NotFoundException("Пользователь не найден!");
         }
         return all;
     }
@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User update(User user) {
         if (user.getTelegramId() == null || getById(user.getTelegramId()) == null) {
-            throw new UserNotFoundException();
+            throw new NotFoundException("Пользователь не найден!");
         }
         return userRepo.save(user);
     }
