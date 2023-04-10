@@ -1,5 +1,6 @@
 package ru.codehunters.zaepestelegrambot.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.codehunters.zaepestelegrambot.exception.VolunteerNotFoundException;
 import ru.codehunters.zaepestelegrambot.model.Volunteer;
@@ -10,13 +11,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class VolunteerServiceImpl implements VolunteerService {
 
     private final VolunteerRepo volunteerRepo;
-
-    public VolunteerServiceImpl(VolunteerRepo volunteerRepo) {
-        this.volunteerRepo = volunteerRepo;
-    }
 
     @Override
     public Volunteer create(Volunteer volunteer) {

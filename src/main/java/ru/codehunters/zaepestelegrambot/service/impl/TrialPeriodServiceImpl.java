@@ -1,5 +1,6 @@
 package ru.codehunters.zaepestelegrambot.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.codehunters.zaepestelegrambot.exception.TrialPeriodNotFoundException;
 import ru.codehunters.zaepestelegrambot.model.TrialPeriod;
@@ -10,13 +11,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class TrialPeriodServiceImpl implements TrialPeriodService {
 
     private final TrialPeriodRepo trialPeriodRepo;
-
-    public TrialPeriodServiceImpl(TrialPeriodRepo trialPeriodRepo) {
-        this.trialPeriodRepo = trialPeriodRepo;
-    }
 
     @Override
     public Long create(TrialPeriod trialPeriod) {

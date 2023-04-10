@@ -1,5 +1,6 @@
 package ru.codehunters.zaepestelegrambot.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.codehunters.zaepestelegrambot.exception.UserNotFoundException;
 import ru.codehunters.zaepestelegrambot.model.User;
@@ -10,13 +11,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepo userRepo;
-
-    public UserServiceImpl(UserRepo userRepo) {
-        this.userRepo = userRepo;
-    }
 
     @Override
     public User create(User user)  {
