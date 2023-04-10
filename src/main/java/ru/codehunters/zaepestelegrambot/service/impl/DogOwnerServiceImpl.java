@@ -1,33 +1,39 @@
 package ru.codehunters.zaepestelegrambot.service.impl;
 
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
-import ru.codehunters.zaepestelegrambot.model.User;
+import ru.codehunters.zaepestelegrambot.model.TrialPeriod;
 import ru.codehunters.zaepestelegrambot.model.owners.DogOwner;
 import ru.codehunters.zaepestelegrambot.repository.DogOwnerRepo;
 import ru.codehunters.zaepestelegrambot.service.DogOwnerService;
+import ru.codehunters.zaepestelegrambot.service.TrialPeriodService;
+import ru.codehunters.zaepestelegrambot.service.UserService;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 @Service
+@RequiredArgsConstructor
 public class DogOwnerServiceImpl implements DogOwnerService {
 
     private final DogOwnerRepo dogOwnerRepo;
-
-    public DogOwnerServiceImpl(DogOwnerRepo dogOwnerRepo) {
-        this.dogOwnerRepo = dogOwnerRepo;
-    }
+    private final UserService userService;
+    private final TrialPeriodService trialPeriodService;
 
     @Override
-    public DogOwner create(DogOwner dogOwner)  {
+    public DogOwner create(DogOwner dogOwner, TrialPeriod.AnimalType animalType, Long animalId)  {
+        trialPeriodService.create(new TrialPeriod(LocalDate.now(), LocalDate.now().plusDays(30),
+                LocalDate.now(), new ArrayList<>(), TrialPeriod.Result.IN_PROGRESS, dogOwner.getTelegramId(), animalType, animalId));
         return dogOwnerRepo.save(dogOwner);
     }
 
     @Override
-    public DogOwner create(User user) {
-        DogOwner dogOwner = new DogOwner(user);
+    public DogOwner create(Long id, TrialPeriod.AnimalType animalType, Long animalId) {
+        DogOwner dogOwner = new DogOwner(userService.getById(id));
+        trialPeriodService.create(new TrialPeriod(LocalDate.now(), LocalDate.now().plusDays(30),
+                LocalDate.now(), new ArrayList<>(), TrialPeriod.Result.IN_PROGRESS, id, animalType, animalId));
         return dogOwnerRepo.save(dogOwner);
     }
 
