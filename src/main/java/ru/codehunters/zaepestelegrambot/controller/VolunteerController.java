@@ -31,9 +31,7 @@ public class VolunteerController {
     }
 
     @PostMapping
-    @Operation(
-            summary = "Создать волонтёра"
-    )
+    @Operation(summary = "Создать волонтёра")
     public ResponseEntity<Volunteer> create(@RequestParam @Parameter(description = "Телеграм id волонтёра") Long telegramId,
                                             @RequestParam @Parameter(description = "Имя") String firstName,
                                             @RequestParam @Parameter(description = "Фамилия") String lastName) {
@@ -45,9 +43,7 @@ public class VolunteerController {
     }
 
     @GetMapping()
-    @Operation(
-            summary = "Получение всех волонтёров"
-    )
+    @Operation(summary = "Получение всех волонтёров")
     public ResponseEntity<Object> getAll() {
         try {
             return ResponseEntity.ok(volunteerService.getAll());
@@ -57,15 +53,8 @@ public class VolunteerController {
     }
 
     @GetMapping("id")
-    @Operation(
-            summary = "Получение волонтёра по id"
-    )
-    @Parameter(
-            name = "id",
-            description = "Id волонтёра",
-            example = "1"
-    )
-    public ResponseEntity<Object> getById(@RequestParam Long volunteerId) {
+    @Operation(summary = "Получение волонтёра по id")
+    public ResponseEntity<Object> getById(@RequestParam @Parameter(description = "Id волонтёра") Long volunteerId) {
         try {
             Volunteer volunteer = volunteerService.getById(volunteerId);
             return ResponseEntity.ok().body(volunteer);
@@ -75,9 +64,7 @@ public class VolunteerController {
     }
 
     @PutMapping
-    @Operation(
-            summary = "Изменить волонтёра"
-    )
+    @Operation(summary = "Изменить волонтёра")
     public ResponseEntity<Object> update(@RequestParam @Parameter(description = "Телеграм id волонтёра") Long telegramId,
                                             @RequestParam @Parameter(description = "Имя") String firstName,
                                             @RequestParam @Parameter(description = "Фамилия") String lastName) {
@@ -90,38 +77,9 @@ public class VolunteerController {
         }
     }
 
-    @DeleteMapping()
-    @Operation(
-            summary = "Удаление волонтёра"
-    )
-    @io.swagger.v3.oas.annotations.parameters.RequestBody(
-            description = "Волонтёр в формате json",
-            content = {
-                    @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = Volunteer.class)
-                    )
-            }
-    )
-    public ResponseEntity<String> delete(@RequestBody Volunteer volunteer) {
-        try {
-            volunteerService.delete(volunteer);
-            return ResponseEntity.ok().body("Волонтёр успешно удалён");
-        } catch (VolunteerNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-    }
-
     @DeleteMapping("id")
-    @Operation(
-            summary = "Удаление волонтёра по id"
-    )
-    @Parameter(
-            name = "id",
-            description = "Id волонтёра",
-            example = "1"
-    )
-    public ResponseEntity<String> deleteById(@RequestParam Long volunteerId) {
+    @Operation(summary = "Удаление волонтёра по id")
+    public ResponseEntity<String> deleteById(@RequestParam @Parameter(description = "Id волонтёра") Long volunteerId) {
         try {
             volunteerService.deleteById(volunteerId);
             return ResponseEntity.ok().body("Волонтёр успешно удалён");

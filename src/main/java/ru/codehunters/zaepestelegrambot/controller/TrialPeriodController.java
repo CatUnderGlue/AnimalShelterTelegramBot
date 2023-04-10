@@ -62,15 +62,8 @@ public class TrialPeriodController {
     }
 
     @GetMapping("owner")
-    @Operation(
-            summary = "Получение всех испытательных сроков по id хозяина"
-    )
-    @Parameter(
-            name = "ownerId",
-            description = "Id хозяина животного",
-            example = "1"
-    )
-    public ResponseEntity<Object> getAllByOwnerId(@RequestParam Long ownerId) {
+    @Operation(summary = "Получение всех испытательных сроков по id хозяина")
+    public ResponseEntity<Object> getAllByOwnerId(@RequestParam @Parameter(description = "Id хозяина животного") Long ownerId) {
         try {
             return ResponseEntity.ok(trialPeriodService.getAllByOwnerId(ownerId));
         } catch (TrialPeriodNotFoundException e) {
@@ -136,15 +129,8 @@ public class TrialPeriodController {
     }
 
     @DeleteMapping("id")
-    @Operation(
-            summary = "Удаление испытательного срока по id"
-    )
-    @Parameter(
-            name = "id",
-            description = "Id испытательного срока",
-            example = "1"
-    )
-    public ResponseEntity<String> deleteById(@RequestParam Long id) {
+    @Operation(summary = "Удаление испытательного срока по id")
+    public ResponseEntity<String> deleteById(@RequestParam @Parameter(description = "Id испытательного срока") Long id) {
         try {
             trialPeriodService.deleteById(id);
             return ResponseEntity.ok().body("Испытательный срок успешно удалён");

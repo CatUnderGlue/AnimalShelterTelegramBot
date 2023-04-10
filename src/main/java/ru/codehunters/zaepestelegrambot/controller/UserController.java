@@ -31,13 +31,11 @@ public class UserController {
     }
 
     @PostMapping
-    @Operation(
-            summary = "Создать пользователя"
-    )
+    @Operation(summary = "Создать пользователя")
     public ResponseEntity<User> create(@RequestParam @Parameter(description = "Телеграм id пользователя") Long telegramId,
-                                            @RequestParam @Parameter(description = "Имя") String firstName,
-                                            @RequestParam @Parameter(description = "Фамилия") String lastName,
-                                            @RequestParam @Parameter(description = "Телефон") String phone) {
+                                       @RequestParam @Parameter(description = "Имя") String firstName,
+                                       @RequestParam @Parameter(description = "Фамилия") String lastName,
+                                       @RequestParam @Parameter(description = "Телефон") String phone) {
         try {
             return ResponseEntity.ok(userService.create(new User(telegramId, firstName, lastName, phone)));
         } catch (IllegalArgumentException e) {
@@ -46,9 +44,7 @@ public class UserController {
     }
 
     @GetMapping()
-    @Operation(
-            summary = "Получение списка всех пользователей"
-    )
+    @Operation(summary = "Получение списка всех пользователей")
     public ResponseEntity<Object> getAll() {
         try {
             return ResponseEntity.ok(userService.getAll());
@@ -58,15 +54,8 @@ public class UserController {
     }
 
     @GetMapping("id")
-    @Operation(
-            summary = "Получение пользователя по id"
-    )
-    @Parameter(
-            name = "id",
-            description = "Id пользователя",
-            example = "1"
-    )
-    public ResponseEntity<Object> getById(@RequestParam Long userId) {
+    @Operation(summary = "Получение пользователя по id")
+    public ResponseEntity<Object> getById(@RequestParam @Parameter(description = "Id пользователя") Long userId) {
         try {
             User user = userService.getById(userId);
             return ResponseEntity.ok().body(user);
@@ -76,9 +65,7 @@ public class UserController {
     }
 
     @PutMapping
-    @Operation(
-            summary = "Изменить пользователя"
-    )
+    @Operation(summary = "Изменить пользователя")
     public ResponseEntity<Object> update(@RequestParam @Parameter(description = "Телеграм id пользователя") Long telegramId,
                                          @RequestParam @Parameter(description = "Имя") String firstName,
                                          @RequestParam @Parameter(description = "Фамилия") String lastName,
@@ -92,38 +79,9 @@ public class UserController {
         }
     }
 
-    @DeleteMapping()
-    @Operation(
-            summary = "Удаление пользователя"
-    )
-    @io.swagger.v3.oas.annotations.parameters.RequestBody(
-            description = "Пользователь в формате json",
-            content = {
-                    @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = User.class)
-                    )
-            }
-    )
-    public ResponseEntity<String> delete(@RequestBody User user) {
-        try {
-            userService.delete(user);
-            return ResponseEntity.ok().body("Пользователь успешно удалён");
-        } catch (UserNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-    }
-
     @DeleteMapping("id")
-    @Operation(
-            summary = "Удаление пользователя по id"
-    )
-    @Parameter(
-            name = "id",
-            description = "Id пользователя",
-            example = "1"
-    )
-    public ResponseEntity<String> deleteById(@RequestParam Long userId) {
+    @Operation(summary = "Удаление пользователя по id")
+    public ResponseEntity<String> deleteById(@RequestParam @Parameter(description = "Id пользователя") Long userId) {
         try {
             userService.deleteById(userId);
             return ResponseEntity.ok().body("Пользователь успешно удалён");
