@@ -8,7 +8,6 @@ import ru.codehunters.zaepestelegrambot.model.Volunteer;
 import ru.codehunters.zaepestelegrambot.repository.VolunteerRepo;
 import ru.codehunters.zaepestelegrambot.service.VolunteerService;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 @Service

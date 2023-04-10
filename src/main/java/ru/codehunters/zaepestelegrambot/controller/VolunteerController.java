@@ -12,8 +12,6 @@ import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.Volunteer;
 import ru.codehunters.zaepestelegrambot.service.VolunteerService;
 
-import java.lang.reflect.InvocationTargetException;
-
 @RestController
 @RequestMapping("volunteers")
 @Tag(name = "Волонтёр", description = "CRUD-методы для работы с волонтёрами")
