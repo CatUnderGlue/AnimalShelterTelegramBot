@@ -8,7 +8,6 @@ import ru.codehunters.zaepestelegrambot.model.animals.Cat;
 import ru.codehunters.zaepestelegrambot.model.shelters.CatShelter;
 import ru.codehunters.zaepestelegrambot.repository.CatShelterRepo;
 import ru.codehunters.zaepestelegrambot.service.ShelterService;
-import ru.codehunters.zaepestelegrambot.service.ShelterValidationService;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,11 +18,10 @@ public class CatShelterServiceImpl implements ShelterService<CatShelter, Cat> {
 
 
     private final CatShelterRepo catRepo;
-    private final ShelterValidationService valService;
 
     @Override
     public CatShelter addShelter(CatShelter catShelter) {
-        if (!valService.isCompleteRecord(catShelter)) {
+        if (EntityUtils.checkForObjectNullEmptyOrWhitespace(catShelter)) {
             throw new BadRequestException("Данные приюта не заполнены");
         }
         return catRepo.save(catShelter);
@@ -35,7 +33,7 @@ public class CatShelterServiceImpl implements ShelterService<CatShelter, Cat> {
         if (catShelterId.isEmpty()){
             throw new NotFoundException("Приют не найден. Кошки остались без дома");
         }
-        catShelter = valService.updateCompleteRecord(catShelter, catShelterId.get());
+        EntityUtils.copyNonNullFields(catShelterId.get(), catShelter);
         return catRepo.save(catShelter);
     }
 

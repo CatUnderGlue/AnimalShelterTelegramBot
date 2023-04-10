@@ -57,7 +57,7 @@ public class CatShelter {
    private String safetyAdvice;
 
    /**
-    * Конструктор
+    * Конструктор для POST в БД (Без id, без List)
     *
     */
 
@@ -70,7 +70,10 @@ public class CatShelter {
       this.security = security;
       this.safetyAdvice = safetyAdvice;
    }
-
+   /**
+    * Конструктор для PUT в БД (c id, без List)
+    *
+    */
    public CatShelter(String name, String location, String timetable, String aboutMe, String security, String safetyAdvice) {
       this.name = name;
       this.location = location;

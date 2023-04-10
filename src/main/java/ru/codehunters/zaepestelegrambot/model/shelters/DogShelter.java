@@ -58,6 +58,10 @@ public class DogShelter {
     @Column(name = "safety_advice")
     private String safetyAdvice;
 
+    /**
+     * Конструктор для POST в БД (Без id, без List)
+     *
+     */
     public DogShelter(Long idShelter, String name, String location, String timetable, String aboutMe, String security, String safetyAdvice) {
         this.id = idShelter;
         this.name = name;
@@ -67,7 +71,10 @@ public class DogShelter {
         this.security = security;
         this.safetyAdvice = safetyAdvice;
     }
-
+    /**
+     * Конструктор для PUT в БД (c id, без List)
+     *
+     */
     public DogShelter(String name, String location, String timetable, String aboutMe, String security, String safetyAdvice) {
         this.name = name;
         this.location = location;

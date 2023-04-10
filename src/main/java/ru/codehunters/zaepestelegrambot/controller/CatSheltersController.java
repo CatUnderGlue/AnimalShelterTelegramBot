@@ -49,12 +49,12 @@ public class CatSheltersController {
             summary = "Обновление информации о приюте"
     )
     public ResponseEntity<Object> update(@RequestParam @Parameter(description = "id приюта") long id,
-                                         @RequestParam(required = false) @Parameter(description = "Название приюта", allowEmptyValue = true) String name,
-                                         @RequestParam(required = false) @Parameter(description = "Адрес и схема проезда", allowEmptyValue = true) String location,
-                                         @RequestParam(required = false) @Parameter(description = "Расписание работы приюта", allowEmptyValue = true) String timetable,
-                                         @RequestParam(required = false) @Parameter(description = "О приюте", allowEmptyValue = true) String aboutMe,
-                                         @RequestParam(required = false) @Parameter(description = "Способ связи с охраной", allowEmptyValue = true) String security,
-                                         @RequestParam(required = false) @Parameter(description = "Рекомендации о технике безопасности на территории приюта", allowEmptyValue = true) String safetyAdvice) {
+                                         @RequestParam(required = false) @Parameter(description = "Название приюта") String name,
+                                         @RequestParam(required = false) @Parameter(description = "Адрес и схема проезда") String location,
+                                         @RequestParam(required = false) @Parameter(description = "Расписание работы приюта") String timetable,
+                                         @RequestParam(required = false) @Parameter(description = "О приюте") String aboutMe,
+                                         @RequestParam(required = false) @Parameter(description = "Способ связи с охраной") String security,
+                                         @RequestParam(required = false) @Parameter(description = "Рекомендации о технике безопасности на территории приюта") String safetyAdvice) {
 
         try {
             return ResponseEntity.ok().body(catShelterServiceImpl.updateShelter((new CatShelter(id, name, location, timetable, aboutMe, security, safetyAdvice))));
