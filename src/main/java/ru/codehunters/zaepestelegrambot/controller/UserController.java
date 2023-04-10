@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.codehunters.zaepestelegrambot.exception.UserNotFoundException;
+import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.User;
 import ru.codehunters.zaepestelegrambot.service.UserService;
 
@@ -46,7 +46,7 @@ public class UserController {
     public ResponseEntity<Object> getAll() {
         try {
             return ResponseEntity.ok(userService.getAll());
-        } catch (UserNotFoundException e) {
+        } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
@@ -57,7 +57,7 @@ public class UserController {
         try {
             User user = userService.getById(userId);
             return ResponseEntity.ok().body(user);
-        } catch (UserNotFoundException e) {
+        } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
@@ -72,7 +72,7 @@ public class UserController {
             return ResponseEntity.ok(userService.create(new User(telegramId, firstName, lastName, phone)));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
-        } catch (UserNotFoundException e) {
+        } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
@@ -83,7 +83,7 @@ public class UserController {
         try {
             userService.deleteById(userId);
             return ResponseEntity.ok().body("Пользователь успешно удалён");
-        } catch (UserNotFoundException e) {
+        } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }

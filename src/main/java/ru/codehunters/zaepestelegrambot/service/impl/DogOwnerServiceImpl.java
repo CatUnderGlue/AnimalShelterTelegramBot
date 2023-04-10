@@ -2,7 +2,7 @@ package ru.codehunters.zaepestelegrambot.service.impl;
 
 
 import org.springframework.stereotype.Service;
-import ru.codehunters.zaepestelegrambot.exception.DogOwnerNotFoundException;
+import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.User;
 import ru.codehunters.zaepestelegrambot.model.owners.DogOwner;
 import ru.codehunters.zaepestelegrambot.repository.DogOwnerRepo;
@@ -35,7 +35,7 @@ public class DogOwnerServiceImpl implements DogOwnerService {
     public DogOwner getById(Long id) {
         Optional<DogOwner> optionalDogOwner = dogOwnerRepo.findById(id);
         if (optionalDogOwner.isEmpty()) {
-            throw new DogOwnerNotFoundException();
+            throw new NotFoundException("Хозяин собаки не найден!");
         }
         return optionalDogOwner.get();
     }
@@ -44,7 +44,7 @@ public class DogOwnerServiceImpl implements DogOwnerService {
     public List<DogOwner> getAll() {
         List<DogOwner> all = dogOwnerRepo.findAll();
         if (all.isEmpty()) {
-            throw new DogOwnerNotFoundException();
+            throw new NotFoundException("Хозяин собаки не найден!");
         }
         return all;
     }
@@ -52,7 +52,7 @@ public class DogOwnerServiceImpl implements DogOwnerService {
     @Override
     public DogOwner update(DogOwner dogOwner) {
         if (dogOwner.getTelegramId() == null || getById(dogOwner.getTelegramId()) == null) {
-            throw new DogOwnerNotFoundException();
+            throw new NotFoundException("Хозяин собаки не найден!");
         }
         return dogOwnerRepo.save(dogOwner);
     }

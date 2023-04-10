@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.codehunters.zaepestelegrambot.exception.CatOwnerNotFoundException;
+import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.TrialPeriod;
 import ru.codehunters.zaepestelegrambot.model.owners.CatOwner;
 import ru.codehunters.zaepestelegrambot.service.CatOwnerService;
@@ -68,7 +68,7 @@ public class CatOwnerController {
     public ResponseEntity<Object> getAll() {
         try {
             return ResponseEntity.ok(catOwnerService.getAll());
-        } catch (CatOwnerNotFoundException e) {
+        } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
@@ -82,7 +82,7 @@ public class CatOwnerController {
         try {
             CatOwner catOwner = catOwnerService.getById(catOwnerId);
             return ResponseEntity.ok().body(catOwner);
-        } catch (CatOwnerNotFoundException e) {
+        } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
@@ -100,7 +100,7 @@ public class CatOwnerController {
                     null, null)));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
-        } catch (CatOwnerNotFoundException e) {
+        } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
@@ -114,7 +114,7 @@ public class CatOwnerController {
         try {
             catOwnerService.deleteById(catOwnerId);
             return ResponseEntity.ok().body("Владелец кота успешно удалён");
-        } catch (CatOwnerNotFoundException e) {
+        } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
