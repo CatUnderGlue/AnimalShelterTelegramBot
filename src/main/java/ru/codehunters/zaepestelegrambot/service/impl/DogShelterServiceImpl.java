@@ -25,12 +25,13 @@ public class DogShelterServiceImpl implements ShelterService<DogShelter, Dog> {
 
     @Override
     public DogShelter updateShelter(DogShelter shelter) {
-        Optional<DogShelter> dogShelterId = dogRepo.findById(shelter.getId());
-        if(dogShelterId.isEmpty()){
+        Optional<DogShelter> shelterId = dogRepo.findById(shelter.getId());
+        if(shelterId.isEmpty()){
             throw new NotFoundException("Приют не найден. Собачки остались без дома");
         }
-        EntityUtils.copyNonNullFields(dogShelterId.get(), shelter);
-        return dogRepo.save(shelter);
+       DogShelter currentShelter = shelterId.get();
+        EntityUtils.copyNonNullFields(shelter, currentShelter);
+        return dogRepo.save(currentShelter);
     }
 
 
