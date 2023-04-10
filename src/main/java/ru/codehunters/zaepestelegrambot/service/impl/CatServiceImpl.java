@@ -22,6 +22,10 @@ public class CatServiceImpl implements CatService {
     }
 
     @Override
+    public Cat getByUserId(Long id) {
+        return catRepo.findByOwnerId(id).orElseThrow(CatNotFoundException::new);
+    }
+    @Override
     public Cat create(Cat cat) {
         return catRepo.save(cat);
     }

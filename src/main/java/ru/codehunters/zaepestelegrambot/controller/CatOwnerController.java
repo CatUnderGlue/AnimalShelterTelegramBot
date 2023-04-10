@@ -51,9 +51,9 @@ public class CatOwnerController {
     @Operation(
             summary = "Создать хозяина кота в бд из пользователя"
     )
-    public ResponseEntity<CatOwner> create(@RequestParam @Parameter(description = "Пользователь") User user) {
+    public ResponseEntity<CatOwner> create(@RequestParam @Parameter(description = "Пользователь") Long id) {
         try {
-            return ResponseEntity.ok(catOwnerService.create(user));
+            return ResponseEntity.ok(catOwnerService.create(id));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
@@ -75,12 +75,8 @@ public class CatOwnerController {
     @Operation(
             summary = "Получение владельца кота по id"
     )
-    @Parameter(
-            name = "id",
-            description = "Id владельца кота",
-            example = "1"
-    )
-    public ResponseEntity<Object> getById(@RequestParam Long catOwnerId) {
+
+    public ResponseEntity<Object> getById(@RequestParam @Parameter(description = "Id владельца кота")Long catOwnerId) {
         try {
             CatOwner catOwner = catOwnerService.getById(catOwnerId);
             return ResponseEntity.ok().body(catOwner);
@@ -107,38 +103,12 @@ public class CatOwnerController {
         }
     }
 
-    @DeleteMapping()
-    @Operation(
-            summary = "Удаление владельца кота"
-    )
-    @io.swagger.v3.oas.annotations.parameters.RequestBody(
-            description = "Владелец кота в формате json",
-            content = {
-                    @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = CatOwner.class)
-                    )
-            }
-    )
-    public ResponseEntity<String> delete(@RequestBody CatOwner catOwner) {
-        try {
-            catOwnerService.delete(catOwner);
-            return ResponseEntity.ok().body("Владелец кота успешно удалён");
-        } catch (CatOwnerNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-    }
-
     @DeleteMapping("id")
     @Operation(
             summary = "Удаление владельца кота по id"
     )
-    @Parameter(
-            name = "id",
-            description = "Id владельца кота",
-            example = "1"
-    )
-    public ResponseEntity<String> deleteById(@RequestParam Long catOwnerId) {
+
+    public ResponseEntity<String> deleteById(@RequestParam @Parameter(description = "Id владельца кота")Long catOwnerId) {
         try {
             catOwnerService.deleteById(catOwnerId);
             return ResponseEntity.ok().body("Владелец кота успешно удалён");
