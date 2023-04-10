@@ -1,5 +1,6 @@
 package ru.codehunters.zaepestelegrambot.model.shelters;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -44,6 +45,7 @@ public class DogShelter {
     /**
      * Список животных в приюте
      */
+    @Hidden
     @OneToMany(mappedBy = "shelterId", cascade = CascadeType.ALL)
     private List<Dog> list; // Список животных в приюте
     /**
