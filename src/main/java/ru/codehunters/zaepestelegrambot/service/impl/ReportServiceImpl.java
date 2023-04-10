@@ -45,7 +45,7 @@ public class ReportServiceImpl implements ReportService {
     public List<Report> getAll() {
         List<Report> all = reportRepo.findAll();
         if (all.isEmpty()) {
-            throw new NotFoundException("Отчёт не найден!");
+            throw new NotFoundException("Отчёты не найдены!");
         }
         return all;
     }
@@ -54,7 +54,7 @@ public class ReportServiceImpl implements ReportService {
     public List<Report> gelAllByTrialPeriodId(Long id) {
         List<Report> allByTrialPeriodId = reportRepo.findAllByTrialPeriodId(id);
         if (allByTrialPeriodId.isEmpty()) {
-            throw new NotFoundException("Отчёт не найден!");
+            throw new NotFoundException("Отчёты не найдены!");
         }
         return allByTrialPeriodId;
     }
