@@ -2,7 +2,6 @@ package ru.codehunters.zaepestelegrambot.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.codehunters.zaepestelegrambot.exception.BadRequestException;
 import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.animals.Dog;
 import ru.codehunters.zaepestelegrambot.model.shelters.DogShelter;
@@ -21,9 +20,6 @@ public class DogShelterServiceImpl implements ShelterService<DogShelter, Dog> {
 
     @Override
     public DogShelter addShelter(DogShelter shelter) {
-        if (EntityUtils.checkForObjectNullEmptyOrWhitespace(shelter)) {
-            throw new BadRequestException("Данные приюта не заполнены");
-        }
         return dogRepo.save(shelter);
     }
 
