@@ -34,7 +34,7 @@ public class VolunteerServiceImpl implements VolunteerService {
     public List<Volunteer> getAll() {
         List<Volunteer> all = volunteerRepo.findAll();
         if (all.isEmpty()) {
-            throw new NotFoundException("Волонтёр не найден!");
+            throw new NotFoundException("Волонтёры не найдены!");
         }
         return all;
     }

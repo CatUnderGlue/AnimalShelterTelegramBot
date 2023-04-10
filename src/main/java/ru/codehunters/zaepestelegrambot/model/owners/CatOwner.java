@@ -30,7 +30,7 @@ public class CatOwner{
     @Column
     private String phone;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ownerId")
+    @OneToMany(mappedBy = "ownerId")
     private List<Cat> catList;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "ownerId")

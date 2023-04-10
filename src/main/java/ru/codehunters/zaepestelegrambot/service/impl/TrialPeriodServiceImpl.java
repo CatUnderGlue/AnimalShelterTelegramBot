@@ -34,7 +34,7 @@ public class TrialPeriodServiceImpl implements TrialPeriodService {
     public List<TrialPeriod> getAll() {
         List<TrialPeriod> all = trialPeriodRepo.findAll();
         if (all.isEmpty()) {
-            throw new NotFoundException("Испытательный срок не найден!");
+            throw new NotFoundException("Испытательные сроки не найдены!");
         }
         return all;
     }
@@ -43,7 +43,7 @@ public class TrialPeriodServiceImpl implements TrialPeriodService {
     public List<TrialPeriod> getAllByOwnerId(Long ownerId) {
         List<TrialPeriod> allByOwnerId = trialPeriodRepo.findAllByOwnerId(ownerId);
         if (allByOwnerId.isEmpty()) {
-            throw new NotFoundException("Испытательный срок не найден!");
+            throw new NotFoundException("Испытательные сроки не найдены!");
         }
         return allByOwnerId;
     }

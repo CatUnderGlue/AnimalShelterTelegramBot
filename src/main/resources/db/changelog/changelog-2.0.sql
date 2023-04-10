@@ -11,3 +11,11 @@ alter table catowner
 alter table dogowner
     rename column name to first_name;
 
+--changeset catunderglue:2
+
+alter table trial_periods
+    add animal_type varchar(255);
+
+alter table trial_periods
+    add animal_id bigint;
+

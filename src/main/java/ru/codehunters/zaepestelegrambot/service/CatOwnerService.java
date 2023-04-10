@@ -1,6 +1,6 @@
 package ru.codehunters.zaepestelegrambot.service;
 
-import ru.codehunters.zaepestelegrambot.model.User;
+import ru.codehunters.zaepestelegrambot.model.TrialPeriod;
 import ru.codehunters.zaepestelegrambot.model.owners.CatOwner;
 
 import java.util.List;
@@ -12,14 +12,14 @@ public interface CatOwnerService {
      * @param catOwner Хозяин кота для сохранения в бд
      * @return Сохранённый хозяин кота
      */
-    CatOwner create(CatOwner catOwner);
+    CatOwner create(CatOwner catOwner, TrialPeriod.AnimalType animalType, Long animalId);
 
     /**
      * Создание хозяина кота в бд из пользователя
-     * @param user Пользователь из бота для сохранения в бд в качестве хозяина кота
+     * @param id Пользователь из бота для сохранения в бд в качестве хозяина кота
      * @return Сохранённый хозяин кота
      */
-    CatOwner create(User user);
+    CatOwner create(Long id, TrialPeriod.AnimalType animalType, Long animalId);
 
     /**
      * Получение хозяина кота по id
