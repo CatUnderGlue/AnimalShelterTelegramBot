@@ -50,10 +50,9 @@ public class TrialPeriodServiceImpl implements TrialPeriodService {
 
     @Override
     public TrialPeriod update(TrialPeriod trialPeriod) {
-        if (trialPeriod.getId() == null || getById(trialPeriod.getId()) == null) {
-            throw new NotFoundException("Испытательный срок не найден!");
-        }
-        return trialPeriodRepo.save(trialPeriod);
+        TrialPeriod currentTrialPeriod = getById(trialPeriod.getId());
+        EntityUtils.copyNonNullFields(trialPeriod, currentTrialPeriod);
+        return trialPeriodRepo.save(currentTrialPeriod);
     }
 
     @Override

@@ -18,7 +18,7 @@ public interface ReportService {
     Long create(Report report);
 
     /**
-     * Получение отчёта из бд по id
+     * Получение отчёта из бд по id<br>
      * Используется метод репозитория {@link ReportRepo#findById(Object)}
      * @param id id отчёта
      * @return Отчёт

@@ -61,10 +61,9 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public Report update(Report report) {
-        if (report.getId() == null || getById(report.getId()) == null) {
-            throw new NotFoundException("Отчёт не найден!");
-        }
-        return reportRepo.save(report);
+        Report currentReport = getById(report.getId());
+        EntityUtils.copyNonNullFields(report, currentReport);
+        return reportRepo.save(currentReport);
     }
 
     @Override
