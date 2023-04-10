@@ -16,10 +16,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("cats/shelters")
-@Tag(name = "Кошачий приют")
+@Tag(name = "Кошачий приют", description = "CRUD-методы для работы с приютом")
 @RequiredArgsConstructor
 @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Всё хорошо, запрос выполнился."),
+        @ApiResponse(responseCode = "200", description = "Всё хорошо, кошки довольны."),
         @ApiResponse(responseCode = "400", description = "Есть ошибка в параметрах запроса."),
         @ApiResponse(responseCode = "404", description = "URL неверный или такого действия нет в веб-приложении."),
         @ApiResponse(responseCode = "500", description = "Во время выполнения запроса произошла ошибка на сервере.")
@@ -42,7 +42,7 @@ public class CatSheltersController {
     )
     public ResponseEntity<Object> update(
             @RequestBody @Parameter(description = "Объект приюта") CatShelter catShelter,
-            @RequestParam @Parameter(description = "Id приюта") long id) {
+            @RequestParam @Parameter(description = "id приюта") long id) {
 
         return ResponseEntity.ok().body(catShelterServiceImpl.updateShelter(catShelter, id));
     }
@@ -59,7 +59,7 @@ public class CatSheltersController {
     @Operation(
             summary = "Список животных приюта"
     )
-    public ResponseEntity<List<Cat>> getAnimal(@PathVariable long id) {
+    public ResponseEntity<List<Cat>> getAnimal(@PathVariable @Parameter(description = "id приюта") long id) {
         return ResponseEntity.ok(catShelterServiceImpl.getAnimal(id));
     }
 
@@ -68,7 +68,7 @@ public class CatSheltersController {
             summary = "Удаление приюта"
     )
 
-    public ResponseEntity<String> delete(@PathVariable long id) {
+    public ResponseEntity<String> delete(@PathVariable @Parameter(description = "id приюта") long id) {
         return ResponseEntity.ok(catShelterServiceImpl.delShelter(id));
     }
 
