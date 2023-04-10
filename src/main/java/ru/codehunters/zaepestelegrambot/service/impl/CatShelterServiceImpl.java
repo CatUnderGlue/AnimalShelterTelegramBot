@@ -31,8 +31,11 @@ public class CatShelterServiceImpl implements ShelterService<CatShelter, Cat> {
 
     @Override
     public CatShelter updateShelter(CatShelter catShelter) {
-        CatShelter catShelterId = catRepo.findById(catShelter.getId()).orElseThrow();
-        catShelter = valService.updateCompleteRecord(catShelter, catShelterId);
+        Optional<CatShelter> catShelterId = catRepo.findById(catShelter.getId());
+        if (catShelterId.isEmpty()){
+            throw new NotFoundException("Приют не найден. Кошки остались без дома");
+        }
+        catShelter = valService.updateCompleteRecord(catShelter, catShelterId.get());
         return catRepo.save(catShelter);
     }
 

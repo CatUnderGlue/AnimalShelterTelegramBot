@@ -21,7 +21,7 @@ public class DogShelter {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idShelter;
+    private Long id;
     /**
      * Название приюта
      */
@@ -46,7 +46,7 @@ public class DogShelter {
      * Список животных в приюте
      */
     @OneToMany(mappedBy = "shelterId", cascade = CascadeType.ALL)
-    private List<Dog> list; // Список животных в приюте
+    private List<Dog> list;
     /**
      * Способ связи с охраной
      */
@@ -59,7 +59,7 @@ public class DogShelter {
     private String safetyAdvice;
 
     public DogShelter(Long idShelter, String name, String location, String timetable, String aboutMe, String security, String safetyAdvice) {
-        this.idShelter = idShelter;
+        this.id = idShelter;
         this.name = name;
         this.location = location;
         this.timetable = timetable;

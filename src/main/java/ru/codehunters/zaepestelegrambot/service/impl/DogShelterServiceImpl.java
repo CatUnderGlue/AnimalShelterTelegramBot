@@ -31,8 +31,11 @@ public class DogShelterServiceImpl implements ShelterService<DogShelter, Dog> {
 
     @Override
     public DogShelter updateShelter(DogShelter shelter) {
-        DogShelter shelterId = dogRepo.findById(shelter.getIdShelter()).orElseThrow();
-        shelter = valService.updateCompleteRecord(shelter, shelterId);
+        Optional<DogShelter> dogShelterId = dogRepo.findById(shelter.getId());
+        if(dogShelterId.isEmpty()){
+            throw new NotFoundException("Приют не найден. Собачки остались без дома");
+        }
+        shelter = valService.updateCompleteRecord(shelter, dogShelterId.get());
         return dogRepo.save(shelter);
     }
 

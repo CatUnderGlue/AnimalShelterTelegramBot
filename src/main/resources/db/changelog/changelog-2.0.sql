@@ -19,3 +19,6 @@ alter table trial_periods
 alter table trial_periods
     add animal_id bigint;
 
+--changeset pro100:3
+alter table dog_Shelter
+    rename column id_shelter to id;

@@ -56,6 +56,11 @@ public class CatShelter {
    @Column(name = "safety_advice")
    private String safetyAdvice;
 
+   /**
+    * Конструктор
+    *
+    */
+
    public CatShelter(Long id, String name, String location, String timetable, String aboutMe, String security, String safetyAdvice) {
       this.id = id;
       this.name = name;
