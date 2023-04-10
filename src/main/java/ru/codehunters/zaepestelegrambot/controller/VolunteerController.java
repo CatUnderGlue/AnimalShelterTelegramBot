@@ -2,15 +2,13 @@ package ru.codehunters.zaepestelegrambot.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.codehunters.zaepestelegrambot.exception.VolunteerNotFoundException;
+import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.Volunteer;
 import ru.codehunters.zaepestelegrambot.service.VolunteerService;
 
@@ -47,7 +45,7 @@ public class VolunteerController {
     public ResponseEntity<Object> getAll() {
         try {
             return ResponseEntity.ok(volunteerService.getAll());
-        } catch (VolunteerNotFoundException e) {
+        } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
@@ -58,7 +56,7 @@ public class VolunteerController {
         try {
             Volunteer volunteer = volunteerService.getById(volunteerId);
             return ResponseEntity.ok().body(volunteer);
-        } catch (VolunteerNotFoundException e) {
+        } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
@@ -72,7 +70,7 @@ public class VolunteerController {
             return ResponseEntity.ok(volunteerService.create(new Volunteer(telegramId, firstName, lastName)));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
-        } catch (VolunteerNotFoundException e) {
+        } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
@@ -83,7 +81,7 @@ public class VolunteerController {
         try {
             volunteerService.deleteById(volunteerId);
             return ResponseEntity.ok().body("Волонтёр успешно удалён");
-        } catch (VolunteerNotFoundException e) {
+        } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }

@@ -1,7 +1,7 @@
 package ru.codehunters.zaepestelegrambot.service.impl;
 
 import org.springframework.stereotype.Service;
-import ru.codehunters.zaepestelegrambot.exception.ReportNotFoundException;
+import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.Report;
 import ru.codehunters.zaepestelegrambot.repository.ReportRepo;
 import ru.codehunters.zaepestelegrambot.service.ReportService;
@@ -27,7 +27,7 @@ public class ReportServiceImpl implements ReportService {
     public Report getById(Long id) {
         Optional<Report> optionalReport = reportRepo.findById(id);
         if (optionalReport.isEmpty()){
-            throw new ReportNotFoundException();
+            throw new NotFoundException("Отчёт не найден!");
         }
         return optionalReport.get();
     }
@@ -36,7 +36,7 @@ public class ReportServiceImpl implements ReportService {
     public Report getByDateAndTrialId(LocalDate date, Long id) {
         Optional<Report> optionalReport = reportRepo.findByReceiveDateAndTrialPeriodId(date, id);
         if (optionalReport.isEmpty()){
-            throw new ReportNotFoundException();
+            throw new NotFoundException("Отчёт не найден!");
         }
         return optionalReport.get();
     }
@@ -45,7 +45,7 @@ public class ReportServiceImpl implements ReportService {
     public List<Report> getAll() {
         List<Report> all = reportRepo.findAll();
         if (all.isEmpty()) {
-            throw new ReportNotFoundException();
+            throw new NotFoundException("Отчёт не найден!");
         }
         return all;
     }
@@ -54,7 +54,7 @@ public class ReportServiceImpl implements ReportService {
     public List<Report> gelAllByTrialPeriodId(Long id) {
         List<Report> allByTrialPeriodId = reportRepo.findAllByTrialPeriodId(id);
         if (allByTrialPeriodId.isEmpty()) {
-            throw new ReportNotFoundException();
+            throw new NotFoundException("Отчёт не найден!");
         }
         return allByTrialPeriodId;
     }
@@ -62,7 +62,7 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public Report update(Report report) {
         if (report.getId() == null || getById(report.getId()) == null) {
-            throw new ReportNotFoundException();
+            throw new NotFoundException("Отчёт не найден!");
         }
         return reportRepo.save(report);
     }
@@ -75,6 +75,5 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public void deleteById(Long id) {
         reportRepo.deleteById(getById(id).getId());
-
     }
 }

@@ -2,15 +2,13 @@ package ru.codehunters.zaepestelegrambot.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.codehunters.zaepestelegrambot.exception.TrialPeriodNotFoundException;
+import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.TrialPeriod;
 import ru.codehunters.zaepestelegrambot.service.TrialPeriodService;
 
@@ -56,7 +54,7 @@ public class TrialPeriodController {
     public ResponseEntity<Object> getAll() {
         try {
             return ResponseEntity.ok(trialPeriodService.getAll());
-        } catch (TrialPeriodNotFoundException e) {
+        } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
@@ -66,7 +64,7 @@ public class TrialPeriodController {
     public ResponseEntity<Object> getAllByOwnerId(@RequestParam @Parameter(description = "Id хозяина животного") Long ownerId) {
         try {
             return ResponseEntity.ok(trialPeriodService.getAllByOwnerId(ownerId));
-        } catch (TrialPeriodNotFoundException e) {
+        } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
@@ -83,7 +81,7 @@ public class TrialPeriodController {
     public ResponseEntity<Object> getById(@RequestParam Long id) {
         try {
             return ResponseEntity.ok(trialPeriodService.getById(id));
-        } catch (TrialPeriodNotFoundException e) {
+        } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
@@ -101,29 +99,7 @@ public class TrialPeriodController {
             return ResponseEntity.ok(trialPeriodService.update(new TrialPeriod(id, startDate, endDate, startDate.plusDays(1), new ArrayList<>(), result, ownerId)));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
-        } catch (TrialPeriodNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-    }
-
-    @DeleteMapping()
-    @Operation(
-            summary = "Удаление испытательного срока"
-    )
-    @io.swagger.v3.oas.annotations.parameters.RequestBody(
-            description = "Испытательный срок в формате json",
-            content = {
-                    @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = TrialPeriod.class)
-                    )
-            }
-    )
-    public ResponseEntity<String> delete(@RequestBody TrialPeriod trialPeriod) {
-        try {
-            trialPeriodService.delete(trialPeriod);
-            return ResponseEntity.ok().body("Испытательный срок успешно удалён");
-        } catch (TrialPeriodNotFoundException e) {
+        } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
@@ -134,7 +110,7 @@ public class TrialPeriodController {
         try {
             trialPeriodService.deleteById(id);
             return ResponseEntity.ok().body("Испытательный срок успешно удалён");
-        } catch (TrialPeriodNotFoundException e) {
+        } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }

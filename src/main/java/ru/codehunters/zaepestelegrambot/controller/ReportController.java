@@ -3,15 +3,13 @@ package ru.codehunters.zaepestelegrambot.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.codehunters.zaepestelegrambot.exception.ReportNotFoundException;
+import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.Report;
 import ru.codehunters.zaepestelegrambot.service.ReportService;
 
@@ -59,7 +57,7 @@ public class ReportController {
     public ResponseEntity<Object> getAll() {
         try {
             return ResponseEntity.ok(reportService.getAll());
-        } catch (ReportNotFoundException e) {
+        } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
@@ -71,7 +69,7 @@ public class ReportController {
     public ResponseEntity<Object> getAllByTrialPeriodId(@RequestParam Long id) {
         try {
             return ResponseEntity.ok(reportService.gelAllByTrialPeriodId(id));
-        } catch (ReportNotFoundException e) {
+        } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
@@ -96,25 +94,18 @@ public class ReportController {
     public ResponseEntity<Object> getByDateAndTrialId(@RequestParam LocalDate date, @RequestParam Long id) {
         try {
             return ResponseEntity.ok(reportService.getByDateAndTrialId(date, id));
-        } catch (ReportNotFoundException e) {
+        } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
     @GetMapping("id")
-    @Operation(
-            summary = "Получение отчёта по id"
-    )
-    @Parameter(
-            name = "id",
-            description = "Id испытательного срока",
-            example = "1"
-    )
-    public ResponseEntity<Object> getById(@RequestParam Long reportId) {
+    @Operation(summary = "Получение отчёта по id")
+    public ResponseEntity<Object> getById(@RequestParam @Parameter(description = "Id испытательного срока") Long reportId) {
         try {
             Report report = reportService.getById(reportId);
             return ResponseEntity.ok().body(report);
-        } catch (ReportNotFoundException e) {
+        } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
@@ -134,29 +125,7 @@ public class ReportController {
             return ResponseEntity.ok(reportService.update(new Report(id ,photoId, foodRation, generalHealth, behaviorChanges, receiveDate, trialPeriodId)));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
-        } catch (ReportNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-    }
-
-    @DeleteMapping()
-    @Operation(
-            summary = "Удаление отчёта"
-    )
-    @io.swagger.v3.oas.annotations.parameters.RequestBody(
-            description = "Отчёт в формате json",
-            content = {
-                    @Content(
-                            mediaType = "application/json",
-                            schema = @Schema(implementation = Report.class)
-                    )
-            }
-    )
-    public ResponseEntity<String> delete(@RequestBody Report report) {
-        try {
-            reportService.delete(report);
-            return ResponseEntity.ok().body("Отчёт успешно удалён");
-        } catch (ReportNotFoundException e) {
+        } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
@@ -174,7 +143,7 @@ public class ReportController {
         try {
             reportService.deleteById(id);
             return ResponseEntity.ok().body("Отчёт успешно удалён");
-        } catch (ReportNotFoundException e) {
+        } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
