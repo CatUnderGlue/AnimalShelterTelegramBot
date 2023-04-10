@@ -17,7 +17,7 @@ public class User {
     private Long telegramId;
 
     @Column
-    private String name;
+    private String firstName;
 
     @Column
     private String lastName;
