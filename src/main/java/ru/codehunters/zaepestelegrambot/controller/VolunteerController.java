@@ -64,10 +64,10 @@ public class VolunteerController {
     @PutMapping
     @Operation(summary = "Изменить волонтёра")
     public ResponseEntity<Object> update(@RequestParam @Parameter(description = "Телеграм id волонтёра") Long telegramId,
-                                            @RequestParam @Parameter(description = "Имя") String firstName,
-                                            @RequestParam @Parameter(description = "Фамилия") String lastName) {
+                                            @RequestParam(required = false) @Parameter(description = "Имя") String firstName,
+                                            @RequestParam(required = false) @Parameter(description = "Фамилия") String lastName) {
         try {
-            return ResponseEntity.ok(volunteerService.create(new Volunteer(telegramId, firstName, lastName)));
+            return ResponseEntity.ok(volunteerService.update(new Volunteer(telegramId, firstName, lastName)));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         } catch (NotFoundException e) {

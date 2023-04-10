@@ -13,7 +13,7 @@ public class EntityUtils {
                     field.set(toObj, value);
                 }
             } catch (IllegalAccessException e) {
-                System.out.println("Мы опять обосрались");
+                System.out.println("Что-то пошло не так");
             }
         }
     }

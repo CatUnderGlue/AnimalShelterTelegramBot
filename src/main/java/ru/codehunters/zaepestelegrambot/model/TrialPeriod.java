@@ -41,6 +41,9 @@ public class TrialPeriod {
     @OneToMany(mappedBy = "trialPeriodId", cascade = CascadeType.ALL)
     private List<Report> reports;
 
+    /**
+     * Стадия испытательного срока
+     */
     @Enumerated(EnumType.STRING)
     @Column(name = "result")
     private Result result;

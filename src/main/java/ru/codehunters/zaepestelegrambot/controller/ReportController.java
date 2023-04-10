@@ -113,13 +113,13 @@ public class ReportController {
     @Operation(
             summary = "Изменить отчёт"
     )
-    public ResponseEntity<Object> update(@RequestParam @Parameter(description = "Id отчёта") Long id,
-                                          @RequestParam @Parameter(description = "Id фотографии") String photoId,
-                                          @RequestParam @Parameter(description = "Рацион животного") String foodRation,
-                                          @RequestParam @Parameter(description = "Общее самочувствие и привыкание к новому месту") String generalHealth,
-                                          @RequestParam @Parameter(description = "Изменение в поведении") String behaviorChanges,
-                                          @RequestParam @Parameter(description = "Дата получения") LocalDate receiveDate,
-                                          @RequestParam @Parameter(description = "Id испытательного срока") Long trialPeriodId) {
+    public ResponseEntity<Object> update(@RequestParam(required = false) @Parameter(description = "Id отчёта") Long id,
+                                          @RequestParam(required = false) @Parameter(description = "Id фотографии") String photoId,
+                                          @RequestParam(required = false) @Parameter(description = "Рацион животного") String foodRation,
+                                          @RequestParam(required = false) @Parameter(description = "Общее самочувствие и привыкание к новому месту") String generalHealth,
+                                          @RequestParam(required = false) @Parameter(description = "Изменение в поведении") String behaviorChanges,
+                                          @RequestParam(required = false) @Parameter(description = "Дата получения") LocalDate receiveDate,
+                                          @RequestParam(required = false) @Parameter(description = "Id испытательного срока") Long trialPeriodId) {
         try {
             return ResponseEntity.ok(reportService.update(new Report(id ,photoId, foodRation, generalHealth, behaviorChanges, receiveDate, trialPeriodId)));
         } catch (IllegalArgumentException e) {

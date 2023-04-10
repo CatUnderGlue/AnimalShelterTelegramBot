@@ -1,14 +1,14 @@
 package ru.codehunters.zaepestelegrambot.service.impl;
 
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.Volunteer;
 import ru.codehunters.zaepestelegrambot.repository.VolunteerRepo;
 import ru.codehunters.zaepestelegrambot.service.VolunteerService;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -41,10 +41,9 @@ public class VolunteerServiceImpl implements VolunteerService {
 
     @Override
     public Volunteer update(Volunteer volunteer) {
-        if (volunteer.getTelegramId() == null || getById(volunteer.getTelegramId()) == null) {
-            throw new NotFoundException("Волонтёр не найден!");
-        }
-        return volunteerRepo.save(volunteer);
+        Volunteer currentVolunteer = getById(volunteer.getTelegramId());
+        EntityUtils.copyNonNullFields(volunteer, currentVolunteer);
+        return volunteerRepo.save(currentVolunteer);
     }
 
     @Override

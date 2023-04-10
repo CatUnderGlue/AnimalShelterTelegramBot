@@ -93,15 +93,16 @@ public class TrialPeriodController {
             summary = "Изменить испытательный срок"
     )
     public ResponseEntity<Object> update(@RequestParam @Parameter(description = "Id испытательного срока") Long id,
-                                         @RequestParam @Parameter(description = "Дата начала испытательного срока") LocalDate startDate,
-                                         @RequestParam @Parameter(description = "Дата окончания испытательного срока") LocalDate endDate,
-                                         @RequestParam @Parameter(description = "Состояние") TrialPeriod.Result result,
-                                         @RequestParam @Parameter(description = "Id хозяина животного") Long ownerId,
-                                         @RequestParam @Parameter(description = "Тип взятого животного") TrialPeriod.AnimalType animalType,
-                                         @RequestParam @Parameter(description = "Id животного") Long animalId) {
+                                         @RequestParam(required = false) @Parameter(description = "Дата начала испытательного срока") LocalDate startDate,
+                                         @RequestParam(required = false) @Parameter(description = "Дата окончания испытательного срока") LocalDate endDate,
+                                         @RequestParam(required = false) @Parameter(description = "Дата последнего отчёта") LocalDate lastReportDate,
+                                         @RequestParam(required = false) @Parameter(description = "Состояние") TrialPeriod.Result result,
+                                         @RequestParam(required = false) @Parameter(description = "Id хозяина животного") Long ownerId,
+                                         @RequestParam(required = false) @Parameter(description = "Тип взятого животного") TrialPeriod.AnimalType animalType,
+                                         @RequestParam(required = false) @Parameter(description = "Id животного") Long animalId) {
         try {
             return ResponseEntity.ok(trialPeriodService.update(new TrialPeriod(id, startDate, endDate,
-                    startDate.plusDays(1), new ArrayList<>(), result, ownerId, animalType, animalId)));
+                    lastReportDate, new ArrayList<>(), result, ownerId, animalType, animalId)));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         } catch (NotFoundException e) {
