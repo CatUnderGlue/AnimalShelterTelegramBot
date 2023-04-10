@@ -1,6 +1,6 @@
 package ru.codehunters.zaepestelegrambot.service;
 
-import ru.codehunters.zaepestelegrambot.model.User;
+import ru.codehunters.zaepestelegrambot.model.TrialPeriod;
 import ru.codehunters.zaepestelegrambot.model.owners.CatOwner;
 import ru.codehunters.zaepestelegrambot.model.owners.DogOwner;
 
@@ -13,14 +13,14 @@ public interface DogOwnerService {
      * @param dogOwner Хозяин собаки для сохранения в бд
      * @return Сохранённый хозяин собаки
      */
-    DogOwner create(DogOwner dogOwner);
+    DogOwner create(DogOwner dogOwner, TrialPeriod.AnimalType animalType, Long animalId);
 
     /**
      * Создание хозяина собаки в бд из пользователя
-     * @param user Пользователь из бота для сохранения в бд в качестве хозяина собаки
+     * @param id Пользователь из бота для сохранения в бд в качестве хозяина собаки
      * @return Сохранённый хозяин собаки
      */
-    DogOwner create(User user);
+    DogOwner create(Long id, TrialPeriod.AnimalType animalType, Long animalId);
 
     /**
      * Получение хозяина собаки по id

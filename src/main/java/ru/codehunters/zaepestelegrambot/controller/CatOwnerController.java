@@ -37,11 +37,10 @@ public class CatOwnerController {
                                            @RequestParam @Parameter(description = "Имя") String firstName,
                                            @RequestParam @Parameter(description = "Фамилия") String lastName,
                                            @RequestParam @Parameter(description = "Телефон") String phone,
-                                           @RequestParam @Parameter(description = "Тип взятого животного") TrialPeriod.AnimalType animalType,
-                                           @RequestParam @Parameter(description = "Id животного") Long animalId) {
+                                           @RequestParam @Parameter(description = "Id кота") Long animalId) {
         try {
             return ResponseEntity.ok(catOwnerService.create(new CatOwner(telegramId, firstName, lastName, phone,
-                    null, null), animalType, animalId));
+                    null, null), TrialPeriod.AnimalType.CAT, animalId));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
@@ -52,10 +51,9 @@ public class CatOwnerController {
             summary = "Создать хозяина кота в бд из пользователя"
     )
     public ResponseEntity<CatOwner> create(@RequestParam @Parameter(description = "Пользователь") Long id,
-                                           @RequestParam @Parameter(description = "Тип животного") TrialPeriod.AnimalType animalType,
-                                           @RequestParam @Parameter(description = "Id животного") Long animalId) {
+                                           @RequestParam @Parameter(description = "Id кота") Long animalId) {
         try {
-            return ResponseEntity.ok(catOwnerService.create(id, animalType, animalId));
+            return ResponseEntity.ok(catOwnerService.create(id, TrialPeriod.AnimalType.CAT, animalId));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }

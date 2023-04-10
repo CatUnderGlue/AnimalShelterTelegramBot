@@ -48,17 +48,17 @@ public class DogSheltersController {
     )
     public ResponseEntity<Object> update(@RequestParam @Parameter(description = "id приюта") long id,
                                          @RequestParam(required = false)
-                                         @Parameter(description = "Название приюта", allowEmptyValue = true) String name,
+                                         @Parameter(description = "Название приюта") String name,
                                          @RequestParam(required = false)
-                                             @Parameter(description = "Адрес и схема проезда", allowEmptyValue = true) String location,
+                                             @Parameter(description = "Адрес и схема проезда") String location,
                                          @RequestParam(required = false)
-                                             @Parameter(description = "Расписание работы приюта", allowEmptyValue = true) String timetable,
+                                             @Parameter(description = "Расписание работы приюта") String timetable,
                                          @RequestParam(required = false)
-                                             @Parameter(description = "О приюте", allowEmptyValue = true) String aboutMe,
+                                             @Parameter(description = "О приюте") String aboutMe,
                                          @RequestParam(required = false)
-                                             @Parameter(description = "Способ связи с охраной", allowEmptyValue = true) String security,
+                                             @Parameter(description = "Способ связи с охраной") String security,
                                          @RequestParam(required = false)
-                                             @Parameter(description = "Рекомендации о технике безопасности на территории приюта", allowEmptyValue = true) String safetyAdvice) {
+                                             @Parameter(description = "Рекомендации о технике безопасности на территории приюта") String safetyAdvice) {
         return ResponseEntity.ok().body(dogShelterService.updateShelter((new DogShelter(id, name, location, timetable, aboutMe, security, safetyAdvice))));
     }
 

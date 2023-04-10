@@ -25,14 +25,14 @@ public class CatShelterServiceImpl implements ShelterService<CatShelter, Cat> {
 
     @Override
     public CatShelter updateShelter(CatShelter catShelter) {
-        Optional<CatShelter> catShelterId = catRepo.findById(catShelter.getId());
-        if (catShelterId.isEmpty()){
+        Optional<CatShelter> shelterId = catRepo.findById(catShelter.getId());
+        if (shelterId.isEmpty()){
             throw new NotFoundException("Приют не найден. Кошки остались без дома");
         }
-        EntityUtils.copyNonNullFields(catShelterId.get(), catShelter);
-        return catRepo.save(catShelter);
+        CatShelter currentShelter = shelterId.get();
+        EntityUtils.copyNonNullFields(catShelter, currentShelter);
+        return catRepo.save(currentShelter);
     }
-
 
     @Override
     public List<CatShelter> getShelter() {
