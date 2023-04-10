@@ -4,6 +4,7 @@ import ru.codehunters.zaepestelegrambot.model.shelters.CatShelter;
 import ru.codehunters.zaepestelegrambot.model.shelters.DogShelter;
 
 
+
 public interface ShelterValidationService {
     /**
      * Проверка записи приютов на null и ""
@@ -25,4 +26,9 @@ public interface ShelterValidationService {
      */
     boolean isCompleteRecord(DogShelter shelter);
 
+    CatShelter updateCompleteRecord(CatShelter shelter, CatShelter shelterId);
+
+
+
+    DogShelter updateCompleteRecord(DogShelter shelter, DogShelter shelterId);
 }

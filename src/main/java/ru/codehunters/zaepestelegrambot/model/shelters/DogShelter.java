@@ -1,6 +1,6 @@
 package ru.codehunters.zaepestelegrambot.model.shelters;
 
-import io.swagger.v3.oas.annotations.Hidden;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -45,7 +45,6 @@ public class DogShelter {
     /**
      * Список животных в приюте
      */
-    @Hidden
     @OneToMany(mappedBy = "shelterId", cascade = CascadeType.ALL)
     private List<Dog> list; // Список животных в приюте
     /**
@@ -58,4 +57,23 @@ public class DogShelter {
      */
     @Column(name = "safety_advice")
     private String safetyAdvice;
+
+    public DogShelter(Long idShelter, String name, String location, String timetable, String aboutMe, String security, String safetyAdvice) {
+        this.idShelter = idShelter;
+        this.name = name;
+        this.location = location;
+        this.timetable = timetable;
+        this.aboutMe = aboutMe;
+        this.security = security;
+        this.safetyAdvice = safetyAdvice;
+    }
+
+    public DogShelter(String name, String location, String timetable, String aboutMe, String security, String safetyAdvice) {
+        this.name = name;
+        this.location = location;
+        this.timetable = timetable;
+        this.aboutMe = aboutMe;
+        this.security = security;
+        this.safetyAdvice = safetyAdvice;
+    }
 }
