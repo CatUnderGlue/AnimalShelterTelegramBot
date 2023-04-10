@@ -11,3 +11,11 @@ alter table catowner
 alter table dogowner
     rename column name to first_name;
 
+--changeset catunderglue:2
+
+alter table trial_periods
+    add is_cat boolean;
+
+alter table trial_periods
+    add animal_id bigint;
+

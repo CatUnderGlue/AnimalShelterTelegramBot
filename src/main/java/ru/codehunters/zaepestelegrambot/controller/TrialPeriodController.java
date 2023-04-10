@@ -37,11 +37,13 @@ public class TrialPeriodController {
             summary = "Создать испытательный срок"
     )
     public ResponseEntity<Long> create(@RequestParam @Parameter(description = "Дата начала испытательного срока") LocalDate startDate,
-                                       @RequestParam @Parameter(description = "Дата окончания испытательного срока") LocalDate endDate,
                                        @RequestParam @Parameter(description = "Состояние") TrialPeriod.Result result,
-                                       @RequestParam @Parameter(description = "Id хозяина животного") Long ownerId) {
+                                       @RequestParam @Parameter(description = "Id хозяина животного") Long ownerId,
+                                       @RequestParam @Parameter(description = "Является ли кошкой") Boolean isCat,
+                                       @RequestParam @Parameter(description = "Id животного") Long animalId) {
         try {
-            return ResponseEntity.ok(trialPeriodService.create(new TrialPeriod(startDate, endDate, startDate.plusDays(1), new ArrayList<>(), result, ownerId)));
+            return ResponseEntity.ok(trialPeriodService.create(new TrialPeriod(startDate, startDate.plusDays(30),
+                    startDate, new ArrayList<>(), result, ownerId, isCat, animalId)));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
@@ -91,12 +93,14 @@ public class TrialPeriodController {
             summary = "Изменить испытательный срок"
     )
     public ResponseEntity<Object> update(@RequestParam @Parameter(description = "Id испытательного срока") Long id,
-                                              @RequestParam @Parameter(description = "Дата начала испытательного срока") LocalDate startDate,
-                                              @RequestParam @Parameter(description = "Дата окончания испытательного срока") LocalDate endDate,
-                                              @RequestParam @Parameter(description = "Состояние") TrialPeriod.Result result,
-                                              @RequestParam @Parameter(description = "Id хозяина животного") Long ownerId) {
+                                         @RequestParam @Parameter(description = "Дата начала испытательного срока") LocalDate startDate,
+                                         @RequestParam @Parameter(description = "Дата окончания испытательного срока") LocalDate endDate,
+                                         @RequestParam @Parameter(description = "Состояние") TrialPeriod.Result result,
+                                         @RequestParam @Parameter(description = "Id хозяина животного") Long ownerId,
+                                         @RequestParam @Parameter(description = "Является ли кошкой") Boolean isCat,
+                                         @RequestParam @Parameter(description = "Id животного") Long animalId) {
         try {
-            return ResponseEntity.ok(trialPeriodService.update(new TrialPeriod(id, startDate, endDate, startDate.plusDays(1), new ArrayList<>(), result, ownerId)));
+            return ResponseEntity.ok(trialPeriodService.update(new TrialPeriod(id, startDate, endDate, startDate.plusDays(1), new ArrayList<>(), result, ownerId, isCat, animalId)));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         } catch (NotFoundException e) {
