@@ -40,10 +40,9 @@ public class ReportController {
                                        @RequestParam @Parameter(description = "Рацион животного") String foodRation,
                                        @RequestParam @Parameter(description = "Общее самочувствие и привыкание к новому месту") String generalHealth,
                                        @RequestParam @Parameter(description = "Изменение в поведении") String behaviorChanges,
-                                       @RequestParam @Parameter(description = "Дата получения") LocalDate receiveDate,
                                        @RequestParam @Parameter(description = "Id испытательного срока") Long trialPeriodId) {
         try {
-            return ResponseEntity.ok(reportService.create(new Report(photoId, foodRation, generalHealth, behaviorChanges, receiveDate, trialPeriodId)));
+            return ResponseEntity.ok(reportService.create(new Report(photoId, foodRation, generalHealth, behaviorChanges, LocalDate.now(), trialPeriodId)));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }

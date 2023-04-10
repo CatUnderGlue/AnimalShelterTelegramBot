@@ -2,8 +2,6 @@ package ru.codehunters.zaepestelegrambot.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -11,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.codehunters.zaepestelegrambot.exception.CatOwnerNotFoundException;
-import ru.codehunters.zaepestelegrambot.model.User;
+import ru.codehunters.zaepestelegrambot.model.TrialPeriod;
 import ru.codehunters.zaepestelegrambot.model.owners.CatOwner;
 import ru.codehunters.zaepestelegrambot.service.CatOwnerService;
 
@@ -38,10 +36,12 @@ public class CatOwnerController {
     public ResponseEntity<CatOwner> create(@RequestParam @Parameter(description = "Телеграм id владельца кота") Long telegramId,
                                            @RequestParam @Parameter(description = "Имя") String firstName,
                                            @RequestParam @Parameter(description = "Фамилия") String lastName,
-                                           @RequestParam @Parameter(description = "Телефон") String phone) {
+                                           @RequestParam @Parameter(description = "Телефон") String phone,
+                                           @RequestParam @Parameter(description = "Тип взятого животного") TrialPeriod.AnimalType animalType,
+                                           @RequestParam @Parameter(description = "Id животного") Long animalId) {
         try {
             return ResponseEntity.ok(catOwnerService.create(new CatOwner(telegramId, firstName, lastName, phone,
-                    null, null)));
+                    null, null), animalType, animalId));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
@@ -51,9 +51,11 @@ public class CatOwnerController {
     @Operation(
             summary = "Создать хозяина кота в бд из пользователя"
     )
-    public ResponseEntity<CatOwner> create(@RequestParam @Parameter(description = "Пользователь") Long id) {
+    public ResponseEntity<CatOwner> create(@RequestParam @Parameter(description = "Пользователь") Long id,
+                                           @RequestParam @Parameter(description = "Тип животного") TrialPeriod.AnimalType animalType,
+                                           @RequestParam @Parameter(description = "Id животного") Long animalId) {
         try {
-            return ResponseEntity.ok(catOwnerService.create(id));
+            return ResponseEntity.ok(catOwnerService.create(id, animalType, animalId));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
@@ -76,7 +78,7 @@ public class CatOwnerController {
             summary = "Получение владельца кота по id"
     )
 
-    public ResponseEntity<Object> getById(@RequestParam @Parameter(description = "Id владельца кота")Long catOwnerId) {
+    public ResponseEntity<Object> getById(@RequestParam @Parameter(description = "Id владельца кота") Long catOwnerId) {
         try {
             CatOwner catOwner = catOwnerService.getById(catOwnerId);
             return ResponseEntity.ok().body(catOwner);
@@ -94,7 +96,7 @@ public class CatOwnerController {
                                          @RequestParam @Parameter(description = "Фамилия") String lastName,
                                          @RequestParam @Parameter(description = "Телефон") String phone) {
         try {
-            return ResponseEntity.ok(catOwnerService.create(new CatOwner(telegramId, firstName, lastName, phone,
+            return ResponseEntity.ok(catOwnerService.update(new CatOwner(telegramId, firstName, lastName, phone,
                     null, null)));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
@@ -108,7 +110,7 @@ public class CatOwnerController {
             summary = "Удаление владельца кота по id"
     )
 
-    public ResponseEntity<String> deleteById(@RequestParam @Parameter(description = "Id владельца кота")Long catOwnerId) {
+    public ResponseEntity<String> deleteById(@RequestParam @Parameter(description = "Id владельца кота") Long catOwnerId) {
         try {
             catOwnerService.deleteById(catOwnerId);
             return ResponseEntity.ok().body("Владелец кота успешно удалён");

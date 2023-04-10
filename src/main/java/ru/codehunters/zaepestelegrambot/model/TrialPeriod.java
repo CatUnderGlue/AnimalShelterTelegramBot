@@ -20,6 +20,10 @@ public class TrialPeriod {
         NOT_SUCCESSFUL,
         EXTENDED
     }
+    public enum AnimalType {
+        CAT,
+        DOG
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,20 +48,21 @@ public class TrialPeriod {
     @Column(name = "owner_id")
     private Long ownerId;
 
-    @Column(name = "is_cat")
-    private boolean isCat;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "animal_type")
+    private AnimalType animalType;
 
     @Column(name = "animal_id")
     private Long animalId;
 
-    public TrialPeriod(LocalDate startDate, LocalDate endDate, LocalDate lastReportDate, List<Report> reports, Result result, Long ownerId, boolean isCat, Long animalId) {
+    public TrialPeriod(LocalDate startDate, LocalDate endDate, LocalDate lastReportDate, List<Report> reports, Result result, Long ownerId, AnimalType animalType, Long animalId) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.lastReportDate = lastReportDate;
         this.reports = reports;
         this.result = result;
         this.ownerId = ownerId;
-        this.isCat = isCat;
+        this.animalType = animalType;
         this.animalId = animalId;
     }
 }

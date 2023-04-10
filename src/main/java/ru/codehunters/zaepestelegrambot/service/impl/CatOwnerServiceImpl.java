@@ -23,17 +23,17 @@ public class CatOwnerServiceImpl implements CatOwnerService {
     private final TrialPeriodService trialPeriodService;
 
     @Override
-    public CatOwner create(CatOwner catOwner)  {
+    public CatOwner create(CatOwner catOwner, TrialPeriod.AnimalType animalType, Long animalId)  {
         trialPeriodService.create(new TrialPeriod(LocalDate.now(), LocalDate.now().plusDays(30),
-                LocalDate.now(), new ArrayList<>(), TrialPeriod.Result.IN_PROGRESS, catOwner.getTelegramId()));
+                LocalDate.now(), new ArrayList<>(), TrialPeriod.Result.IN_PROGRESS, catOwner.getTelegramId(), animalType, animalId));
         return catOwnerRepo.save(catOwner);
     }
 
     @Override
-    public CatOwner create(Long id) {
+    public CatOwner create(Long id, TrialPeriod.AnimalType animalType, Long animalId) {
         CatOwner catOwner = new CatOwner(userService.getById(id));
         trialPeriodService.create(new TrialPeriod(LocalDate.now(), LocalDate.now().plusDays(30),
-                LocalDate.now(), new ArrayList<>(), TrialPeriod.Result.IN_PROGRESS, id));
+                LocalDate.now(), new ArrayList<>(), TrialPeriod.Result.IN_PROGRESS, id, animalType, animalId));
         return catOwnerRepo.save(catOwner);
     }
 

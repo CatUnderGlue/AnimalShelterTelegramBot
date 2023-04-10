@@ -14,7 +14,7 @@ alter table dogowner
 --changeset catunderglue:2
 
 alter table trial_periods
-    add is_cat boolean;
+    add animal_type varchar(255);
 
 alter table trial_periods
     add animal_id bigint;
