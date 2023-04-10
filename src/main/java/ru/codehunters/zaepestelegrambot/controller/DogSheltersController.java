@@ -32,19 +32,34 @@ public class DogSheltersController {
     @Operation(
             summary = "Регистрация нового собачьего приюта."
     )
-    public ResponseEntity<Object> add(@RequestBody DogShelter dogShelter) {
-        return ResponseEntity.ok().body(dogShelterService.addShelter(dogShelter));
+    public ResponseEntity<Object> create(@RequestParam @Parameter(description = "Название приюта") String name,
+                                         @RequestParam @Parameter(description = "Адрес и схема проезда") String location,
+                                         @RequestParam @Parameter(description = "Расписание работы приюта") String timetable,
+                                         @RequestParam @Parameter(description = "О приюте") String aboutMe,
+                                         @RequestParam @Parameter(description = "Способ связи с охраной") String security,
+                                         @RequestParam @Parameter(description = "Рекомендации о технике безопасности на территории приюта") String safetyAdvice
+    ) {
+        return ResponseEntity.ok().body(dogShelterService.addShelter(new DogShelter(name, location, timetable, aboutMe, security, safetyAdvice)));
     }
 
     @PutMapping("/")
     @Operation(
             summary = "Обновление информации о приюте"
     )
-    public ResponseEntity<Object> update(
-            @RequestBody @Parameter(description = "Объект приюта") DogShelter dogShelter,
-            @RequestParam @Parameter(description = "id приюта") long id) {
-
-        return ResponseEntity.ok().body(dogShelterService.updateShelter(dogShelter, id));
+    public ResponseEntity<Object> update(@RequestParam @Parameter(description = "id приюта") long id,
+                                         @RequestParam(required = false)
+                                         @Parameter(description = "Название приюта", allowEmptyValue = true) String name,
+                                         @RequestParam(required = false)
+                                             @Parameter(description = "Адрес и схема проезда", allowEmptyValue = true) String location,
+                                         @RequestParam(required = false)
+                                             @Parameter(description = "Расписание работы приюта", allowEmptyValue = true) String timetable,
+                                         @RequestParam(required = false)
+                                             @Parameter(description = "О приюте", allowEmptyValue = true) String aboutMe,
+                                         @RequestParam(required = false)
+                                             @Parameter(description = "Способ связи с охраной", allowEmptyValue = true) String security,
+                                         @RequestParam(required = false)
+                                             @Parameter(description = "Рекомендации о технике безопасности на территории приюта", allowEmptyValue = true) String safetyAdvice) {
+        return ResponseEntity.ok().body(dogShelterService.updateShelter((new DogShelter(id, name, location, timetable, aboutMe, security, safetyAdvice))));
     }
 
     @GetMapping("/")

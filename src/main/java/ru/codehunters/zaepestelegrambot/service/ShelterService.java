@@ -2,7 +2,7 @@ package ru.codehunters.zaepestelegrambot.service;
 
 import ru.codehunters.zaepestelegrambot.exception.CatNotFoundException;
 import ru.codehunters.zaepestelegrambot.exception.DogNotFoundException;
-import ru.codehunters.zaepestelegrambot.exception.ShelterException;
+import ru.codehunters.zaepestelegrambot.exception.BadRequestException;
 
 import java.util.List;
 
@@ -11,21 +11,20 @@ public interface ShelterService<T, D> {
      * Сохранить приют в БД
      * @param shelter объект приют
      * @return сохранение приюта в БД
-     * @exception ShelterException если, какое-либо поле содержит null или ""
+     * @exception BadRequestException если, какое-либо поле содержит null или ""
      */
 
     T addShelter(T shelter);
 
     /**
      * Обновление данных приюта
-     * @param id идентификатор приюта
      * @param shelter объект приют
      * @return shelter объект приют
      * @exception CatNotFoundException если, не удалось найти кошачий приют по id
      * @exception DogNotFoundException если, не удалось найти собачий приют по id
-     * @exception ShelterException если, какое-либо поле содержит null или ""
+     * @exception BadRequestException если, какое-либо поле содержит null или ""
      */
-    T updateShelter(T shelter, long id);
+    T updateShelter(T shelter);
 
 
     /**
