@@ -2,8 +2,8 @@ package ru.codehunters.zaepestelegrambot.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.codehunters.zaepestelegrambot.exception.DogNotFoundException;
-import ru.codehunters.zaepestelegrambot.exception.ShelterException;
+import ru.codehunters.zaepestelegrambot.exception.BadRequestException;
+import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.animals.Dog;
 import ru.codehunters.zaepestelegrambot.model.shelters.DogShelter;
 import ru.codehunters.zaepestelegrambot.repository.DogShelterRepo;
@@ -23,21 +23,16 @@ public class DogShelterServiceImpl implements ShelterService<DogShelter, Dog> {
 
     @Override
     public DogShelter addShelter(DogShelter shelter) {
-        if (valService.isCompleteRecord(shelter)) {
-            throw new ShelterException("Данные приюта не заполнены");
+        if (!valService.isCompleteRecord(shelter)) {
+            throw new BadRequestException("Данные приюта не заполнены");
         }
         return dogRepo.save(shelter);
     }
 
     @Override
-    public DogShelter updateShelter(DogShelter shelter, long id) {
-        if (!dogRepo.existsById(id)) {
-            throw new DogNotFoundException("Собачий приют не найден");
-        }
-        dogRepo.getReferenceById(id);
-        if (valService.isCompleteRecord(shelter)) {
-            throw new ShelterException("Данные приюта не заполнены");
-        }
+    public DogShelter updateShelter(DogShelter shelter) {
+        DogShelter shelterId = dogRepo.findById(shelter.getIdShelter()).orElseThrow();
+        shelter = valService.updateCompleteRecord(shelter, shelterId);
         return dogRepo.save(shelter);
     }
 
@@ -61,7 +56,7 @@ public class DogShelterServiceImpl implements ShelterService<DogShelter, Dog> {
             dogRepo.deleteById(index);
             result = "Запись удалена";
         } else {
-            throw new DogNotFoundException("Собачки без приюта. Мы его не нашли(");
+            throw new NotFoundException("Собачки без приюта. Мы его не нашли(");
         }
         return result;
     }

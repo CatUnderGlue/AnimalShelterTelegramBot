@@ -2,8 +2,8 @@ package ru.codehunters.zaepestelegrambot.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.codehunters.zaepestelegrambot.exception.CatNotFoundException;
-import ru.codehunters.zaepestelegrambot.exception.ShelterException;
+import ru.codehunters.zaepestelegrambot.exception.BadRequestException;
+import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.animals.Cat;
 import ru.codehunters.zaepestelegrambot.model.shelters.CatShelter;
 import ru.codehunters.zaepestelegrambot.repository.CatShelterRepo;
@@ -23,24 +23,18 @@ public class CatShelterServiceImpl implements ShelterService<CatShelter, Cat> {
 
     @Override
     public CatShelter addShelter(CatShelter catShelter) {
-        if (valService.isCompleteRecord(catShelter)) {
-            throw new ShelterException("Данные приюта не заполнены");
+        if (!valService.isCompleteRecord(catShelter)) {
+            throw new BadRequestException("Данные приюта не заполнены");
         }
         return catRepo.save(catShelter);
     }
 
     @Override
-    public CatShelter updateShelter(CatShelter catShelter, long id) {
-        if (!catRepo.existsById(id)) {
-            throw new CatNotFoundException("Кошачий приют не найден");
-        }
-        if (valService.isCompleteRecord(catShelter)) {
-            throw new ShelterException("Данные приюта не заполнены");
-        }
+    public CatShelter updateShelter(CatShelter catShelter) {
+        CatShelter catShelterId = catRepo.findById(catShelter.getId()).orElseThrow();
+        catShelter = valService.updateCompleteRecord(catShelter, catShelterId);
         return catRepo.save(catShelter);
     }
-
-
 
 
     @Override
@@ -61,7 +55,7 @@ public class CatShelterServiceImpl implements ShelterService<CatShelter, Cat> {
             catRepo.deleteById(index);
             result = "Запись удалена";
         } else {
-            throw new CatNotFoundException("Котятки остались без приюта. Не нашли приют");
+            throw new NotFoundException("Котятки остались без приюта. Не нашли приют");
         }
         return result;
 

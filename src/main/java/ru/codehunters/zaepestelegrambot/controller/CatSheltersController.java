@@ -6,8 +6,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.animals.Cat;
 import ru.codehunters.zaepestelegrambot.model.shelters.CatShelter;
 import ru.codehunters.zaepestelegrambot.service.impl.CatShelterServiceImpl;
@@ -32,19 +34,35 @@ public class CatSheltersController {
     @Operation(
             summary = "Регистрация нового кошачьего приюта."
     )
-    public ResponseEntity<Object> add(@RequestBody CatShelter catShelter) {
-        return ResponseEntity.ok().body(catShelterServiceImpl.addShelter(catShelter));
+    public ResponseEntity<Object> create(@RequestParam @Parameter(description = "Название приюта") String name,
+                                         @RequestParam @Parameter(description = "Адрес и схема проезда") String location,
+                                         @RequestParam @Parameter(description = "Расписание работы приюта") String timetable,
+                                         @RequestParam @Parameter(description = "О приюте") String aboutMe,
+                                         @RequestParam @Parameter(description = "Способ связи с охраной") String security,
+                                         @RequestParam @Parameter(description = "Рекомендации о технике безопасности на территории приюта") String safetyAdvice
+    ) {
+        return ResponseEntity.ok().body(catShelterServiceImpl.addShelter(new CatShelter(name, location, timetable, aboutMe, security, safetyAdvice)));
     }
 
     @PutMapping("/")
     @Operation(
             summary = "Обновление информации о приюте"
     )
-    public ResponseEntity<Object> update(
-            @RequestBody @Parameter(description = "Объект приюта") CatShelter catShelter,
-            @RequestParam @Parameter(description = "id приюта") long id) {
+    public ResponseEntity<Object> update(@RequestParam @Parameter(description = "id приюта") long id,
+                                         @RequestParam(required = false) @Parameter(description = "Название приюта", allowEmptyValue = true) String name,
+                                         @RequestParam(required = false) @Parameter(description = "Адрес и схема проезда", allowEmptyValue = true) String location,
+                                         @RequestParam(required = false) @Parameter(description = "Расписание работы приюта", allowEmptyValue = true) String timetable,
+                                         @RequestParam(required = false) @Parameter(description = "О приюте", allowEmptyValue = true) String aboutMe,
+                                         @RequestParam(required = false) @Parameter(description = "Способ связи с охраной", allowEmptyValue = true) String security,
+                                         @RequestParam(required = false) @Parameter(description = "Рекомендации о технике безопасности на территории приюта", allowEmptyValue = true) String safetyAdvice) {
 
-        return ResponseEntity.ok().body(catShelterServiceImpl.updateShelter(catShelter, id));
+        try {
+            return ResponseEntity.ok().body(catShelterServiceImpl.updateShelter((new CatShelter(id, name, location, timetable, aboutMe, security, safetyAdvice))));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @GetMapping("/")
