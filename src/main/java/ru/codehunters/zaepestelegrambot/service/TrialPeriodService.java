@@ -12,9 +12,9 @@ public interface TrialPeriodService {
      * Сохранение испытательного периода в бд (Он же отвечает за обновление уже существующего отчёта)<br>
      * Используется метод репозитория {@link TrialPeriodRepo#save(Object)}
      * @param trialPeriod Испытательный срок для сохранения в бд
-     * @return id испытательного срока
+     * @return Созданный испытательный срок
      */
-    Long create(TrialPeriod trialPeriod);
+    TrialPeriod create(TrialPeriod trialPeriod);
 
     /**
      * Получение испытательного срока из бд по id<br>
