@@ -3,7 +3,6 @@ package ru.codehunters.zaepestelegrambot.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
-import ru.codehunters.zaepestelegrambot.model.animals.Cat;
 import ru.codehunters.zaepestelegrambot.model.animals.Dog;
 import ru.codehunters.zaepestelegrambot.repository.DogRepo;
 import ru.codehunters.zaepestelegrambot.service.DogService;
