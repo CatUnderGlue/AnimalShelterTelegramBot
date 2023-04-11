@@ -18,10 +18,6 @@ public class VolunteerServiceImpl implements VolunteerService {
 
     @Override
     public Volunteer create(Volunteer volunteer) {
-        String nullField = EntityUtils.findNullOrBlankField(volunteer);
-        if (nullField != null) {
-            throw new IllegalArgumentException("Поле " + nullField + " не может быть пустым!");
-        }
         return volunteerRepo.save(volunteer);
     }
 
