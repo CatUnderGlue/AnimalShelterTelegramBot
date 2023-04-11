@@ -2,8 +2,10 @@ package ru.codehunters.zaepestelegrambot.service;
 
 import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.Report;
+import ru.codehunters.zaepestelegrambot.model.TrialPeriod;
 import ru.codehunters.zaepestelegrambot.repository.ReportRepo;
 import ru.codehunters.zaepestelegrambot.service.impl.ReportServiceImpl;
+import ru.codehunters.zaepestelegrambot.exception.AlreadyExistsException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -77,4 +79,17 @@ public interface ReportService {
      * @exception NotFoundException Если в базе нет отчёта с указанным id
      */
     void deleteById(Long id);
+
+    /**
+     * Создание отчёта по данным из телеграма<br>
+     * Используются методы из сервиса испытательных сроков {@link TrialPeriodService#getAllByOwnerId(Long)} и
+     * {@link TrialPeriodService#update(TrialPeriod)}
+     * Так же методы этого же сервиса {@link ReportService#create(Report)}
+     * @param photoId Id фотографии из чата в телеграме
+     * @param caption Описание под фотографией
+     * @param id id пользователя
+     * @exception IllegalArgumentException Если описание пустое или равно null, а так же, если формат данных не совпадает с regEx
+     * @exception AlreadyExistsException Если отчёт уже отправляли в этот день
+     */
+    void createFromTelegram(String photoId, String caption, Long id);
 }

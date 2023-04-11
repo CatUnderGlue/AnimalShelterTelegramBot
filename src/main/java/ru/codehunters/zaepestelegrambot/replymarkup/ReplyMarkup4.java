@@ -6,22 +6,20 @@ import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.model.request.ReplyKeyboardMarkup;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 public class ReplyMarkup4 {
 
-    private TelegramBot telegramBot;
+    private final TelegramBot telegramBot;
+
+    public ReplyMarkup4(TelegramBot telegramBot) {
+        this.telegramBot = telegramBot;
+    }
 
     public void sendMenu(long chatId) {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(
-                new KeyboardButton("Информация о возможностях бота"),
-                new KeyboardButton("Узнать информацию о приюте"));
-        replyKeyboardMarkup.addRow(new KeyboardButton("Как взять питомца из приюта"),
-                new KeyboardButton("Прислать отчет о питомце"));
-        replyKeyboardMarkup.addRow(new KeyboardButton("Позвать волонтера"));
-
-        returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, "Как взять питомца из приюта");
+                new KeyboardButton("Позвать волонтёра"),
+                new KeyboardButton("Отправить форму отчёта"));
+        returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, "Ведение питомца");
     }
 
     public void returnResponseReplyKeyboardMarkup(ReplyKeyboardMarkup replyKeyboardMarkup, Long chatId, String text) {
