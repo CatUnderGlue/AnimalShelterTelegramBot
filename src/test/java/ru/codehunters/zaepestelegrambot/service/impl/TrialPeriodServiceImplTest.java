@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class ReportServiceImplTest {
+class TrialPeriodServiceImplTest {
     final Long ID = 1241421L;
     final Long SECOND_ID = ID + 1;
     final LocalDate DATE = LocalDate.now();
