@@ -60,7 +60,7 @@ class TrialPeriodServiceImplTest {
 
     @Test
     @DisplayName("Возвращает испытательный срок при поиске по id")
-    void shouldReturnVolunteerFoundById() {
+    void shouldReturnTrialPeriodFoundById() {
         when(trialPeriodRepoMock.findById(ID)).thenReturn(Optional.of(VALID_TRIAL_PERIOD));
         TrialPeriod actual = trialPeriodService.getById(ID);
         assertEquals(VALID_TRIAL_PERIOD, actual);
