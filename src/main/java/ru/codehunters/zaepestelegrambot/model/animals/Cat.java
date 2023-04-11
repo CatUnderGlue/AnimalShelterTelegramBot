@@ -35,4 +35,20 @@ public class Cat {
     @Column
     private Long shelterId;
 
+    public Cat(String name, int age, boolean isHealthy, boolean vaccinated, Long shelterId, Long ownerId) {
+        this.name = name;
+        this.age = age;
+        this.isHealthy = isHealthy;
+        this.vaccinated = vaccinated;
+        this.shelterId = shelterId;
+        this.ownerId = ownerId;
+    }
+
+    public Cat(String name, int age, boolean isHealthy, boolean vaccinated, Long shelterId) {
+        this.name = name;
+        this.age = age;
+        this.isHealthy = isHealthy;
+        this.vaccinated = vaccinated;
+        this.shelterId = shelterId;
+    }
 }

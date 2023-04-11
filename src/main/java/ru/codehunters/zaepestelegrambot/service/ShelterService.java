@@ -1,7 +1,6 @@
 package ru.codehunters.zaepestelegrambot.service;
 
-import ru.codehunters.zaepestelegrambot.exception.CatNotFoundException;
-import ru.codehunters.zaepestelegrambot.exception.DogNotFoundException;
+
 
 import java.util.List;
 
@@ -18,9 +17,8 @@ public interface ShelterService<T, D> {
      * Обновление данных приюта
      * @param shelter объект приют
      * @return shelter объект приют
-     * @exception CatNotFoundException если, не удалось найти кошачий приют по id
-     * @exception DogNotFoundException если, не удалось найти собачий приют по id
      */
+
     T updateShelter(T shelter);
 
 
@@ -40,8 +38,6 @@ public interface ShelterService<T, D> {
     /**
      * Удаление приюта
      * @param index номер
-     * @exception DogNotFoundException не найден по индексу собачий приют
-     * @exception CatNotFoundException не найден по индексу кошачий приют
      */
     String delShelter(long index);
 }

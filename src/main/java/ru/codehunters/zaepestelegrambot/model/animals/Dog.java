@@ -35,4 +35,20 @@ public class Dog {
     private Long shelterId;
 
 
+    public Dog(String name, int age, boolean isHealthy, boolean vaccinated,Long shelterId, Long ownerId) {
+        this.name = name;
+        this.age = age;
+        this.isHealthy = isHealthy;
+        this.vaccinated = vaccinated;
+        this.shelterId = shelterId;
+        this.ownerId = ownerId;
+    }
+
+    public Dog(String name, int age, boolean isHealthy, boolean vaccinated, Long shelterId) {
+        this.name = name;
+        this.age = age;
+        this.isHealthy = isHealthy;
+        this.vaccinated = vaccinated;
+        this.shelterId = shelterId;
+    }
 }
