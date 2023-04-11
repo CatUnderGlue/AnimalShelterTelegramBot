@@ -18,6 +18,10 @@ public class VolunteerServiceImpl implements VolunteerService {
 
     @Override
     public Volunteer create(Volunteer volunteer) {
+        String nullField = EntityUtils.findNullOrBlankField(volunteer);
+        if (nullField != null) {
+            throw new IllegalArgumentException("Поле " + nullField + " не может быть пустым!");
+        }
         return volunteerRepo.save(volunteer);
     }
 
@@ -25,7 +29,7 @@ public class VolunteerServiceImpl implements VolunteerService {
     public Volunteer getById(Long id) {
         Optional<Volunteer> optionalVolunteer = volunteerRepo.findById(id);
         if (optionalVolunteer.isEmpty()) {
-            throw new NotFoundException("Волонтёр не найден!");
+            throw new NotFoundException("По указанному id волонтёр не найден!");
         }
         return optionalVolunteer.get();
     }

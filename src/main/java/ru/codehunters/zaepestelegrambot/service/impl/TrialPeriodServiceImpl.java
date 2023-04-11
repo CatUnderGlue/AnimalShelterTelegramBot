@@ -18,6 +18,10 @@ public class TrialPeriodServiceImpl implements TrialPeriodService {
 
     @Override
     public Long create(TrialPeriod trialPeriod) {
+        String nullField = EntityUtils.findNullOrBlankField(trialPeriod);
+        if (nullField != null) {
+            throw new IllegalArgumentException("Поле " + nullField + " не может быть пустым!");
+        }
         return trialPeriodRepo.save(trialPeriod).getId();
     }
 
