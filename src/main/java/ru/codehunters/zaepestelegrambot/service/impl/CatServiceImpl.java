@@ -1,15 +1,16 @@
 package ru.codehunters.zaepestelegrambot.service.impl;
 
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.stereotype.Service;
-import ru.codehunters.zaepestelegrambot.exception.CatNotFoundException;
+import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.animals.Cat;
 import ru.codehunters.zaepestelegrambot.repository.CatRepo;
 import ru.codehunters.zaepestelegrambot.service.CatService;
 
 
 import java.util.Collection;
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class CatServiceImpl implements CatService {
@@ -17,25 +18,35 @@ public class CatServiceImpl implements CatService {
 
 
     @Override
-    public Cat getById(Long id) {
-        return catRepo.findById(id).orElseThrow(CatNotFoundException::new);
-    }
-
-    @Override
-    public Cat getByUserId(Long id) {
-        return catRepo.findByOwnerId(id).orElseThrow(CatNotFoundException::new);
-    }
-    @Override
     public Cat create(Cat cat) {
         return catRepo.save(cat);
     }
 
     @Override
-    public Cat update(Cat cat) {
-        if (cat.getId() != null && getById(cat.getId()) != null){
-            return catRepo.save(cat);
+    public Cat getById(Long id) {
+        Optional<Cat> optionalCat = catRepo.findById(id);
+        if (optionalCat.isEmpty()) {
+            throw new NotFoundException("Кот не найден!");
         }
-        throw new CatNotFoundException();
+        return optionalCat.get();
+    }
+
+
+
+    @Override
+    public Cat getByUserId(Long id) {
+        Optional<Cat> optionalCat = catRepo.findByOwnerId(id);
+        if (optionalCat.isEmpty()) {
+            throw new NotFoundException("Хозяин кота не найден!");
+        }
+        return optionalCat.get();
+    }
+
+    @Override
+    public Cat update(Cat cat) {
+        Cat currentCat = getById(cat.getId());
+        EntityUtils.copyNonNullFields(cat, currentCat);
+        return catRepo.save(cat);
     }
 
     @Override

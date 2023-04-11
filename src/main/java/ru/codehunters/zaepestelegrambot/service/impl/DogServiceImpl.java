@@ -2,20 +2,19 @@ package ru.codehunters.zaepestelegrambot.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.codehunters.zaepestelegrambot.exception.CatNotFoundException;
+import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
+import ru.codehunters.zaepestelegrambot.model.animals.Cat;
 import ru.codehunters.zaepestelegrambot.model.animals.Dog;
 import ru.codehunters.zaepestelegrambot.repository.DogRepo;
 import ru.codehunters.zaepestelegrambot.service.DogService;
+
 import java.util.Collection;
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class DogServiceImpl implements DogService {
     private final DogRepo dogRepo;
-
-    @Override
-    public Dog getById(Long id) {
-       return dogRepo.findById(id).orElseThrow(CatNotFoundException::new);
-    }
 
     @Override
     public Dog create(Dog dog) {
@@ -23,11 +22,29 @@ public class DogServiceImpl implements DogService {
     }
 
     @Override
-    public Dog update(Dog dog) {
-        if (dog.getId() != null && getById(dog.getId()) != null){
-            return dogRepo.save(dog);
+    public Dog getById(Long id) {
+        Optional<Dog> optionalDog = dogRepo.findById(id);
+        if (optionalDog.isEmpty()) {
+            throw new NotFoundException("Пёс не найден!");
         }
-        throw new CatNotFoundException();
+        return optionalDog.get();
+
+    }
+
+    @Override
+    public Dog getByUserId(Long id) {
+        Optional<Dog> optionalDog = dogRepo.findByOwnerId(id);
+        if (optionalDog.isEmpty()) {
+            throw new NotFoundException("Хозяин собаки не найден!");
+        }
+        return optionalDog.get();
+    }
+
+    @Override
+    public Dog update(Dog dog) {
+        Dog currentDog = getById(dog.getId());
+        EntityUtils.copyNonNullFields(dog, currentDog);
+        return dogRepo.save(dog);
     }
 
     @Override
