@@ -30,13 +30,13 @@ public class VolunteerController {
 
     @PostMapping
     @Operation(summary = "Создать волонтёра")
-    public ResponseEntity<Volunteer> create(@RequestParam @Parameter(description = "Телеграм id волонтёра") Long telegramId,
-                                            @RequestParam @Parameter(description = "Имя") String firstName,
-                                            @RequestParam @Parameter(description = "Фамилия") String lastName) {
+    public ResponseEntity<Object> create(@RequestParam @Parameter(description = "Телеграм id волонтёра") Long telegramId,
+                                         @RequestParam @Parameter(description = "Имя") String firstName,
+                                         @RequestParam @Parameter(description = "Фамилия") String lastName) {
         try {
             return ResponseEntity.ok(volunteerService.create(new Volunteer(telegramId, firstName, lastName)));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
@@ -64,8 +64,8 @@ public class VolunteerController {
     @PutMapping
     @Operation(summary = "Изменить волонтёра")
     public ResponseEntity<Object> update(@RequestParam @Parameter(description = "Телеграм id волонтёра") Long telegramId,
-                                            @RequestParam(required = false) @Parameter(description = "Имя") String firstName,
-                                            @RequestParam(required = false) @Parameter(description = "Фамилия") String lastName) {
+                                         @RequestParam(required = false) @Parameter(description = "Имя") String firstName,
+                                         @RequestParam(required = false) @Parameter(description = "Фамилия") String lastName) {
         try {
             return ResponseEntity.ok(volunteerService.update(new Volunteer(telegramId, firstName, lastName)));
         } catch (IllegalArgumentException e) {
