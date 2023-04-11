@@ -36,7 +36,7 @@ public class TrialPeriodController {
     @Operation(
             summary = "Создать испытательный срок"
     )
-    public ResponseEntity<Long> create(@RequestParam @Parameter(description = "Дата начала испытательного срока") LocalDate startDate,
+    public ResponseEntity<TrialPeriod> create(@RequestParam @Parameter(description = "Дата начала испытательного срока") LocalDate startDate,
                                        @RequestParam @Parameter(description = "Состояние") TrialPeriod.Result result,
                                        @RequestParam @Parameter(description = "Id хозяина животного") Long ownerId,
                                        @RequestParam @Parameter(description = "Тип взятого животного") TrialPeriod.AnimalType animalType,

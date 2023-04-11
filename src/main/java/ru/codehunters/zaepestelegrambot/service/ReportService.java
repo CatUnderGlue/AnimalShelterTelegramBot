@@ -13,9 +13,9 @@ public interface ReportService {
      * Сохранение отчёта в бд (Он же отвечает за обновление уже существующего отчёта)<br>
      * Используется метод репозитория {@link ReportRepo#save(Object)}
      * @param report Отчёт для сохранения в бд
-     * @return id отчёта
+     * @return Созданный отчёт
      */
-    Long create(Report report);
+    Report create(Report report);
 
     /**
      * Получение отчёта из бд по id<br>
