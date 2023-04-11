@@ -78,14 +78,14 @@ public class DogController {
     @Operation(summary = "Изменить информацию о собаке")
     public ResponseEntity<Object> update(
             @RequestParam @Parameter(description = "ID кота") Long id,
-            @RequestParam @Parameter(description = "Имя кота") String name,
-            @RequestParam(required = false) @Parameter(description = "Возраст кота") int age,
-            @RequestParam(required = false) @Parameter(description = "Здоров?") boolean isHealthy,
-            @RequestParam(required = false) @Parameter(description = "Привит?") boolean vaccinated,
+            @RequestParam(required = false) @Parameter(description = "Имя кота") String name,
+            @RequestParam(required = false) @Parameter(description = "Возраст кота") Integer age,
+            @RequestParam(required = false) @Parameter(description = "Здоров?") Boolean isHealthy,
+            @RequestParam(required = false) @Parameter(description = "Привит?") Boolean vaccinated,
             @RequestParam(required = false) @Parameter(description = "ID кошачьего приюта") Long shelterId,
-            @RequestParam(required = false) @Parameter(description = "ID хозяина") Long owner) {
+            @RequestParam(required = false) @Parameter(description = "ID хозяина") Long ownerId) {
         try {
-            return ResponseEntity.ok(dogService.update(new Dog(id, name, age, isHealthy, vaccinated, shelterId, owner)));
+            return ResponseEntity.ok(dogService.update(new Dog(id, name, age, isHealthy, vaccinated, shelterId, ownerId)));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         } catch (NotFoundException e) {

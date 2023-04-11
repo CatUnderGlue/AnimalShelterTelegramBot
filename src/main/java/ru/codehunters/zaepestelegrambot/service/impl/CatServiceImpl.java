@@ -44,9 +44,13 @@ public class CatServiceImpl implements CatService {
 
     @Override
     public Cat update(Cat cat) {
-        Cat currentCat = getById(cat.getId());
+        Optional<Cat> catId = catRepo.findById(cat.getId());
+        if (catId.isEmpty()){
+            throw new NotFoundException("Кота нет");
+        }
+        Cat currentCat = catId.get();
         EntityUtils.copyNonNullFields(cat, currentCat);
-        return catRepo.save(cat);
+        return catRepo.save(currentCat);
     }
 
     @Override

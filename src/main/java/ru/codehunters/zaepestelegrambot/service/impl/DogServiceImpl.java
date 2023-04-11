@@ -41,9 +41,13 @@ public class DogServiceImpl implements DogService {
 
     @Override
     public Dog update(Dog dog) {
+        Optional<Dog> dogId = dogRepo.findByOwnerId(dog.getId());
+        if (dogId.isEmpty()){
+            throw new NotFoundException("Пса нет");
+        }
         Dog currentDog = getById(dog.getId());
         EntityUtils.copyNonNullFields(dog, currentDog);
-        return dogRepo.save(dog);
+        return dogRepo.save(currentDog);
     }
 
     @Override
