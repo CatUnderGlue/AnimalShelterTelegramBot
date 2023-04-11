@@ -40,7 +40,7 @@ public class EntityUtils {
                     return field.getName();
                 }
             } catch (IllegalAccessException e) {
-                //todo
+                System.out.println("Что-то пошло не так");
             }
         }
         return null;
