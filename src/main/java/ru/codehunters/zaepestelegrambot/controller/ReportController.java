@@ -36,7 +36,7 @@ public class ReportController {
     @Operation(
             summary = "Создать отчёт"
     )
-    public ResponseEntity<Long> create(@RequestParam @Parameter(description = "Id фотографии") String photoId,
+    public ResponseEntity<Report> create(@RequestParam @Parameter(description = "Id фотографии") String photoId,
                                        @RequestParam @Parameter(description = "Рацион животного") String foodRation,
                                        @RequestParam @Parameter(description = "Общее самочувствие и привыкание к новому месту") String generalHealth,
                                        @RequestParam @Parameter(description = "Изменение в поведении") String behaviorChanges,

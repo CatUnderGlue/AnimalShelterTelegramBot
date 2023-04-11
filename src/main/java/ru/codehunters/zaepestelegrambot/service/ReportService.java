@@ -15,7 +15,7 @@ public interface ReportService {
      * @param report Отчёт для сохранения в бд
      * @return Созданный отчёт
      */
-    Long create(Report report);
+    Report create(Report report);
 
     /**
      * Получение отчёта из бд по id<br>

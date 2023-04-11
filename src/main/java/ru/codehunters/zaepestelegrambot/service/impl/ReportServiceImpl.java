@@ -19,12 +19,12 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public Long create(Report report) {
+    public Report create(Report report) {
         String nullField = EntityUtils.findNullOrBlankField(report);
         if (nullField != null) {
             throw new IllegalArgumentException("Поле " + nullField + " не может быть пустым!");
         }
-        return reportRepo.save(report).getId();
+        return reportRepo.save(report);
     }
 
     @Override
