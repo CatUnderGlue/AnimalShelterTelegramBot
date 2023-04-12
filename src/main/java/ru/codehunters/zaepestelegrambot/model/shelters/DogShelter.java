@@ -2,7 +2,6 @@ package ru.codehunters.zaepestelegrambot.model.shelters;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.codehunters.zaepestelegrambot.model.animals.Dog;
@@ -11,7 +10,6 @@ import java.util.List;
 
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "dog_Shelter")
@@ -71,9 +69,9 @@ public class DogShelter {
         this.security = security;
         this.safetyAdvice = safetyAdvice;
     }
+
     /**
      * Конструктор для PUT в БД (c id, без List)
-     *
      */
     public DogShelter(String name, String location, String timetable, String aboutMe, String security, String safetyAdvice) {
         this.name = name;
