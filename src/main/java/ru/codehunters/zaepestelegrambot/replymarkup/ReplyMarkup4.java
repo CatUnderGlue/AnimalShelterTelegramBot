@@ -6,14 +6,14 @@ import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.model.request.ReplyKeyboardMarkup;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
+@RequiredArgsConstructor
+@Component
 public class ReplyMarkup4 {
 
     private final TelegramBot telegramBot;
-
-    public ReplyMarkup4(TelegramBot telegramBot) {
-        this.telegramBot = telegramBot;
-    }
 
     public void sendMenu(long chatId) {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(

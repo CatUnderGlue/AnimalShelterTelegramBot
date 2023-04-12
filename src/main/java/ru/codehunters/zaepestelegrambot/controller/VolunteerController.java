@@ -1,5 +1,7 @@
 package ru.codehunters.zaepestelegrambot.controller;
 
+import com.pengrad.telegrambot.TelegramBot;
+import com.pengrad.telegrambot.request.SendMessage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -23,9 +25,11 @@ import ru.codehunters.zaepestelegrambot.service.VolunteerService;
 })
 public class VolunteerController {
     private final VolunteerService volunteerService;
+    private final TelegramBot telegramBot;
 
-    public VolunteerController(VolunteerService volunteerService) {
+    public VolunteerController(VolunteerService volunteerService, TelegramBot telegramBot) {
         this.volunteerService = volunteerService;
+        this.telegramBot = telegramBot;
     }
 
     @PostMapping
@@ -83,6 +87,22 @@ public class VolunteerController {
             return ResponseEntity.ok().body("Волонтёр успешно удалён");
         } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @Tag(name = "Сообщения пользователю")
+    @PostMapping("warning_message")
+    @Operation(summary = "Отправить хозяину предупреждение о правильности отчётов")
+    public ResponseEntity<String> sendWarning(@RequestParam @Parameter(description = "Id хозяина") Long ownerId) {
+        try {
+            telegramBot.execute(new SendMessage(ownerId,
+            """
+            Дорогой усыновитель, мы заметили, что ты заполняешь отчет не так подробно, как необходимо.
+            Пожалуйста, подойди ответственнее к этому занятию. В противном случае волонтеры приюта будут обязаны самолично проверять условия содержания животного
+            """));
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }

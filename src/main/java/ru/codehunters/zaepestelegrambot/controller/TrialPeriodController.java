@@ -43,7 +43,7 @@ public class TrialPeriodController {
                                        @RequestParam @Parameter(description = "Id животного") Long animalId) {
         try {
             return ResponseEntity.ok(trialPeriodService.create(new TrialPeriod(startDate, startDate.plusDays(30),
-                    startDate, new ArrayList<>(), result, ownerId, animalType, animalId)));
+                    startDate.minusDays(1), new ArrayList<>(), result, ownerId, animalType, animalId)));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }

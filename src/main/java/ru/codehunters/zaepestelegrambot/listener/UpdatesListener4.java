@@ -41,6 +41,7 @@ public class UpdatesListener4 implements UpdatesListener {
     private final ReportService reportService;
     private final UserService userService;
     private final VolunteerService volunteerService;
+    private final ReplyMarkup4 replyMarkup;
 
     @PostConstruct
     public void init() {
@@ -49,7 +50,6 @@ public class UpdatesListener4 implements UpdatesListener {
 
     @Override
     public int process(List<Update> updates) {
-        ReplyMarkup4 replyMarkup = new ReplyMarkup4(telegramBot);
         try {
             updates.stream()
                     .filter(update -> update.message() != null)
@@ -128,7 +128,7 @@ public class UpdatesListener4 implements UpdatesListener {
     private void sendWarning() {
         for (User user : userService.getAll()) {
             for (TrialPeriod trialPeriod : trialPeriodService.getAllByOwnerId(user.getTelegramId())) {
-                if ((trialPeriod.getReports().size() < 30 || !trialPeriod.getLastReportDate().isEqual(trialPeriod.getEndDate())) &&
+                if ((trialPeriod.getReports().size() < 45 && !trialPeriod.getLastReportDate().isEqual(trialPeriod.getEndDate())) &&
                         trialPeriod.getLastReportDate().isBefore(LocalDate.now().minusDays(2))) {
                     sendMessage(user.getTelegramId(), "Вы не отправляли отчёты уже более двух дней. " +
                             "Пожалуйста, отправьте отчёт или выйдите на связь с волонтёрами.");
@@ -145,7 +145,9 @@ public class UpdatesListener4 implements UpdatesListener {
                 if (trialPeriod.getResult().equals(TrialPeriod.Result.NOT_SUCCESSFUL)) {
                     sendMessage(user.getTelegramId(), Information.TRIAL_NOT_SUCCESSFUL);
                 } else if (trialPeriod.getResult().equals(TrialPeriod.Result.EXTENDED)) {
-                    sendMessage(user.getTelegramId(), "Ваш испытательный срок продлён. Пожалуйста свяжитесь с волонтёрами.");
+                    sendMessage(user.getTelegramId(), Information.TRIAL_EXTENDED);
+                } else if (trialPeriod.getResult().equals(TrialPeriod.Result.SUCCESSFUL)) {
+                    sendMessage(user.getTelegramId(), Information.SUCCESSFUL);
                 }
             }
         }
