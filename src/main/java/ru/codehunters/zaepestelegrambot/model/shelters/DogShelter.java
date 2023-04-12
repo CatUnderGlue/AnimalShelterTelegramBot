@@ -72,6 +72,7 @@ public class DogShelter {
 
     /**
      * Конструктор для PUT в БД (c id, без List)
+     *
      */
     public DogShelter(String name, String location, String timetable, String aboutMe, String security, String safetyAdvice) {
         this.name = name;

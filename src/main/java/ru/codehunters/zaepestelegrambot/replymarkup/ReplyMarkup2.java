@@ -10,11 +10,11 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import ru.codehunters.zaepestelegrambot.model.shelters.CatShelter;
 import ru.codehunters.zaepestelegrambot.model.shelters.DogShelter;
-import ru.codehunters.zaepestelegrambot.repository.CatShelterRepo;
 import ru.codehunters.zaepestelegrambot.service.impl.CatShelterServiceImpl;
 import ru.codehunters.zaepestelegrambot.service.impl.DogShelterServiceImpl;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @RequiredArgsConstructor
 @AllArgsConstructor
@@ -24,38 +24,25 @@ public class ReplyMarkup2 {
     private TelegramBot telegramBot;
 
 
-    public ReplyMarkup2(CatShelterServiceImpl catShelterService, TelegramBot telegramBot, DogShelterServiceImpl dogShelterService) {
-        this.catShelterService = catShelterService;
-        this.telegramBot = telegramBot;
-        this.dogShelterService = dogShelterService;
-    }
 
     public void sendAnimalMenu(long chatId) {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(
                 (new KeyboardButton("Кошачий приют")), (new KeyboardButton("Собачий приют")));
         returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, "Выберите приют который хотите посмотреть:");
     }
-
-    /**
-     * Список приютов
-     *
-     * @param chatId
-     */
     public void sendListMenuCat(long chatId) {
             List<CatShelter> shelters = catShelterService.getShelter();
             List<KeyboardButton> buttons = new ArrayList<>();
             shelters.forEach(shelter -> buttons.add(new KeyboardButton(shelter.getName())));
             ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(buttons.toArray(new KeyboardButton[0]));
-            returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, "Список кошачих приютов");
-
+            returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, "Список кошачьих приютов");
         }
     public void sendListMenuDog(long chatId) {
            List<DogShelter> shelters = dogShelterService.getShelter();
             List<KeyboardButton> buttons = new ArrayList<>();
             shelters.forEach(shelter -> buttons.add(new KeyboardButton(shelter.getName())));
             ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(buttons.toArray(new KeyboardButton[0]));
-            returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, "Список собачих приютов");
-
+            returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, "Список собачьих приютов");
         }
     public void sendMenuCat(long chatId) {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(
