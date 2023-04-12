@@ -1,7 +1,6 @@
 package ru.codehunters.zaepestelegrambot.model.shelters;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.codehunters.zaepestelegrambot.model.animals.Cat;
@@ -9,7 +8,6 @@ import ru.codehunters.zaepestelegrambot.model.animals.Cat;
 import java.util.List;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "cat_Shelter")
