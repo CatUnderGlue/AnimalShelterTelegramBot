@@ -21,11 +21,17 @@ public interface ShelterService<T, D> {
 
     T updateShelter(T shelter);
 
-
+    /** Получение приюта по id
+     *
+     * @param id приюта
+     * @return приют
+     */
+    T getSheltersId(long id);
     /**
      * Выдача списка приютов
      * @return List со списком приютов
      */
+
     List<T> getShelter();
     /**
      * Выдача списка животных приютов
