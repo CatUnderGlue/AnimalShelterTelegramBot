@@ -49,10 +49,11 @@ public class UpdatesListener3 implements UpdatesListener {
                                     " котиков. Мы надеемся, что ты найдешь своего идеального друга здесь");
                             replyMarkup3.CatOrDog(chatId);
 
-                        } else if ("Позвать волонтера".equals(text)) {
-                            sendMessageToVolunteers(message);
-
-                        } else if ("Все о кошках".equals(text)) {
+                        }
+//                        else if ("Позвать волонтера".equals(text)) {
+//                            sendMessageToVolunteers(message);
+//                     }
+                        else if ("Все о кошках".equals(text)) {
                             replyMarkup3.menuCat(chatId);
 
                         } else if ("Все о собаках".equals(text)) {
