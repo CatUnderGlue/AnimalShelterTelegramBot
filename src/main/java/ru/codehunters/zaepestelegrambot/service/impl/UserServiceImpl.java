@@ -31,6 +31,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public String getShelterById(Long id) {
+        Optional<User> optionalUser = userRepo.findById(id);
+        if (optionalUser.isEmpty()) {
+            throw new NotFoundException("Пользователь не найден!");
+        }
+        return optionalUser.get().getShelter();
+    }
+
+    @Override
     public List<User> getAll() {
         List<User> all = userRepo.findAll();
         if (all.isEmpty()) {
