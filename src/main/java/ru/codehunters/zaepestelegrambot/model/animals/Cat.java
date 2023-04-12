@@ -7,21 +7,39 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "cat")
-public class Cat  {
+public class Cat {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column
-    String nameCat;
+    private String name;
 
-    public Cat(String nameCat) {
-        this.nameCat = nameCat;
+    @Column
+    private Integer age;
+
+    @Column
+    private Boolean isHealthy;
+
+    @Column
+    private Boolean vaccinated;
+
+    @Column
+    private Long ownerId;
+
+    @Column
+    private Long shelterId;
+
+    public Cat(String name, Integer age, Boolean isHealthy, Boolean vaccinated, Long shelterId) {
+        this.name = name;
+        this.age = age;
+        this.isHealthy = isHealthy;
+        this.vaccinated = vaccinated;
+        this.shelterId = shelterId;
     }
 }

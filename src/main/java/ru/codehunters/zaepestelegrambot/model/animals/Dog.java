@@ -13,13 +13,32 @@ import lombok.NoArgsConstructor;
 
 public class Dog {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column
-    String name;
+    private String name;
 
-    public Dog(String name) {
+    @Column
+    private Integer age;
+
+    @Column
+    private Boolean isHealthy;
+
+    @Column
+    private Boolean vaccinated;
+
+    @Column
+    private Long ownerId;
+
+    @Column
+    private Long shelterId;
+
+    public Dog(String name, Integer age, Boolean isHealthy, Boolean vaccinated, Long shelterId) {
         this.name = name;
+        this.age = age;
+        this.isHealthy = isHealthy;
+        this.vaccinated = vaccinated;
+        this.shelterId = shelterId;
     }
 }
