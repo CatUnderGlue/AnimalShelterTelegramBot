@@ -8,9 +8,7 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
 import jakarta.annotation.PostConstruct;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.codehunters.zaepestelegrambot.model.shelters.CatShelter;
 import ru.codehunters.zaepestelegrambot.model.shelters.DogShelter;
@@ -22,23 +20,14 @@ import java.util.List;
 
 
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UpdatesListener2 implements UpdatesListener {
 
     private final TelegramBot telegramBot;
     private final CatShelterServiceImpl catShelterService;
     private final DogShelterServiceImpl dogShelterService;
-
-    private Long idCat;
-    private Long idDog;
-    CatShelter catShelter;
-@Autowired
-    public UpdatesListener2(TelegramBot telegramBot, CatShelterServiceImpl catShelterService, DogShelterServiceImpl dogShelterService) {
-        this.telegramBot = telegramBot;
-        this.catShelterService = catShelterService;
-        this.dogShelterService = dogShelterService;
-    }
-
+    private CatShelter catShelter;
+    private DogShelter dogShelter;
 
 
     @PostConstruct
@@ -48,7 +37,7 @@ public class UpdatesListener2 implements UpdatesListener {
 
     @Override
     public int process(List<Update> updates) {
-        ReplyMarkup2 replyMarkup = new ReplyMarkup2(catShelterService,telegramBot,dogShelterService);
+        ReplyMarkup2 replyMarkup = new ReplyMarkup2(catShelterService,dogShelterService,telegramBot);
         try {
             updates.stream()
                     .filter(update -> update.message() != null)
@@ -68,45 +57,49 @@ public class UpdatesListener2 implements UpdatesListener {
                         }
                         else if (isNameCatShelter(text)) {
                             replyMarkup.sendMenuCat(chatId);
-                            idCat=isNameCatShelterId(text);
-                            //    catShelter =loadCat(idCat);
+                            catShelter = catShelterService.getSheltersId(isNameCatShelterId(text));
+
                         }
                         else if (isNameDogShelter(text)) {
                             replyMarkup.sendMenuDog(chatId);
-                            idDog=isNameDogShelterId(text);
+                            dogShelter = dogShelterService.getSheltersId(isNameDogShelterId(text));
                         }
                         else if ("Расписание работы приюта".equals(text)) {
 
-
-                       //    sendMessage(chatId, catShelter.getTimetable());
+                            sendMessage(chatId, catShelter.getTimetable());
                         }
                         else if ("Список кошек приюта".equals(text)) {
-                      //      sendMessage(chatId,catShelterService.getSheltersId(idCat).getList().toString());
-                        }
-                        else if ("О кошачьем приюте".equals(text)) {
-                   //         sendMessage(chatId,catShelterService.getSheltersId(idCat).getAboutMe());
-                        }
-                        else if ("Рекомендации о ТБ приюта".equals(text)) {
-                   //         sendMessage(chatId,catShelterService.getSheltersId(idCat).getSafetyAdvice());
-                        }
-                        else if ("Принять данные для связи".equals(text)) {
+                            catShelter.getList().stream()
+                                    .map(cat -> cat.toString())
+                                    .forEach(catString -> sendMessage(chatId, catString));
 
                         }
-                        else if ("Контактные данные охраны приюта".equals(text)) {
-                    //        sendMessage(chatId,catShelterService.getSheltersId(idCat).getSecurity());
+                        else if ("О кошачьем приюте".equals(text)) {
+                            sendMessage(chatId, catShelter.getAboutMe());
                         }
+                        else if ("Рекомендации о ТБ приюта".equals(text)) {
+                            sendMessage(chatId, catShelter.getSafetyAdvice());
+                        }
+                        else if ("Принять данные для связи".equals(text)) {
+                        }
+                        else if ("Контактные данные охраны приюта".equals(text)) {
+                            sendMessage(chatId, catShelter.getSecurity());
+                        }
+
                         else if ("Расписание работы".equals(text)) {
-                  //          sendMessage(chatId,dogShelterService.getSheltersId(idCat).getTimetable());
+                            sendMessage(chatId, dogShelter.getTimetable());
                         }
                         else if ("Список собачек приюта".equals(text)) {
-                   //         sendMessage(chatId,dogShelterService.getSheltersId(idDog).getList().toString());
+                            dogShelter.getList().stream()
+                                    .map(dog -> dog.toString())
+                                    .forEach(dogString -> sendMessage(chatId, dogString));
                         }
                         else if ("О приюте".equals(text)) {
-                    //        sendMessage(chatId,dogShelterService.getSheltersId(idDog).getAboutMe());
+                            sendMessage(chatId, dogShelter.getAboutMe());
                         } else if ("Рекомендации о ТБ".equals(text)) {
-                   //         sendMessage(chatId,dogShelterService.getSheltersId(idDog).getSecurity());
+                            sendMessage(chatId, dogShelter.getSecurity());
                         } else if ("Контактные данные охраны".equals(text)) {
-                  //          sendMessage(chatId,dogShelterService.getSheltersId(idDog).getSecurity());
+                            sendMessage(chatId, dogShelter.getSecurity());
                         }
 
                     });
@@ -156,9 +149,6 @@ public class UpdatesListener2 implements UpdatesListener {
         return  0l;
     }
 
-  /*  private CatShelter loadCat (Long id){
-    return catShelterService.getSheltersId(id);
-    }*/
 
 }
 
