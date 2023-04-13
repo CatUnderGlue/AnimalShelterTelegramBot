@@ -48,48 +48,54 @@ public class UpdatesListener1 implements UpdatesListener {
                         Chat chat = message.chat();
                         String text = message.text();
 
-                        if ("/start".equals(text)) {
-
-                            sendMessage(chatId, "Рады приветствовать Вас в нашем боте!");
-                            sendMessage(chatId, "У нас здесь живут друзья разных пород и размеров - от веселых щенков до ласковых" +
-                                    " котиков. Мы надеемся, что ты найдешь своего идеального друга здесь");
-                            replyMarkup.sendStartMenu(chatId);
-                        } else if ("Приют для кошек".equals(text)) {
-                            try {
-                                User user = userService.getById(chatId);
-                                user.setShelter("CAT");
-                                userService.update(user);
-                            } catch (Exception e) {
-                                userService.create(new User(chatId, chat.firstName(), chat.lastName(), "","CAT"));
+                        switch (text) {
+                            case "/start" -> {
+                                sendMessage(chatId, "Рады приветствовать Вас в нашем боте!");
+                                sendMessage(chatId, "У нас здесь живут друзья разных пород и размеров - от веселых щенков до ласковых" +
+                                        " котиков. Мы надеемся, что ты найдешь своего идеального друга здесь");
+                                replyMarkup.sendStartMenu(chatId);
                             }
-                            replyMarkup.sendMenuStage0(chatId);
-                        } else if ("Приют для собак".equals(text)) {
-                            try {
-                                User user = userService.getById(chatId);
-                                user.setShelter("DOG");
-                                userService.update(user);
-                            } catch (Exception e) {
-                                userService.create(new User(chatId, chat.firstName(), chat.lastName(), "", "DOG"));
+                            case "Приют для кошек" -> {
+                                try {
+                                    User user = userService.getById(chatId);
+                                    user.setShelter("CAT");
+                                    userService.update(user);
+                                } catch (Exception e) {
+                                    userService.create(new User(chatId, chat.firstName(), chat.lastName(), "", "CAT"));
+                                }
+                                replyMarkup.sendMenuStage0(chatId);
                             }
-                            replyMarkup.sendMenuStage0(chatId);
-                        } else if ("Узнать информацию о приюте".equals(text)) {
-                            String shelter = userService.getShelterById(chatId);
-                            if ("CAT".equals(shelter)) {
-                                replyMarkup2.sendMenuCat(chatId);
-                            }else if ("DOG".equals(shelter)) {
-                                replyMarkup2.sendMenuDog(chatId);
+                            case "Приют для собак" -> {
+                                try {
+                                    User user = userService.getById(chatId);
+                                    user.setShelter("DOG");
+                                    userService.update(user);
+                                } catch (Exception e) {
+                                    userService.create(new User(chatId, chat.firstName(), chat.lastName(), "", "DOG"));
+                                }
+                                replyMarkup.sendMenuStage0(chatId);
                             }
-                        } else if ("Как взять животное из приюта".equals(text)) {
-                            String shelter = userService.getShelterById(chatId);
-                            if ("CAT".equals(shelter)) {
-                                replyMarkup3.menuCat(chatId);
-                            } else if ("DOG".equals(shelter)) {
-                                replyMarkup3.menuDog(chatId);
+                            case "Узнать информацию о приюте" -> {
+                                String shelter = userService.getShelterById(chatId);
+                                if ("CAT".equals(shelter)) {
+                                    replyMarkup2.sendMenuCat(chatId);
+                                } else if ("DOG".equals(shelter)) {
+                                    replyMarkup2.sendMenuDog(chatId);
+                                }
+                                break;
                             }
-                        } else if ("Прислать отчет о питомце".equals(text)) {
-                            sendMessage(chatId, "Тут будет код из Listener4");
-                        }else if ("Позвать волонтёра".equals(text)) {
-                            sendMessage(chatId, "Тут будет код из Listener4");}
+                            case "Как взять животное из приюта" -> {
+                                String shelter = userService.getShelterById(chatId);
+                                if ("CAT".equals(shelter)) {
+                                    replyMarkup3.menuCat(chatId);
+                                } else if ("DOG".equals(shelter)) {
+                                    replyMarkup3.menuDog(chatId);
+                                }
+                                break;
+                            }
+                            case "Прислать отчет о питомце", "Позвать волонтера" -> sendMessage(chatId,
+                                    "Тут будет код из Listener4");
+                        }
                     });
         } catch (Exception e) {
             throw new RuntimeException(e);
