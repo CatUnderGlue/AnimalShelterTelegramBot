@@ -5,14 +5,13 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.animals.Cat;
 import ru.codehunters.zaepestelegrambot.model.shelters.CatShelter;
-import ru.codehunters.zaepestelegrambot.service.impl.CatShelterServiceImpl;
+import ru.codehunters.zaepestelegrambot.service.ShelterService;
 
 import java.util.List;
 
@@ -27,9 +26,9 @@ import java.util.List;
 })
 public class CatSheltersController {
 
-    private final CatShelterServiceImpl catShelterServiceImpl;
-    @Autowired
-    public CatSheltersController(CatShelterServiceImpl catShelterServiceImpl) {
+    private final ShelterService<CatShelter,Cat> catShelterServiceImpl;
+
+    public CatSheltersController(ShelterService<CatShelter,Cat> catShelterServiceImpl) {
         this.catShelterServiceImpl = catShelterServiceImpl;
     }
 
