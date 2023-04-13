@@ -11,11 +11,15 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.codehunters.zaepestelegrambot.model.Information;
+import ru.codehunters.zaepestelegrambot.model.User;
 import ru.codehunters.zaepestelegrambot.model.Volunteer;
 import ru.codehunters.zaepestelegrambot.replymarkup.ReplyMarkup3;
+import ru.codehunters.zaepestelegrambot.service.UserService;
 import ru.codehunters.zaepestelegrambot.service.VolunteerService;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Component
 @RequiredArgsConstructor
@@ -23,7 +27,7 @@ public class UpdatesListener3 implements UpdatesListener {
 
     private final TelegramBot telegramBot;
     private final VolunteerService volunteerService;
-
+    private final UserService userService;
 
     @PostConstruct
     public void init() {
@@ -41,75 +45,69 @@ public class UpdatesListener3 implements UpdatesListener {
                         Long chatId = message.chat().id();
                         String text = message.text();
 
-                        if ("/start".equals(text)) {
-                            sendMessage(chatId, "Рады приветствовать тебя в нашем боте!");
-                            replyMarkup3.sendMenu(chatId);
-                        } else if ("Часто задаваемые вопросы".equals(text)) {
-                            sendMessage(chatId, "У нас здесь живут друзья разных пород и размеров - от веселых щенков до ласковых" +
-                                    " котиков. Мы надеемся, что ты найдешь своего идеального друга здесь");
-                            replyMarkup3.CatOrDog(chatId);
+                        User user = new User();
+                        sendContact(message);
 
-                        }
-//                        else if ("Позвать волонтера".equals(text)) {
-//                            sendMessageToVolunteers(message);
-//                     }
-                        else if ("Все о кошках".equals(text)) {
-                            replyMarkup3.menuCat(chatId);
+                        switch (text) {
+                            case "/start" -> {
+                                sendMessage(chatId, "Рады приветствовать тебя в нашем боте!");
+                                replyMarkup3.sendMenu(chatId);
 
-                        } else if ("Все о собаках".equals(text)) {
-                            replyMarkup3.menuDog(chatId);
+                                user.setTelegramId(chatId);
+                                userService.create(user);
 
-                        } else if ("Правила знакомства c кошкой".equals(text) || "Правила знакомства c собакой".equals(text)) {
-                            sendMessage(chatId, Information.ANIMAL_DATING_RULES);
+                            }
+                            case "Часто задаваемые вопросы" -> {
+                                sendMessage(chatId, "У нас здесь живут друзья разных пород и размеров - от веселых щенков до ласковых" +
+                                        " котиков. Мы надеемся, что ты найдешь своего идеального друга здесь");
+                                replyMarkup3.CatOrDog(chatId);
+                            }
+                            case "Позвать волонтера" -> sendMessageToVolunteers(message);
 
-                        } else if ("Перевозка кошки".equals(text) || "Перевозка собаки".equals(text)) {
-                            sendMessage(chatId, Information.TRANSPORTATION_OF_THE_ANIMAL);
+                            case "Все о кошках", "Назад в \"Все о кошках\"" -> replyMarkup3.menuCat(chatId);
 
-                        } else if ("Необходимые документы".equals(text)) {
-                            sendMessage(chatId, Information.LIST_OF_DOCUMENTS);
+                            case "Ввести свои данные для связи" ->
+                                sendMessage(chatId, "Введите номер 890001112233");
 
-                        } else if ("Список причин для отказа выдачи питомца".equals(text)) {
-                            sendMessage(chatId, Information.LIST_OF_REASON_FOR_DENY);
+                            case "Все о собаках", "Назад в \"Все о собаках\"" -> replyMarkup3.menuDog(chatId);
 
-                        } else if ("Рекомендации для собак".equals(text)) {
-                            replyMarkup3.rulesForDogs(chatId);
+                            case "Правила знакомства c кошкой", "Правила знакомства c собакой" ->
+                                    sendMessage(chatId, Information.ANIMAL_DATING_RULES);
 
-                        } else if ("Рекомендации для кошек".equals(text)) {
-                            replyMarkup3.rulesForCats(chatId);
+                            case "Перевозка кошки", "Перевозка собаки" ->
+                                    sendMessage(chatId, Information.TRANSPORTATION_OF_THE_ANIMAL);
 
-                        } else if ("Обустройство щенка".equals(text) || "Обустройство котенка".equals(text)) {
-                            sendMessage(chatId, Information.RECOMMENDATIONS_HOME_IMPROVEMENT_KITTEN_PUPPY);
+                            case "Необходимые документы" -> sendMessage(chatId, Information.LIST_OF_DOCUMENTS);
 
-                        } else if ("Обустройство взрослой собаки".equals(text) ||
-                                "Обустройство взрослой кошки".equals(text)) {
-                            sendMessage(chatId, Information.RECOMMENDATIONS_HOME_IMPROVEMENT_ADULT_ANIMAL);
+                            case "Список причин для отказа выдачи питомца" ->
+                                    sendMessage(chatId, Information.LIST_OF_REASON_FOR_DENY);
 
-                        } else if ("Обустройство собаки с ограниченными возможностями".equals(text) ||
-                                "Обустройство кошки с ограниченными возможностями".equals(text)) {
-                            sendMessage(chatId, Information.RECOMMENDATIONS_HOME_IMPROVEMENT_DISABLED_ANIMAL);
+                            case "Рекомендации для собак" -> replyMarkup3.rulesForDogs(chatId);
 
-                        } else if ("Советы кинолога".equals(text)) {
-                            sendMessage(chatId, Information.DOG_HANDLERS_ADVICE);
+                            case "Рекомендации для кошек" -> replyMarkup3.rulesForCats(chatId);
 
-                        } else if ("Проверенные кинологи для обращения".equals(text)) {
-                            sendMessage(chatId, Information.DOG_HANDLERS_CONTACTS);
+                            case "Обустройство щенка", "Обустройство котенка" ->
+                                    sendMessage(chatId, Information.RECOMMENDATIONS_HOME_IMPROVEMENT_KITTEN_PUPPY);
 
-                        } else if ("Назад в меню".equals(text)) {
-                            replyMarkup3.sendMenu(chatId);
+                            case "Обустройство взрослой собаки", "Обустройство взрослой кошки" ->
+                                    sendMessage(chatId, Information.RECOMMENDATIONS_HOME_IMPROVEMENT_ADULT_ANIMAL);
 
-                        } else if ("Назад в меню выбора".equals(text)) {
-                            replyMarkup3.CatOrDog(chatId);
+                            case "Обустройство собаки с ограниченными возможностями", "Обустройство кошки с ограниченными возможностями" ->
+                                    sendMessage(chatId, Information.RECOMMENDATIONS_HOME_IMPROVEMENT_DISABLED_ANIMAL);
 
-                        } else if ("Назад в \"Все о собаках\"".equals(text)) {
-                            replyMarkup3.menuDog(chatId);
+                            case "Советы кинолога" -> sendMessage(chatId, Information.DOG_HANDLERS_ADVICE);
 
-                        } else if ("Назад в \"Все о кошках\"".equals(text)) {
-                            replyMarkup3.menuCat(chatId);
+                            case "Проверенные кинологи для обращения" ->
+                                    sendMessage(chatId, Information.DOG_HANDLERS_CONTACTS);
+
+                            case "Назад в меню" -> replyMarkup3.sendMenu(chatId);
+
+                            case "Назад в меню выбора" -> replyMarkup3.CatOrDog(chatId);
 
                         }
                     });
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
         return CONFIRMED_UPDATES_ALL;
     }
@@ -128,4 +126,25 @@ public class UpdatesListener3 implements UpdatesListener {
             telegramBot.execute(new ForwardMessage(volunteer.getTelegramId(), chatId, integer));
         }
     }
+
+    private void sendContact(Message message) {
+        Long chatId = message.chat().id();
+        String txt = message.text();
+        Pattern pattern = Pattern.compile("^(\\d{11})$");
+        Matcher matcher = pattern.matcher(txt);
+
+        if (matcher.find()) {
+            User byId = userService.getById(chatId);
+            byId.setPhone(matcher.group(1));
+            userService.update(byId);
+            sendMessage(chatId, "Телефон принят");
+        } else {
+            sendMessage(chatId, "Неверно ввел");
+        }
+
+
+    }
+
+
 }
+

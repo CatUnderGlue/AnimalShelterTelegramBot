@@ -53,7 +53,8 @@ public class ReplyMarkup3 {
         );
         replyKeyboardMarkup.addRow(
                 new KeyboardButton("Рекомендации для кошек"),
-                new KeyboardButton("Позвать волонтера")
+                new KeyboardButton("Позвать волонтера"),
+                new KeyboardButton("Ввести свои данные для связи")
 
         );
         replyKeyboardMarkup.addRow(
