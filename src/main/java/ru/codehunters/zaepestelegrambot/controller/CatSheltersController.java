@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +19,6 @@ import java.util.List;
 @RestController
 @RequestMapping("cats/shelters")
 @Tag(name = "Кошачий приют", description = "CRUD-методы для работы с приютом")
-@RequiredArgsConstructor
 @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Всё хорошо, кошки довольны."),
         @ApiResponse(responseCode = "400", description = "Есть ошибка в параметрах запроса."),
@@ -29,6 +28,10 @@ import java.util.List;
 public class CatSheltersController {
 
     private final CatShelterServiceImpl catShelterServiceImpl;
+    @Autowired
+    public CatSheltersController(CatShelterServiceImpl catShelterServiceImpl) {
+        this.catShelterServiceImpl = catShelterServiceImpl;
+    }
 
     @PostMapping("/")
     @Operation(
@@ -74,7 +77,8 @@ public class CatSheltersController {
             summary = "Список приютов"
     )
     public ResponseEntity<List<CatShelter>> getAll() {
-        return ResponseEntity.ok(catShelterServiceImpl.getShelter());
+        List<CatShelter> shelters = catShelterServiceImpl.getShelter();
+        return ResponseEntity.ok(shelters);
     }
 
     @GetMapping("/list{id}")

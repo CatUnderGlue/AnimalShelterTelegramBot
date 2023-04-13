@@ -25,4 +25,13 @@ public class User {
     @Column
     private String phone;
 
+    @Column
+    private String shelter;
+
+    public User(Long telegramId, String firstName, String lastName, String phone) {
+        this.telegramId = telegramId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+    }
 }

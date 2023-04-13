@@ -34,6 +34,11 @@ public class DogShelterServiceImpl implements ShelterService<DogShelter, Dog> {
         return dogRepo.save(currentShelter);
     }
 
+    @Override
+    public DogShelter getSheltersId(long id) {
+        return dogRepo.getReferenceById(id);
+    }
+
 
     @Override
     public List<DogShelter> getShelter() {

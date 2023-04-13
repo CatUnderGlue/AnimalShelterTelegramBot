@@ -1,6 +1,7 @@
 package ru.codehunters.zaepestelegrambot.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.animals.Cat;
@@ -32,6 +33,11 @@ public class CatShelterServiceImpl implements ShelterService<CatShelter, Cat> {
         CatShelter currentShelter = shelterId.get();
         EntityUtils.copyNonNullFields(catShelter, currentShelter);
         return catRepo.save(currentShelter);
+    }
+
+    @Override
+    public CatShelter getSheltersId(long id) {
+        return catRepo.getReferenceById(id);
     }
 
     @Override

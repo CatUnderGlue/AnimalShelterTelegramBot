@@ -21,6 +21,13 @@ public interface UserService {
     User getById(Long id);
 
     /**
+     * Получение выбранного в боте приюта по id пользователя
+     * @param id Id пользователя
+     * @return "CAT" или "DOG"
+     */
+    String getShelterById(Long id);
+
+    /**
      * @return Список всех пользователей
      */
     List<User> getAll();

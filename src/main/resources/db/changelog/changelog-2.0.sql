@@ -22,3 +22,7 @@ alter table trial_periods
 --changeset pro100:3
 alter table dog_Shelter
     rename column id_shelter to id;
+
+--changeset profmi2022:4
+alter table users
+    add shelter varchar(255);

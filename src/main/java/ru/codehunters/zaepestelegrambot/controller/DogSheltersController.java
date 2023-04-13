@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.codehunters.zaepestelegrambot.model.animals.Dog;
@@ -17,7 +18,6 @@ import java.util.List;
 @RestController
 @RequestMapping("dogs/shelters")
 @Tag(name = "Собачий приют", description = "CRUD-методы для работы с приютом")
-@RequiredArgsConstructor
 @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Всё хорошо, собачки довольны."),
         @ApiResponse(responseCode = "400", description = "Есть ошибка в параметрах запроса."),
@@ -27,6 +27,10 @@ import java.util.List;
 public class DogSheltersController {
 
     private final DogShelterServiceImpl dogShelterService;
+@Autowired
+    public DogSheltersController(DogShelterServiceImpl dogShelterService) {
+        this.dogShelterService = dogShelterService;
+    }
 
     @PostMapping("/")
     @Operation(
