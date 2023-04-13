@@ -1,7 +1,5 @@
 package ru.codehunters.zaepestelegrambot.service;
 
-
-
 import java.util.List;
 
 public interface ShelterService<T, D> {
@@ -27,6 +25,9 @@ public interface ShelterService<T, D> {
      * @return приют
      */
     T getSheltersId(long id);
+
+    T getShelterByName(String name);
+
     /**
      * Выдача списка приютов
      * @return List со списком приютов

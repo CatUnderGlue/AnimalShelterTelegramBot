@@ -43,6 +43,14 @@ public class DogShelterServiceImpl implements ShelterService<DogShelter, Dog> {
         return shelterId.get();
     }
 
+    @Override
+    public DogShelter getShelterByName(String name) {
+        Optional<DogShelter> shelterId = dogRepo.findByName(name);
+        if (shelterId.isEmpty()){
+            throw new NotFoundException("Приют не найден. Собачки остались без дома");
+        }
+        return shelterId.get();
+    }
 
     @Override
     public List<DogShelter> getShelter() {

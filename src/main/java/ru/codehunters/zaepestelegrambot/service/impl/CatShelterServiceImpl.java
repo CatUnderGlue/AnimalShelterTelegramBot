@@ -44,6 +44,15 @@ public class CatShelterServiceImpl implements ShelterService<CatShelter, Cat> {
     }
 
     @Override
+    public CatShelter getShelterByName(String name) {
+        Optional<CatShelter> shelterId = catRepo.findByName(name);
+        if (shelterId.isEmpty()){
+            throw new NotFoundException("Приют не найден. Кошки остались без дома");
+        }
+        return shelterId.get();
+    }
+
+    @Override
     public List<CatShelter> getShelter() {
         return catRepo.findAll();
     }

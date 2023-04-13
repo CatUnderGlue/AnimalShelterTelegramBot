@@ -25,7 +25,10 @@ alter table dog_Shelter
 
 --changeset profmi2022:4
 alter table users
-    add shelter varchar(255);
+    add shelter_type varchar(255);
+
+alter table users
+    add shelter_name varchar(255);
 
 --changeset mexx:1
 alter table cat

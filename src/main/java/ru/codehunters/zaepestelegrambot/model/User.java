@@ -26,7 +26,10 @@ public class User {
     private String phone;
 
     @Column
-    private String shelter;
+    private String shelterType;
+
+    @Column
+    private String shelterName;
 
     public User(Long telegramId, String firstName, String lastName, String phone) {
         this.telegramId = telegramId;

@@ -41,4 +41,12 @@ public class Dog {
         this.vaccinated = vaccinated;
         this.shelterId = shelterId;
     }
+
+    @Override
+    public String toString() {
+        return "Имя: " + name +
+                ", Возраст: " + age +
+                ", Состояние здоровья: " + (isHealthy ? "здоров" : "инвалид") +
+                ", Вакцинация: " + (vaccinated ? "привит" : "не привит");
+    }
 }

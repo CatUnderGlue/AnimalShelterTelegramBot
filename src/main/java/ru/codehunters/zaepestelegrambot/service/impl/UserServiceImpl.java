@@ -36,7 +36,8 @@ public class UserServiceImpl implements UserService {
         if (optionalUser.isEmpty()) {
             throw new NotFoundException("Пользователь не найден!");
         }
-        return optionalUser.get().getShelter();
+        User user = optionalUser.get();
+        return user.getShelterType();
     }
 
     @Override
