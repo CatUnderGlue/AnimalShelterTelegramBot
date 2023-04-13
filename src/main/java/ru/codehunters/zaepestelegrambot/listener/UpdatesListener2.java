@@ -29,6 +29,7 @@ public class UpdatesListener2 implements UpdatesListener {
     private CatShelter catShelter;
     private DogShelter dogShelter;
 
+
     @PostConstruct
     public void init() {
         telegramBot.setUpdatesListener(this);
@@ -68,7 +69,10 @@ public class UpdatesListener2 implements UpdatesListener {
                             sendMessage(chatId, catShelter.getTimetable());
                         }
                         else if ("Список кошек приюта".equals(text)) {
-                            // sendMessage(chatId,replyMarkup.catObject(idCat).getList().toString());
+                            catShelter.getList().stream()
+                                    .map(cat -> cat.toString())
+                                    .forEach(catString -> sendMessage(chatId, catString));
+
                         }
                         else if ("О кошачьем приюте".equals(text)) {
                             sendMessage(chatId, catShelter.getAboutMe());
@@ -86,7 +90,9 @@ public class UpdatesListener2 implements UpdatesListener {
                             sendMessage(chatId, dogShelter.getTimetable());
                         }
                         else if ("Список собачек приюта".equals(text)) {
-                            //   sendMessage(chatId,replyMarkup.dogObject(idDog).getList().toString());
+                            dogShelter.getList().stream()
+                                    .map(dog -> dog.toString())
+                                    .forEach(dogString -> sendMessage(chatId, dogString));
                         }
                         else if ("О приюте".equals(text)) {
                             sendMessage(chatId, dogShelter.getAboutMe());

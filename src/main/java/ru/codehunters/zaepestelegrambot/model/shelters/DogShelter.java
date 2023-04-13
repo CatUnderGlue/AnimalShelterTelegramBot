@@ -43,7 +43,7 @@ public class DogShelter {
     /**
      * Список животных в приюте
      */
-    @OneToMany(mappedBy = "shelterId", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "shelterId", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private List<Dog> list;
     /**
      * Способ связи с охраной
