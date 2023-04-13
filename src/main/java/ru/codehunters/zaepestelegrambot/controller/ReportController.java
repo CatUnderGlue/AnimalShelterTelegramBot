@@ -113,7 +113,7 @@ public class ReportController {
     @Operation(
             summary = "Изменить отчёт"
     )
-    public ResponseEntity<Object> update(@RequestParam(required = false) @Parameter(description = "Id отчёта") Long id,
+    public ResponseEntity<Object> update(@RequestParam @Parameter(description = "Id отчёта") Long id,
                                           @RequestParam(required = false) @Parameter(description = "Id фотографии") String photoId,
                                           @RequestParam(required = false) @Parameter(description = "Рацион животного") String foodRation,
                                           @RequestParam(required = false) @Parameter(description = "Общее самочувствие и привыкание к новому месту") String generalHealth,
