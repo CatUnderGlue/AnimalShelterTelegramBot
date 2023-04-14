@@ -7,7 +7,6 @@ import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.TrialPeriod;
 import ru.codehunters.zaepestelegrambot.model.owners.DogOwner;
 import ru.codehunters.zaepestelegrambot.repository.DogOwnerRepo;
-import ru.codehunters.zaepestelegrambot.repository.DogRepo;
 import ru.codehunters.zaepestelegrambot.service.DogOwnerService;
 import ru.codehunters.zaepestelegrambot.service.DogService;
 import ru.codehunters.zaepestelegrambot.service.TrialPeriodService;
@@ -22,30 +21,31 @@ import java.util.Optional;
 public class DogOwnerServiceImpl implements DogOwnerService {
 
     private final DogOwnerRepo dogOwnerRepo;
-    private final DogRepo dogRepo;
     private final UserService userService;
     private final DogService dogService;
     private final TrialPeriodService trialPeriodService;
 
     @Override
     public DogOwner create(DogOwner dogOwner, TrialPeriod.AnimalType animalType, Long animalId) {
-        if (dogRepo.getById(animalId).getOwnerId() != null) {
+        if (dogService.getById(animalId).getOwnerId() != null) {
             throw new AlreadyExistsException("У этой собаки уже есть хозяин!");
         }
         trialPeriodService.create(new TrialPeriod(LocalDate.now(), LocalDate.now().plusDays(30),
-                LocalDate.now().minusDays(1), new ArrayList<>(), TrialPeriod.Result.IN_PROGRESS, dogOwner.getTelegramId(), animalType, animalId));
+                LocalDate.now().minusDays(1), new ArrayList<>(),
+                TrialPeriod.Result.IN_PROGRESS, dogOwner.getTelegramId(), animalType, animalId), animalType);
         dogService.getById(animalId).setOwnerId(dogOwner.getTelegramId());
         return dogOwnerRepo.save(dogOwner);
     }
 
     @Override
     public DogOwner create(Long id, TrialPeriod.AnimalType animalType, Long animalId) {
-        if (dogRepo.getById(animalId).getOwnerId() != null) {
+        if (dogService.getById(animalId).getOwnerId() != null) {
             throw new AlreadyExistsException("У этой собаки уже есть хозяин!");
         }
         DogOwner dogOwner = new DogOwner(userService.getById(id));
         trialPeriodService.create(new TrialPeriod(LocalDate.now(), LocalDate.now().plusDays(30),
-                LocalDate.now().minusDays(1), new ArrayList<>(), TrialPeriod.Result.IN_PROGRESS, id, animalType, animalId));
+                LocalDate.now().minusDays(1), new ArrayList<>(),
+                TrialPeriod.Result.IN_PROGRESS, id, animalType, animalId), animalType);
         dogService.getById(animalId).setOwnerId(id);
         return dogOwnerRepo.save(dogOwner);
     }
