@@ -5,7 +5,6 @@ import com.pengrad.telegrambot.model.request.KeyboardButton;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.model.request.ReplyKeyboardMarkup;
 import com.pengrad.telegrambot.request.SendMessage;
-import com.pengrad.telegrambot.response.SendResponse;
 import lombok.RequiredArgsConstructor;
 import ru.codehunters.zaepestelegrambot.model.shelters.CatShelter;
 import ru.codehunters.zaepestelegrambot.model.shelters.DogShelter;
@@ -31,7 +30,7 @@ public class ReplyMarkup {
         returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, "Выберите приют:");
     }
 
-    public void sendMenuStage0(long chatId) {
+    public void sendMenuStage(long chatId) {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(
                 new KeyboardButton("Узнать информацию о приюте"),
                 new KeyboardButton("Часто задаваемые вопросы"),
@@ -186,6 +185,6 @@ public class ReplyMarkup {
                 .replyMarkup(replyKeyboardMarkup)
                 .parseMode(ParseMode.HTML)
                 .disableWebPagePreview(true);
-        SendResponse sendResponse = telegramBot.execute(request);
+        telegramBot.execute(request);
     }
 }
