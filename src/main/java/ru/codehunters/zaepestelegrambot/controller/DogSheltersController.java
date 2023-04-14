@@ -5,12 +5,12 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.codehunters.zaepestelegrambot.model.animals.Dog;
 import ru.codehunters.zaepestelegrambot.model.shelters.DogShelter;
-import ru.codehunters.zaepestelegrambot.service.impl.DogShelterServiceImpl;
+import ru.codehunters.zaepestelegrambot.service.ShelterService;
+
 
 import java.util.List;
 
@@ -25,9 +25,9 @@ import java.util.List;
 })
 public class DogSheltersController {
 
-    private final DogShelterServiceImpl dogShelterService;
-    @Autowired
-    public DogSheltersController(DogShelterServiceImpl dogShelterService) {
+    private final ShelterService<DogShelter,Dog> dogShelterService;
+
+    public DogSheltersController( ShelterService<DogShelter,Dog> dogShelterService) {
         this.dogShelterService = dogShelterService;
     }
 
