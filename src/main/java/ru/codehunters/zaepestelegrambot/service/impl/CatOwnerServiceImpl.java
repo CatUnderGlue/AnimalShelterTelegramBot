@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.codehunters.zaepestelegrambot.exception.AlreadyExistsException;
 import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.TrialPeriod;
+import ru.codehunters.zaepestelegrambot.model.animals.Cat;
 import ru.codehunters.zaepestelegrambot.model.owners.CatOwner;
 import ru.codehunters.zaepestelegrambot.repository.CatOwnerRepo;
 import ru.codehunters.zaepestelegrambot.service.CatOwnerService;
@@ -81,11 +82,19 @@ public class CatOwnerServiceImpl implements CatOwnerService {
 
     @Override
     public void delete(CatOwner catOwner) {
+        for (Cat cat : catOwner.getCatList()) {
+            cat.setOwnerId(null);
+            catService.update(cat);
+        }
         catOwnerRepo.delete(getById(catOwner.getTelegramId()));
     }
 
     @Override
     public void deleteById(Long id) {
+        for (Cat cat : getById(id).getCatList()) {
+            cat.setOwnerId(null);
+            catService.update(cat);
+        }
         catOwnerRepo.deleteById(getById(id).getTelegramId());
     }
 }
