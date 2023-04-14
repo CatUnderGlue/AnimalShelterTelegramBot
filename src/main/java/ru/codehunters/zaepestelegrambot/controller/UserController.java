@@ -38,29 +38,29 @@ public class UserController {
     @GetMapping()
     @Operation(summary = "Получение списка всех пользователей")
     public ResponseEntity<Object> getAll() {
-            return ResponseEntity.ok(userService.getAll());
+        return ResponseEntity.ok(userService.getAll());
     }
 
     @GetMapping("id")
     @Operation(summary = "Получение пользователя по id")
     public ResponseEntity<Object> getById(@RequestParam @Parameter(description = "Id пользователя") Long userId) {
-            User user = userService.getById(userId);
-            return ResponseEntity.ok().body(user);
+        User user = userService.getById(userId);
+        return ResponseEntity.ok().body(user);
     }
 
     @PutMapping
     @Operation(summary = "Изменить пользователя")
     public ResponseEntity<Object> update(@RequestParam @Parameter(description = "Телеграм id пользователя") Long telegramId,
-                                         @RequestParam @Parameter(description = "Имя") String firstName,
-                                         @RequestParam @Parameter(description = "Фамилия") String lastName,
-                                         @RequestParam @Parameter(description = "Телефон") String phone) {
-            return ResponseEntity.ok(userService.create(new User(telegramId, firstName, lastName, phone)));
+                                         @RequestParam(required = false) @Parameter(description = "Имя") String firstName,
+                                         @RequestParam(required = false) @Parameter(description = "Фамилия") String lastName,
+                                         @RequestParam(required = false) @Parameter(description = "Телефон") String phone) {
+        return ResponseEntity.ok(userService.update(new User(telegramId, firstName, lastName, phone)));
     }
 
     @DeleteMapping("id")
     @Operation(summary = "Удаление пользователя по id")
     public ResponseEntity<String> deleteById(@RequestParam @Parameter(description = "Id пользователя") Long userId) {
-            userService.deleteById(userId);
-            return ResponseEntity.ok().body("Пользователь успешно удалён");
+        userService.deleteById(userId);
+        return ResponseEntity.ok().body("Пользователь успешно удалён");
     }
 }

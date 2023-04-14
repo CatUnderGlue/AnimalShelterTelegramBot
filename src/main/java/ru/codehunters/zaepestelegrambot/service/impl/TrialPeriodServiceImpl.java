@@ -6,6 +6,7 @@ import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.TrialPeriod;
 import ru.codehunters.zaepestelegrambot.repository.TrialPeriodRepo;
 import ru.codehunters.zaepestelegrambot.service.CatService;
+import ru.codehunters.zaepestelegrambot.service.DogService;
 import ru.codehunters.zaepestelegrambot.service.TrialPeriodService;
 
 import java.util.List;
@@ -17,10 +18,20 @@ public class TrialPeriodServiceImpl implements TrialPeriodService {
 
     private final TrialPeriodRepo trialPeriodRepo;
     private final CatService catService;
+    private final DogService dogService;
 
     @Override
     public TrialPeriod create(TrialPeriod trialPeriod) {
-        catService.getById(trialPeriod.getAnimalId()).setOwnerId(trialPeriod.getOwnerId());
+        return trialPeriodRepo.save(trialPeriod);
+    }
+
+    @Override
+    public TrialPeriod create(TrialPeriod trialPeriod, TrialPeriod.AnimalType animalType) {
+        if (animalType.equals(TrialPeriod.AnimalType.CAT)) {
+            catService.getById(trialPeriod.getAnimalId()).setOwnerId(trialPeriod.getOwnerId());
+        } else if (animalType.equals(TrialPeriod.AnimalType.DOG)) {
+            dogService.getById(trialPeriod.getAnimalId()).setOwnerId(trialPeriod.getOwnerId());
+        }
         return trialPeriodRepo.save(trialPeriod);
     }
 
