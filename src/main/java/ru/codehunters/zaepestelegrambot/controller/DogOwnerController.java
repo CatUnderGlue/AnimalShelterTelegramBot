@@ -5,10 +5,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.TrialPeriod;
 import ru.codehunters.zaepestelegrambot.model.owners.DogOwner;
 import ru.codehunters.zaepestelegrambot.service.DogOwnerService;
@@ -78,9 +76,9 @@ public class DogOwnerController {
             summary = "Изменить владельца собаки"
     )
     public ResponseEntity<Object> update(@RequestParam @Parameter(description = "Телеграм id владельца собаки") Long telegramId,
-                                         @RequestParam @Parameter(description = "Имя") String firstName,
-                                         @RequestParam @Parameter(description = "Фамилия") String lastName,
-                                         @RequestParam @Parameter(description = "Телефон") String phone) {
+                                         @RequestParam (required = false) @Parameter(description = "Имя") String firstName,
+                                         @RequestParam (required = false) @Parameter(description = "Фамилия") String lastName,
+                                         @RequestParam (required = false) @Parameter(description = "Телефон") String phone) {
         return ResponseEntity.ok(dogOwnerService.update(new DogOwner(telegramId, firstName, lastName, phone,
                 null, null)));
     }
