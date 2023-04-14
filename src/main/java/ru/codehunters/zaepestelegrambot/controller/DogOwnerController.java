@@ -5,10 +5,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.TrialPeriod;
 import ru.codehunters.zaepestelegrambot.model.owners.DogOwner;
 import ru.codehunters.zaepestelegrambot.service.DogOwnerService;
@@ -38,12 +36,8 @@ public class DogOwnerController {
                                            @RequestParam @Parameter(description = "Фамилия") String lastName,
                                            @RequestParam @Parameter(description = "Телефон") String phone,
                                            @RequestParam @Parameter(description = "Id собаки") Long animalId) {
-        try {
-            return ResponseEntity.ok(dogOwnerService.create(new DogOwner(telegramId, firstName, lastName, phone,
-                    null, null), TrialPeriod.AnimalType.DOG, animalId));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
+        return ResponseEntity.ok(dogOwnerService.create(new DogOwner(telegramId, firstName, lastName, phone,
+                null, null), TrialPeriod.AnimalType.DOG, animalId));
     }
 
     @PostMapping("/user")
@@ -52,11 +46,7 @@ public class DogOwnerController {
     )
     public ResponseEntity<DogOwner> create(@RequestParam @Parameter(description = "Пользователь") Long id,
                                            @RequestParam @Parameter(description = "Id собаки") Long animalId) {
-        try {
-            return ResponseEntity.ok(dogOwnerService.create(id, TrialPeriod.AnimalType.DOG, animalId));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
+        return ResponseEntity.ok(dogOwnerService.create(id, TrialPeriod.AnimalType.DOG, animalId));
     }
 
     @GetMapping()
@@ -64,11 +54,7 @@ public class DogOwnerController {
             summary = "Получение списка всех владельцев собак"
     )
     public ResponseEntity<Object> getAll() {
-        try {
-            return ResponseEntity.ok(dogOwnerService.getAll());
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        return ResponseEntity.ok(dogOwnerService.getAll());
     }
 
     @GetMapping("id")
@@ -81,12 +67,8 @@ public class DogOwnerController {
             example = "1"
     )
     public ResponseEntity<Object> getById(@RequestParam Long dogOwnerId) {
-        try {
-            DogOwner dogOwner = dogOwnerService.getById(dogOwnerId);
-            return ResponseEntity.ok().body(dogOwner);
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        DogOwner dogOwner = dogOwnerService.getById(dogOwnerId);
+        return ResponseEntity.ok().body(dogOwner);
     }
 
     @PutMapping
@@ -97,14 +79,8 @@ public class DogOwnerController {
                                          @RequestParam @Parameter(description = "Имя") String firstName,
                                          @RequestParam @Parameter(description = "Фамилия") String lastName,
                                          @RequestParam @Parameter(description = "Телефон") String phone) {
-        try {
-            return ResponseEntity.ok(dogOwnerService.update(new DogOwner(telegramId, firstName, lastName, phone,
-                    null, null)));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        return ResponseEntity.ok(dogOwnerService.update(new DogOwner(telegramId, firstName, lastName, phone,
+                null, null)));
     }
 
     @DeleteMapping("id")
@@ -112,12 +88,8 @@ public class DogOwnerController {
             summary = "Удаление владельца собаки по id"
     )
 
-    public ResponseEntity<String> deleteById(@RequestParam @Parameter(description = "Id владельца собаки")Long dogOwnerId) {
-        try {
-            dogOwnerService.deleteById(dogOwnerId);
-            return ResponseEntity.ok().body("Владелец собаки успешно удалён");
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    public ResponseEntity<String> deleteById(@RequestParam @Parameter(description = "Id владельца собаки") Long dogOwnerId) {
+        dogOwnerService.deleteById(dogOwnerId);
+        return ResponseEntity.ok().body("Владелец собаки успешно удалён");
     }
 }

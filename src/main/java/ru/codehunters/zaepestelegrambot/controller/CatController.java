@@ -6,10 +6,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.animals.Cat;
 import ru.codehunters.zaepestelegrambot.service.CatService;
 
@@ -30,12 +28,8 @@ public class CatController {
     @GetMapping("/id")
     @Operation(summary = "Получение кота по ID")
     public ResponseEntity<Object> getById(@RequestParam @Parameter(description = "ID кота") Long id) {
-        try {
-            Cat cat = catService.getById(id);
-            return ResponseEntity.ok().body(cat);
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        Cat cat = catService.getById(id);
+        return ResponseEntity.ok().body(cat);
     }
 
     @PostMapping
@@ -46,31 +40,19 @@ public class CatController {
             @RequestParam @Parameter(description = "Здоров?") boolean isHealthy,
             @RequestParam @Parameter(description = "Привит?") boolean vaccinated,
             @RequestParam @Parameter(description = "ID приюта") Long shelterId) {
-        try {
-            return ResponseEntity.ok(catService.create(new Cat(name, age, isHealthy, vaccinated, shelterId)));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
+        return ResponseEntity.ok(catService.create(new Cat(name, age, isHealthy, vaccinated, shelterId)));
     }
 
     @GetMapping()
     @Operation(summary = "Получение всех котов")
     public ResponseEntity<Object> getAll() {
-        try {
-            return ResponseEntity.ok(catService.getAll());
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        return ResponseEntity.ok(catService.getAll());
     }
 
     @GetMapping("/ownerID")
     @Operation(summary = "Получение информации о хозяине кота по ID")
     public ResponseEntity<Object> getOwnerById(@RequestParam @Parameter(description = "ID хозяина") Long id) {
-        try {
-            return ResponseEntity.ok(catService.getByUserId(id));
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        return ResponseEntity.ok(catService.getByUserId(id));
     }
 
 
@@ -84,24 +66,14 @@ public class CatController {
             @RequestParam(required = false) @Parameter(description = "Привит?") Boolean vaccinated,
             @RequestParam(required = false) @Parameter(description = "ID кошачьего приюта") Long shelterId,
             @RequestParam(required = false) @Parameter(description = "ID хозяина") Long ownerId) {
-        try {
-            return ResponseEntity.ok(catService.update(new Cat(id, name, age, isHealthy, vaccinated, shelterId, ownerId)));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        return ResponseEntity.ok(catService.update(new Cat(id, name, age, isHealthy, vaccinated, shelterId, ownerId)));
     }
 
     @DeleteMapping("/id")
     @Operation(summary = "Удаление кота")
     public ResponseEntity<Object> deleteById(@RequestParam Long id) {
-        try {
-            catService.remove(id);
-            return ResponseEntity.ok().body("Кота выбросили на улицу");
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        catService.remove(id);
+        return ResponseEntity.ok().body("Кота выбросили на улицу");
     }
 
 }
