@@ -88,8 +88,9 @@ public interface ReportService {
      * @param photoId Id фотографии из чата в телеграме
      * @param caption Описание под фотографией
      * @param id id пользователя
+     * @return Созданный отчёт
      * @exception IllegalArgumentException Если описание пустое или равно null, а так же, если формат данных не совпадает с regEx
      * @exception AlreadyExistsException Если отчёт уже отправляли в этот день
      */
-    void createFromTelegram(String photoId, String caption, Long id);
+    Report createFromTelegram(String photoId, String caption, Long id);
 }
