@@ -30,7 +30,7 @@ public class ReplyMarkup {
         returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, "Выберите приют:");
     }
 
-    public void sendMenuStage0(long chatId) {
+    public void sendMenuStage(long chatId) {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(
                 new KeyboardButton("Узнать информацию о приюте"),
                 new KeyboardButton("Часто задаваемые вопросы"),

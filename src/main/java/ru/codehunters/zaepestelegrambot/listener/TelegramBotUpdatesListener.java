@@ -131,7 +131,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                                 } catch (Exception e) {
                                     logger.error(e.getMessage(), e);
                                 }
-                                replyMarkup.sendMenuStage0(chatId);
+                                replyMarkup.sendMenuStage(chatId);
                             }
                             case "Приют для собак" -> {
                                 logger.info("Вызвано меню выбора приюта для собак - ID:{}",chatId);
@@ -142,7 +142,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                                 } catch (Exception e) {
                                     logger.error(e.getMessage(), e);
                                 }
-                                replyMarkup.sendMenuStage0(chatId);
+                                replyMarkup.sendMenuStage(chatId);
                             }
 
                             case "Узнать информацию о приюте" -> {
@@ -258,47 +258,47 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                                 }
                             }
                             case "Все о кошках", "Назад в \"Все о кошках\"" -> {
-                                logger.info("Часто задаваемые вопросы - ID:{}",chatId);
+                                logger.info("Все о кошках - ID:{}",chatId);
                                 replyMarkup.menuCat(chatId);
                             }
                             case "Все о собаках", "Назад в \"Все о собаках\"" -> {
-                                logger.info("Часто задаваемые вопросы - ID:{}",chatId);
+                                logger.info("Все о собаках - ID:{}",chatId);
                                 replyMarkup.menuDog(chatId);
                             }
                             case "Правила знакомства c кошкой", "Правила знакомства c собакой" -> {
-                                logger.info("Часто задаваемые вопросы - ID:{}",chatId);
+                                logger.info("Правила знакомства - ID:{}",chatId);
                                 sendMessage(chatId, Information.ANIMAL_DATING_RULES);
                             }
                             case "Перевозка кошки", "Перевозка собаки" -> {
-                                logger.info("Часто задаваемые вопросы - ID:{}",chatId);
+                                logger.info("Перевозка - ID:{}",chatId);
                                 sendMessage(chatId, Information.TRANSPORTATION_OF_THE_ANIMAL);
                             }
                             case "Необходимые документы" -> {
-                                logger.info("Часто задаваемые вопросы - ID:{}",chatId);
+                                logger.info("Необходимые документы - ID:{}",chatId);
                                 sendMessage(chatId, Information.LIST_OF_DOCUMENTS);
                             }
                             case "Список причин для отказа выдачи питомца" -> {
-                                logger.info("Часто задаваемые вопросы - ID:{}",chatId);
+                                logger.info("Список причин для отказа выдачи питомца - ID:{}",chatId);
                                 sendMessage(chatId, Information.LIST_OF_REASON_FOR_DENY);
                             }
                             case "Рекомендации для собак" -> {
-                                logger.info("Часто задаваемые вопросы - ID:{}",chatId);
+                                logger.info("Рекомендации для собак - ID:{}",chatId);
                                 replyMarkup.rulesForDogs(chatId);
                             }
                             case "Рекомендации для кошек" -> {
-                                logger.info("Часто задаваемые вопросы - ID:{}",chatId);
+                                logger.info("Рекомендации для кошек - ID:{}",chatId);
                                 replyMarkup.rulesForCats(chatId);
                             }
                             case "Обустройство щенка", "Обустройство котенка" -> {
-                                logger.info("Часто задаваемые вопросы - ID:{}",chatId);
+                                logger.info("Обустройство щенка/котенка - ID:{}",chatId);
                                 sendMessage(chatId, Information.RECOMMENDATIONS_HOME_IMPROVEMENT_KITTEN_PUPPY);
                             }
                             case "Обустройство взрослой собаки", "Обустройство взрослой кошки" -> {
-                                logger.info("Часто задаваемые вопросы - ID:{}",chatId);
+                                logger.info("Обустройство взрослого животного - ID:{}",chatId);
                                 sendMessage(chatId, Information.RECOMMENDATIONS_HOME_IMPROVEMENT_ADULT_ANIMAL);
                             }
                             case "Обустройство собаки с ограниченными возможностями", "Обустройство кошки с ограниченными возможностями" -> {
-                                logger.info("Часто задаваемые вопросы - ID:{}",chatId);
+                                logger.info("Обустройство животного с ограниченными возможностями - ID:{}",chatId);
                                 sendMessage(chatId, Information.RECOMMENDATIONS_HOME_IMPROVEMENT_DISABLED_ANIMAL);
                             }
                             case "Советы кинолога" -> {
@@ -343,6 +343,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         } else {
             sendMessage(chatId, "Неверно ввел");
         }
+        logger.info("Прилетел телефон - ID:{} тел:{} ",chatId, text);
     }
 
     private void sendMessageToVolunteers(Message message) {
