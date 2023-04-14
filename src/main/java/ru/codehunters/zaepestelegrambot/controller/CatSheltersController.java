@@ -5,10 +5,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.animals.Cat;
 import ru.codehunters.zaepestelegrambot.model.shelters.CatShelter;
 import ru.codehunters.zaepestelegrambot.service.ShelterService;
@@ -26,9 +24,9 @@ import java.util.List;
 })
 public class CatSheltersController {
 
-    private final ShelterService<CatShelter,Cat> catShelterServiceImpl;
+    private final ShelterService<CatShelter, Cat> catShelterServiceImpl;
 
-    public CatSheltersController(ShelterService<CatShelter,Cat> catShelterServiceImpl) {
+    public CatSheltersController(ShelterService<CatShelter, Cat> catShelterServiceImpl) {
         this.catShelterServiceImpl = catShelterServiceImpl;
     }
 
@@ -43,11 +41,7 @@ public class CatSheltersController {
                                          @RequestParam @Parameter(description = "Способ связи с охраной") String security,
                                          @RequestParam @Parameter(description = "Рекомендации о технике безопасности на территории приюта") String safetyAdvice
     ) {
-        try {
-            return ResponseEntity.ok().body(catShelterServiceImpl.addShelter(new CatShelter(name, location, timetable, aboutMe, security, safetyAdvice)));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
+        return ResponseEntity.ok().body(catShelterServiceImpl.addShelter(new CatShelter(name, location, timetable, aboutMe, security, safetyAdvice)));
     }
 
     @PutMapping("/")
@@ -62,13 +56,7 @@ public class CatSheltersController {
                                          @RequestParam(required = false) @Parameter(description = "Способ связи с охраной") String security,
                                          @RequestParam(required = false) @Parameter(description = "Рекомендации о технике безопасности на территории приюта") String safetyAdvice) {
 
-        try {
-            return ResponseEntity.ok().body(catShelterServiceImpl.updateShelter((new CatShelter(id, name, location, timetable, aboutMe, security, safetyAdvice))));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        return ResponseEntity.ok().body(catShelterServiceImpl.updateShelter((new CatShelter(id, name, location, timetable, aboutMe, security, safetyAdvice))));
     }
 
     @GetMapping("/")

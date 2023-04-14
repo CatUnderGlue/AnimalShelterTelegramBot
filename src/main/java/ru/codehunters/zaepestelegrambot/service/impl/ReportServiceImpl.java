@@ -22,7 +22,6 @@ import java.util.regex.Pattern;
 public class ReportServiceImpl implements ReportService {
     private final ReportRepo reportRepo;
     private final TrialPeriodService trialPeriodService;
-    private final Pattern pattern = Pattern.compile("(Рацион:)(\\s\\W+;)\\n(Самочувствие:)(\\s\\W+;)\\n(Поведение:)(\\s\\W+;)");
 
     @Override
     public Report create(Report report) {
@@ -32,7 +31,7 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public Report getById(Long id) {
         Optional<Report> optionalReport = reportRepo.findById(id);
-        if (optionalReport.isEmpty()){
+        if (optionalReport.isEmpty()) {
             throw new NotFoundException("Отчёт не найден!");
         }
         return optionalReport.get();
@@ -41,7 +40,7 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public Report getByDateAndTrialId(LocalDate date, Long id) {
         Optional<Report> optionalReport = reportRepo.findByReceiveDateAndTrialPeriodId(date, id);
-        if (optionalReport.isEmpty()){
+        if (optionalReport.isEmpty()) {
             throw new NotFoundException("Отчёт не найден!");
         }
         return optionalReport.get();
@@ -83,7 +82,7 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public void createFromTelegram(String photoId, String caption, Long id) {
+    public Report createFromTelegram(String photoId, String caption, Long id) {
         TrialPeriod trialPeriod = trialPeriodService.getAllByOwnerId(id).stream()
                 .filter(trialPeriod1 -> trialPeriod1.getResult().equals(TrialPeriod.Result.IN_PROGRESS))
                 .findFirst().get();
@@ -91,9 +90,11 @@ public class ReportServiceImpl implements ReportService {
             throw new AlreadyExistsException("Вы уже отправляли отчёт сегодня.");
         }
         List<String> captionParts = splitCaption(caption);
-        create(new Report(photoId, captionParts.get(0), captionParts.get(1), captionParts.get(2), LocalDate.now(), trialPeriod.getId()));
+        Report report = create(new Report(photoId, captionParts.get(0), captionParts.get(1),
+                captionParts.get(2), LocalDate.now(), trialPeriod.getId()));
         trialPeriod.setLastReportDate(LocalDate.now());
         trialPeriodService.update(trialPeriod);
+        return report;
     }
 
     /**
@@ -103,6 +104,7 @@ public class ReportServiceImpl implements ReportService {
      * @return Список с частями для создания отчёта
      */
     private List<String> splitCaption(String caption) {
+        Pattern pattern = Pattern.compile("(Рацион:)\\s(\\W+);\\n(Самочувствие:)\\s(\\W+);\\n(Поведение:)\\s(\\W+);");
         if (caption == null || caption.isBlank()) {
             throw new IllegalArgumentException("Описание под фотографией не должно быть пустым. Отправьте отчёт заново");
         }

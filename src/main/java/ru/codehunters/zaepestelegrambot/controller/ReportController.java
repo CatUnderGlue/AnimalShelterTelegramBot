@@ -6,10 +6,8 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.Report;
 import ru.codehunters.zaepestelegrambot.service.ReportService;
 
@@ -37,15 +35,11 @@ public class ReportController {
             summary = "Создать отчёт"
     )
     public ResponseEntity<Report> create(@RequestParam @Parameter(description = "Id фотографии") String photoId,
-                                       @RequestParam @Parameter(description = "Рацион животного") String foodRation,
-                                       @RequestParam @Parameter(description = "Общее самочувствие и привыкание к новому месту") String generalHealth,
-                                       @RequestParam @Parameter(description = "Изменение в поведении") String behaviorChanges,
-                                       @RequestParam @Parameter(description = "Id испытательного срока") Long trialPeriodId) {
-        try {
-            return ResponseEntity.ok(reportService.create(new Report(photoId, foodRation, generalHealth, behaviorChanges, LocalDate.now(), trialPeriodId)));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
+                                         @RequestParam @Parameter(description = "Рацион животного") String foodRation,
+                                         @RequestParam @Parameter(description = "Общее самочувствие и привыкание к новому месту") String generalHealth,
+                                         @RequestParam @Parameter(description = "Изменение в поведении") String behaviorChanges,
+                                         @RequestParam @Parameter(description = "Id испытательного срока") Long trialPeriodId) {
+        return ResponseEntity.ok(reportService.create(new Report(photoId, foodRation, generalHealth, behaviorChanges, LocalDate.now(), trialPeriodId)));
     }
 
 
@@ -54,11 +48,7 @@ public class ReportController {
             summary = "Получение всех отчётов"
     )
     public ResponseEntity<Object> getAll() {
-        try {
-            return ResponseEntity.ok(reportService.getAll());
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        return ResponseEntity.ok(reportService.getAll());
     }
 
     @GetMapping("trialId")
@@ -66,11 +56,7 @@ public class ReportController {
             summary = "Получение всех отчётов по id испытательного срока"
     )
     public ResponseEntity<Object> getAllByTrialPeriodId(@RequestParam Long id) {
-        try {
-            return ResponseEntity.ok(reportService.gelAllByTrialPeriodId(id));
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        return ResponseEntity.ok(reportService.gelAllByTrialPeriodId(id));
     }
 
     @GetMapping("date")
@@ -91,22 +77,14 @@ public class ReportController {
     }
     )
     public ResponseEntity<Object> getByDateAndTrialId(@RequestParam LocalDate date, @RequestParam Long id) {
-        try {
-            return ResponseEntity.ok(reportService.getByDateAndTrialId(date, id));
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        return ResponseEntity.ok(reportService.getByDateAndTrialId(date, id));
     }
 
     @GetMapping("id")
     @Operation(summary = "Получение отчёта по id")
     public ResponseEntity<Object> getById(@RequestParam @Parameter(description = "Id испытательного срока") Long reportId) {
-        try {
-            Report report = reportService.getById(reportId);
-            return ResponseEntity.ok().body(report);
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        Report report = reportService.getById(reportId);
+        return ResponseEntity.ok().body(report);
     }
 
     @PutMapping
@@ -114,19 +92,13 @@ public class ReportController {
             summary = "Изменить отчёт"
     )
     public ResponseEntity<Object> update(@RequestParam @Parameter(description = "Id отчёта") Long id,
-                                          @RequestParam(required = false) @Parameter(description = "Id фотографии") String photoId,
-                                          @RequestParam(required = false) @Parameter(description = "Рацион животного") String foodRation,
-                                          @RequestParam(required = false) @Parameter(description = "Общее самочувствие и привыкание к новому месту") String generalHealth,
-                                          @RequestParam(required = false) @Parameter(description = "Изменение в поведении") String behaviorChanges,
-                                          @RequestParam(required = false) @Parameter(description = "Дата получения") LocalDate receiveDate,
-                                          @RequestParam(required = false) @Parameter(description = "Id испытательного срока") Long trialPeriodId) {
-        try {
-            return ResponseEntity.ok(reportService.update(new Report(id ,photoId, foodRation, generalHealth, behaviorChanges, receiveDate, trialPeriodId)));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+                                         @RequestParam(required = false) @Parameter(description = "Id фотографии") String photoId,
+                                         @RequestParam(required = false) @Parameter(description = "Рацион животного") String foodRation,
+                                         @RequestParam(required = false) @Parameter(description = "Общее самочувствие и привыкание к новому месту") String generalHealth,
+                                         @RequestParam(required = false) @Parameter(description = "Изменение в поведении") String behaviorChanges,
+                                         @RequestParam(required = false) @Parameter(description = "Дата получения") LocalDate receiveDate,
+                                         @RequestParam(required = false) @Parameter(description = "Id испытательного срока") Long trialPeriodId) {
+        return ResponseEntity.ok(reportService.update(new Report(id, photoId, foodRation, generalHealth, behaviorChanges, receiveDate, trialPeriodId)));
     }
 
     @DeleteMapping("id")
@@ -139,11 +111,7 @@ public class ReportController {
             example = "1"
     )
     public ResponseEntity<String> deleteById(@RequestParam Long id) {
-        try {
-            reportService.deleteById(id);
-            return ResponseEntity.ok().body("Отчёт успешно удалён");
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        reportService.deleteById(id);
+        return ResponseEntity.ok().body("Отчёт успешно удалён");
     }
 }
