@@ -5,7 +5,6 @@ import com.pengrad.telegrambot.model.request.KeyboardButton;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.model.request.ReplyKeyboardMarkup;
 import com.pengrad.telegrambot.request.SendMessage;
-import com.pengrad.telegrambot.response.SendResponse;
 import lombok.RequiredArgsConstructor;
 import ru.codehunters.zaepestelegrambot.model.shelters.CatShelter;
 import ru.codehunters.zaepestelegrambot.model.shelters.DogShelter;
@@ -186,6 +185,6 @@ public class ReplyMarkup {
                 .replyMarkup(replyKeyboardMarkup)
                 .parseMode(ParseMode.HTML)
                 .disableWebPagePreview(true);
-        SendResponse sendResponse = telegramBot.execute(request);
+        telegramBot.execute(request);
     }
 }
