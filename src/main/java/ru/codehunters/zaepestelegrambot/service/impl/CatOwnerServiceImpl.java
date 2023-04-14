@@ -61,10 +61,13 @@ public class CatOwnerServiceImpl implements CatOwnerService {
 
     @Override
     public CatOwner update(CatOwner catOwner) {
-        if (catOwner.getTelegramId() == null || getById(catOwner.getTelegramId()) == null) {
-            throw new NotFoundException("Хозяин кота не найден!");
+        Optional<CatOwner> optionalCatOwner = catOwnerRepo.findById(catOwner.getTelegramId());
+        if (optionalCatOwner.isEmpty()) {
+            throw new NotFoundException("Владелец собаки не найден!");
         }
-        return catOwnerRepo.save(catOwner);
+        CatOwner currentCatOwner = optionalCatOwner.get();
+        EntityUtils.copyNonNullFields(catOwner, currentCatOwner);
+        return catOwnerRepo.save(currentCatOwner);
     }
 
     @Override
