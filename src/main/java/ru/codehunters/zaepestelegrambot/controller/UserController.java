@@ -65,11 +65,11 @@ public class UserController {
     @PutMapping
     @Operation(summary = "Изменить пользователя")
     public ResponseEntity<Object> update(@RequestParam @Parameter(description = "Телеграм id пользователя") Long telegramId,
-                                         @RequestParam @Parameter(description = "Имя") String firstName,
-                                         @RequestParam @Parameter(description = "Фамилия") String lastName,
-                                         @RequestParam @Parameter(description = "Телефон") String phone) {
+                                         @RequestParam (required = false) @Parameter(description = "Имя") String firstName,
+                                         @RequestParam (required = false) @Parameter(description = "Фамилия") String lastName,
+                                         @RequestParam (required = false) @Parameter(description = "Телефон") String phone) {
         try {
-            return ResponseEntity.ok(userService.create(new User(telegramId, firstName, lastName, phone)));
+            return ResponseEntity.ok(userService.update(new User(telegramId, firstName, lastName, phone)));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         } catch (NotFoundException e) {

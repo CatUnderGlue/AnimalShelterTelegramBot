@@ -90,9 +90,9 @@ public class CatOwnerController {
             summary = "Изменить владельца кота"
     )
     public ResponseEntity<Object> update(@RequestParam @Parameter(description = "Телеграм id владельца кота") Long telegramId,
-                                         @RequestParam @Parameter(description = "Имя") String firstName,
-                                         @RequestParam @Parameter(description = "Фамилия") String lastName,
-                                         @RequestParam @Parameter(description = "Телефон") String phone) {
+                                         @RequestParam (required = false) @Parameter (description = "Имя") String firstName,
+                                         @RequestParam (required = false) @Parameter(description = "Фамилия") String lastName,
+                                         @RequestParam (required = false) @Parameter(description = "Телефон") String phone) {
         try {
             return ResponseEntity.ok(catOwnerService.update(new CatOwner(telegramId, firstName, lastName, phone,
                     null, null)));
