@@ -56,7 +56,7 @@ public class CatShelterServiceImpl implements ShelterService<CatShelter,Cat> {
 
     @Override
     public List<Cat> getAnimal(long index) {
-        return catRepo.getReferenceById(index).getList();
+        return getSheltersId(index).getList();
     }
 
     @Override
@@ -70,6 +70,5 @@ public class CatShelterServiceImpl implements ShelterService<CatShelter,Cat> {
             throw new NotFoundException("Котятки остались без приюта. Не нашли приют");
         }
         return result;
-
     }
 }

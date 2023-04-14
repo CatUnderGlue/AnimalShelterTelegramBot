@@ -55,7 +55,7 @@ public class DogShelterServiceImpl implements ShelterService<DogShelter,Dog> {
 
     @Override
     public List<Dog> getAnimal(long index) {
-        return dogRepo.getReferenceById(index).getList();
+        return getSheltersId(index).getList();
     }
 
 
