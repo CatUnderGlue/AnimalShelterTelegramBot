@@ -1,24 +1,30 @@
 package ru.codehunters.zaepestelegrambot.exception;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@ControllerAdvice
+@RestControllerAdvice
 public class RestResponseEntityExceptionHandler {
 
-    @ExceptionHandler
-    public ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-        List<String> errorsMessages = new ArrayList<>();
-        for (FieldError error : ex.getBindingResult().getFieldErrors()) {
-            errorsMessages.add(error.getDefaultMessage());
-        }
-        return ResponseEntity.badRequest()
-                .body(errorsMessages);
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<String> handleNotFoundException(NotFoundException exception) {
+        return ResponseEntity
+                .badRequest()
+                .body(exception.getMessage());
+    }
+
+    @ExceptionHandler(AlreadyExistsException.class)
+    public ResponseEntity<String> handleAlreadyExistsException(AlreadyExistsException exception) {
+        return ResponseEntity
+                .badRequest()
+                .body(exception.getMessage());
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException exception) {
+        return ResponseEntity
+                .badRequest()
+                .body(exception.getMessage());
     }
 }

@@ -38,12 +38,8 @@ public class CatOwnerController {
                                            @RequestParam @Parameter(description = "Фамилия") String lastName,
                                            @RequestParam @Parameter(description = "Телефон") String phone,
                                            @RequestParam @Parameter(description = "Id кота") Long animalId) {
-        try {
-            return ResponseEntity.ok(catOwnerService.create(new CatOwner(telegramId, firstName, lastName, phone,
-                    null, null), TrialPeriod.AnimalType.CAT, animalId));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
+        return ResponseEntity.ok(catOwnerService.create(new CatOwner(telegramId, firstName, lastName, phone,
+                null, null), TrialPeriod.AnimalType.CAT, animalId));
     }
 
     @PostMapping("/user")
@@ -52,11 +48,7 @@ public class CatOwnerController {
     )
     public ResponseEntity<CatOwner> create(@RequestParam @Parameter(description = "Пользователь") Long id,
                                            @RequestParam @Parameter(description = "Id кота") Long animalId) {
-        try {
-            return ResponseEntity.ok(catOwnerService.create(id, TrialPeriod.AnimalType.CAT, animalId));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
+        return ResponseEntity.ok(catOwnerService.create(id, TrialPeriod.AnimalType.CAT, animalId));
     }
 
     @GetMapping()
@@ -64,11 +56,7 @@ public class CatOwnerController {
             summary = "Получение списка всех владельцев котов"
     )
     public ResponseEntity<Object> getAll() {
-        try {
-            return ResponseEntity.ok(catOwnerService.getAll());
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        return ResponseEntity.ok(catOwnerService.getAll());
     }
 
     @GetMapping("id")
@@ -77,12 +65,8 @@ public class CatOwnerController {
     )
 
     public ResponseEntity<Object> getById(@RequestParam @Parameter(description = "Id владельца кота") Long catOwnerId) {
-        try {
-            CatOwner catOwner = catOwnerService.getById(catOwnerId);
-            return ResponseEntity.ok().body(catOwner);
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        CatOwner catOwner = catOwnerService.getById(catOwnerId);
+        return ResponseEntity.ok().body(catOwner);
     }
 
     @PutMapping
@@ -90,17 +74,11 @@ public class CatOwnerController {
             summary = "Изменить владельца кота"
     )
     public ResponseEntity<Object> update(@RequestParam @Parameter(description = "Телеграм id владельца кота") Long telegramId,
-                                         @RequestParam (required = false) @Parameter (description = "Имя") String firstName,
-                                         @RequestParam (required = false) @Parameter(description = "Фамилия") String lastName,
-                                         @RequestParam (required = false) @Parameter(description = "Телефон") String phone) {
-        try {
-            return ResponseEntity.ok(catOwnerService.update(new CatOwner(telegramId, firstName, lastName, phone,
-                    null, null)));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+                                         @RequestParam @Parameter(description = "Имя") String firstName,
+                                         @RequestParam @Parameter(description = "Фамилия") String lastName,
+                                         @RequestParam @Parameter(description = "Телефон") String phone) {
+        return ResponseEntity.ok(catOwnerService.update(new CatOwner(telegramId, firstName, lastName, phone,
+                null, null)));
     }
 
     @DeleteMapping("id")
@@ -109,11 +87,7 @@ public class CatOwnerController {
     )
 
     public ResponseEntity<String> deleteById(@RequestParam @Parameter(description = "Id владельца кота") Long catOwnerId) {
-        try {
-            catOwnerService.deleteById(catOwnerId);
-            return ResponseEntity.ok().body("Владелец кота успешно удалён");
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        catOwnerService.deleteById(catOwnerId);
+        return ResponseEntity.ok().body("Владелец кота успешно удалён");
     }
 }

@@ -6,10 +6,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.animals.Dog;
 import ru.codehunters.zaepestelegrambot.service.DogService;
 
@@ -30,12 +28,8 @@ public class DogController {
     @GetMapping("/id")
     @Operation(summary = "Получение собаки по ID")
     public ResponseEntity<Object> getById(@RequestParam @Parameter(description = "ID собаки") Long id) {
-        try {
-            Dog dog = dogService.getById(id);
-            return ResponseEntity.ok().body(dog);
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        Dog dog = dogService.getById(id);
+        return ResponseEntity.ok().body(dog);
     }
 
     @PostMapping
@@ -46,31 +40,19 @@ public class DogController {
             @RequestParam @Parameter(description = "Здоров?") boolean isHealthy,
             @RequestParam @Parameter(description = "Привит?") boolean vaccinated,
             @RequestParam @Parameter(description = "ID приюта") Long shelterId) {
-        try {
-            return ResponseEntity.ok(dogService.create(new Dog(name, age, isHealthy, vaccinated, shelterId)));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
+        return ResponseEntity.ok(dogService.create(new Dog(name, age, isHealthy, vaccinated, shelterId)));
     }
 
     @GetMapping()
     @Operation(summary = "Получение всех собак")
     public ResponseEntity<Object> getAll() {
-        try {
-            return ResponseEntity.ok(dogService.getAll());
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        return ResponseEntity.ok(dogService.getAll());
     }
 
     @GetMapping("/ownerID")
     @Operation(summary = "Получение собаки по ID хозяина")
     public ResponseEntity<Object> getOwnerById(@RequestParam @Parameter(description = "ID хозяина собаки") Long id) {
-        try {
-            return ResponseEntity.ok(dogService.getByUserId(id));
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        return ResponseEntity.ok(dogService.getByUserId(id));
     }
 
 
@@ -84,23 +66,13 @@ public class DogController {
             @RequestParam(required = false) @Parameter(description = "Привит?") Boolean vaccinated,
             @RequestParam(required = false) @Parameter(description = "ID собачьего приюта") Long shelterId,
             @RequestParam(required = false) @Parameter(description = "ID хозяина") Long ownerId) {
-        try {
-            return ResponseEntity.ok(dogService.update(new Dog(id, name, age, isHealthy, vaccinated, shelterId, ownerId)));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        return ResponseEntity.ok(dogService.update(new Dog(id, name, age, isHealthy, vaccinated, shelterId, ownerId)));
     }
 
     @DeleteMapping("/id")
     @Operation(summary = "Удаление собаки")
     public ResponseEntity<Object> deleteById(@RequestParam Long id) {
-        try {
-            dogService.remove(id);
-            return ResponseEntity.ok().body("Собаку выбросили на улицу");
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+        dogService.remove(id);
+        return ResponseEntity.ok().body("Собаку выбросили на улицу");
     }
 }

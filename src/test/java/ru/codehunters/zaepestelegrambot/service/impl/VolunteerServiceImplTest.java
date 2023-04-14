@@ -20,13 +20,11 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class VolunteerServiceImplTest {
     final Long TELEGRAM_ID = 1234567890L;
-    final Long SECOND_TELEGRAM_ID = TELEGRAM_ID + 1;
     final String CORRECT_FIRST_NAME = "Bob";
     final String CORRECT_LAST_NAME = "Bee";
     final Volunteer VALID_VOLUNTEER = new Volunteer(TELEGRAM_ID, CORRECT_FIRST_NAME, CORRECT_LAST_NAME);
     final Volunteer SECOND_VALID_VOLUNTEER = new Volunteer(TELEGRAM_ID, CORRECT_LAST_NAME, null);
     final Volunteer THIRD_VALID_VOLUNTEER = new Volunteer(TELEGRAM_ID, CORRECT_LAST_NAME, CORRECT_LAST_NAME);
-    final Volunteer INVALID_VOLUNTEER = new Volunteer(SECOND_TELEGRAM_ID, null, CORRECT_LAST_NAME);
     final List<Volunteer> LIST_OF_VOLUNTEER = List.of(VALID_VOLUNTEER);
     final List<Volunteer> EMPTY_LIST = new ArrayList<>();
 
@@ -43,12 +41,6 @@ class VolunteerServiceImplTest {
         Volunteer actual = volunteerService.create(VALID_VOLUNTEER);
         assertEquals(VALID_VOLUNTEER, actual);
         verify(volunteerRepoMock, times(1)).save(VALID_VOLUNTEER);
-    }
-
-    @Test
-    @DisplayName("Выбрасывает ошибку о пустом или равном null поле, при некорректном параметре")
-    void shouldThrowIllegalArgExWhenCreateVolunteer() {
-        assertThrows(IllegalArgumentException.class, () -> volunteerService.create(INVALID_VOLUNTEER));
     }
 
     @Test

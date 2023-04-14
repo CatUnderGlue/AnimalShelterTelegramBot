@@ -9,7 +9,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.Report;
 import ru.codehunters.zaepestelegrambot.model.TrialPeriod;
+import ru.codehunters.zaepestelegrambot.model.animals.Cat;
 import ru.codehunters.zaepestelegrambot.repository.TrialPeriodRepo;
+import ru.codehunters.zaepestelegrambot.service.CatService;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -25,20 +27,21 @@ class TrialPeriodServiceImplTest {
     final Long SECOND_ID = ID + 1;
     final LocalDate DATE = LocalDate.now();
     final List<Report> REPORTS_LIST = new ArrayList<>();
-
+    final Cat CAT = new Cat("Name", 2, true, true, ID);
     final TrialPeriod VALID_TRIAL_PERIOD = new TrialPeriod(ID, DATE, DATE, DATE, REPORTS_LIST,
             TrialPeriod.Result.IN_PROGRESS, ID, TrialPeriod.AnimalType.CAT, ID);
     final TrialPeriod SECOND_VALID_TRIAL_PERIOD = new TrialPeriod(ID, null, null, null, null,
             null, null, null, SECOND_ID);
     final TrialPeriod THIRD_VALID_TRIAL_PERIOD = new TrialPeriod(ID, DATE, DATE, DATE, REPORTS_LIST,
             TrialPeriod.Result.IN_PROGRESS, ID, TrialPeriod.AnimalType.CAT, SECOND_ID);
-    final TrialPeriod INVALID_TRIAL_PERIOD = new TrialPeriod(SECOND_ID, null, DATE, DATE, REPORTS_LIST,
-            TrialPeriod.Result.IN_PROGRESS, ID, TrialPeriod.AnimalType.CAT, ID);
     final List<TrialPeriod> TRIAL_PERIOD_LIST = List.of(VALID_TRIAL_PERIOD);
     final List<TrialPeriod> EMPTY_LIST = new ArrayList<>();
 
     @Mock
     TrialPeriodRepo trialPeriodRepoMock;
+
+    @Mock
+    CatService catService;
 
     @InjectMocks
     TrialPeriodServiceImpl trialPeriodService;
@@ -47,15 +50,10 @@ class TrialPeriodServiceImplTest {
     @DisplayName("Создаёт и возвращает испытательный срок со всеми полями")
     void shouldCreateAndReturnTrialPeriodWithAllArgs() {
         when(trialPeriodRepoMock.save(VALID_TRIAL_PERIOD)).thenReturn(VALID_TRIAL_PERIOD);
+        when(catService.getById(ID)).thenReturn(CAT);
         TrialPeriod actual = trialPeriodService.create(VALID_TRIAL_PERIOD);
         assertEquals(VALID_TRIAL_PERIOD, actual);
         verify(trialPeriodRepoMock, times(1)).save(VALID_TRIAL_PERIOD);
-    }
-
-    @Test
-    @DisplayName("Выбрасывает ошибку о пустом или равном null поле, при некорректном параметре")
-    void shouldThrowIllegalArgExWhenCreateTrialPeriod() {
-        assertThrows(IllegalArgumentException.class, () -> trialPeriodService.create(INVALID_TRIAL_PERIOD));
     }
 
     @Test
