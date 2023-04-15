@@ -12,6 +12,7 @@ import ru.codehunters.zaepestelegrambot.model.Report;
 import ru.codehunters.zaepestelegrambot.service.ReportService;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("reports")
@@ -47,7 +48,7 @@ public class ReportController {
     @Operation(
             summary = "Получение всех отчётов"
     )
-    public ResponseEntity<Object> getAll() {
+    public ResponseEntity<List<Report>> getAll() {
         return ResponseEntity.ok(reportService.getAll());
     }
 
@@ -55,11 +56,11 @@ public class ReportController {
     @Operation(
             summary = "Получение всех отчётов по id испытательного срока"
     )
-    public ResponseEntity<Object> getAllByTrialPeriodId(@RequestParam Long id) {
+    public ResponseEntity<List<Report>> getAllByTrialPeriodId(@RequestParam @Parameter(description = "id испытательного срока") Long id) {
         return ResponseEntity.ok(reportService.gelAllByTrialPeriodId(id));
     }
 
-    @GetMapping("date")
+    @GetMapping("dateandtrial")
     @Operation(
             summary = "Получение отчёта по дате и id испытательного срока"
     )
@@ -76,13 +77,14 @@ public class ReportController {
             )
     }
     )
-    public ResponseEntity<Object> getByDateAndTrialId(@RequestParam LocalDate date, @RequestParam Long id) {
+    public ResponseEntity<Report> getByDateAndTrialId(@RequestParam @Parameter(description = "Дата получения отчёта") LocalDate date,
+                                                      @RequestParam @Parameter(description = "id испытательного срока") Long id) {
         return ResponseEntity.ok(reportService.getByDateAndTrialId(date, id));
     }
 
     @GetMapping("id")
     @Operation(summary = "Получение отчёта по id")
-    public ResponseEntity<Object> getById(@RequestParam @Parameter(description = "Id испытательного срока") Long reportId) {
+    public ResponseEntity<Report> getById(@RequestParam @Parameter(description = "Id испытательного срока") Long reportId) {
         Report report = reportService.getById(reportId);
         return ResponseEntity.ok().body(report);
     }
@@ -91,7 +93,7 @@ public class ReportController {
     @Operation(
             summary = "Изменить отчёт"
     )
-    public ResponseEntity<Object> update(@RequestParam @Parameter(description = "Id отчёта") Long id,
+    public ResponseEntity<Report> update(@RequestParam @Parameter(description = "Id отчёта") Long id,
                                          @RequestParam(required = false) @Parameter(description = "Id фотографии") String photoId,
                                          @RequestParam(required = false) @Parameter(description = "Рацион животного") String foodRation,
                                          @RequestParam(required = false) @Parameter(description = "Общее самочувствие и привыкание к новому месту") String generalHealth,
@@ -112,6 +114,6 @@ public class ReportController {
     )
     public ResponseEntity<String> deleteById(@RequestParam Long id) {
         reportService.deleteById(id);
-        return ResponseEntity.ok().body("Отчёт успешно удалён");
+        return ResponseEntity.ok().body("Report deleted successfully");
     }
 }
