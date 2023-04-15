@@ -64,7 +64,7 @@ public class CatOwnerServiceImpl implements CatOwnerService {
     public List<CatOwner> getAll() {
         List<CatOwner> all = catOwnerRepo.findAll();
         if (all.isEmpty()) {
-            throw new NotFoundException("Хозяин кота не найден!");
+            throw new NotFoundException("Владельцев котов нет!");
         }
         return all;
     }
@@ -73,7 +73,7 @@ public class CatOwnerServiceImpl implements CatOwnerService {
     public CatOwner update(CatOwner catOwner) {
         Optional<CatOwner> optionalCatOwner = catOwnerRepo.findById(catOwner.getTelegramId());
         if (optionalCatOwner.isEmpty()) {
-            throw new NotFoundException("Владелец собаки не найден!");
+            throw new NotFoundException("Владелец кота не найден!");
         }
         CatOwner currentCatOwner = optionalCatOwner.get();
         EntityUtils.copyNonNullFields(catOwner, currentCatOwner);
@@ -82,19 +82,33 @@ public class CatOwnerServiceImpl implements CatOwnerService {
 
     @Override
     public void delete(CatOwner catOwner) {
-        for (Cat cat : catOwner.getCatList()) {
-            cat.setOwnerId(null);
-            catService.update(cat);
+        if (catOwner.getCatList() != null) {
+            for (Cat cat : catOwner.getCatList()) {
+                cat.setOwnerId(null);
+                catService.update(cat);
+            }
         }
-        catOwnerRepo.delete(getById(catOwner.getTelegramId()));
+        try {
+            catOwnerRepo.deleteById(catOwner.getTelegramId());
+        } catch (Exception e) {
+            throw new NotFoundException("Владелец кота не найден!");
+        }
     }
 
     @Override
     public void deleteById(Long id) {
-        for (Cat cat : getById(id).getCatList()) {
-            cat.setOwnerId(null);
-            catService.update(cat);
-        }
-        catOwnerRepo.deleteById(getById(id).getTelegramId());
+        CatOwner catOwner = getById(id);
+        delete(catOwner);
+//        if (catOwner.getCatList() != null) {
+//            for (Cat cat : catOwner.getCatList()) {
+//                cat.setOwnerId(null);
+//                catService.update(cat);
+//            }
+//        }
+//        try {
+//            catOwnerRepo.delete(catOwner);
+//        } catch (Exception e) {
+//            throw new NotFoundException("Владелец кота не найден!");
+//        }
     }
 }
