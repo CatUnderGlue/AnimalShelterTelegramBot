@@ -95,26 +95,6 @@ public class ReplyMarkup {
         returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, "Информация о собачьем приюте");
     }
 
-    public void Cat(long chatId) {
-        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(
-                new KeyboardButton("Все о кошках")
-        );
-        replyKeyboardMarkup.addRow(
-                new KeyboardButton("Главное меню")
-        );
-        returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, "О ком нужна информация?");
-    }
-
-    public void Dog(long chatId) {
-        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(
-                new KeyboardButton("Все о собаках")
-        );
-        replyKeyboardMarkup.addRow(
-                new KeyboardButton("Главное меню")
-        );
-        returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, "О ком нужна информация?");
-    }
-
     public void menuCat(long chatId) {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(
                 new KeyboardButton("Необходимые документы"),
