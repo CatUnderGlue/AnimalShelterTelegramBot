@@ -25,15 +25,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(VolunteerController.class)
 @ExtendWith(MockitoExtension.class)
 class VolunteerControllerTest {
-    final Volunteer FIRST_VALID_VOLUNTEER = new Volunteer(1L, "Ivan", "Ivanov");
-    final Volunteer SECOND_VALID_VOLUNTEER = new Volunteer(2L, "Petr", "Petrov");
-    final List<Volunteer> VOLUNTEER_LIST = List.of(FIRST_VALID_VOLUNTEER, SECOND_VALID_VOLUNTEER);
     @Autowired
     MockMvc mockMvc;
     @MockBean
     VolunteerService volunteerService;
     @MockBean
     TelegramBot telegramBot;
+    private static final Volunteer FIRST_VALID_VOLUNTEER = new Volunteer(1L, "Ivan", "Ivanov");
+    private static final Volunteer SECOND_VALID_VOLUNTEER = new Volunteer(2L, "Petr", "Petrov");
+    private static final List<Volunteer> VOLUNTEER_LIST = List.of(FIRST_VALID_VOLUNTEER, SECOND_VALID_VOLUNTEER);
     @Test
     @DisplayName("Должен создать и вернуть волонтёра с нужными параметрами")
     void shouldCreateAndReturnVolunteer() throws Exception {
@@ -108,7 +108,7 @@ class VolunteerControllerTest {
 
     @Test
     @DisplayName("Отправляет сообщения волонтёрам")
-    public void shouldSendMessageToVolunteers() throws Exception {
+    void shouldSendMessageToVolunteers() throws Exception {
         mockMvc.perform(post("/volunteers/warning_message")
                         .param("ownerId", FIRST_VALID_VOLUNTEER.getTelegramId().toString()))
                 .andExpect(status().isOk());
