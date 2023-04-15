@@ -165,7 +165,7 @@ class ReportControllerTest {
         mockMvc.perform(delete("/reports/id")
                         .param("id", "1"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("Report deleted successfully"));
+                .andExpect(content().string("Отчёт успешно удалён"));
         verify(reportService, times(1)).deleteById(1L);
     }
 }

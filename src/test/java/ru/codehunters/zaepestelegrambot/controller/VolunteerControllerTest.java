@@ -102,7 +102,7 @@ class VolunteerControllerTest {
         mockMvc.perform(delete("/volunteers/id")
                         .param("volunteerId", "1"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("Volunteer successfully removed"));
+                .andExpect(content().string("Волонтёр успешно удалён"));
         verify(volunteerService, times(1)).deleteById(1L);
     }
 
@@ -111,7 +111,8 @@ class VolunteerControllerTest {
     void shouldSendMessageToVolunteers() throws Exception {
         mockMvc.perform(post("/volunteers/warning-message")
                         .param("ownerId", FIRST_VALID_VOLUNTEER.getTelegramId().toString()))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().string("Сообщение успешно отправлено"));
         verify(telegramBot, times(1)).execute(any(SendMessage.class));
     }
 }

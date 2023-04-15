@@ -9,7 +9,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.codehunters.zaepestelegrambot.model.Report;
 import ru.codehunters.zaepestelegrambot.model.TrialPeriod;
 import ru.codehunters.zaepestelegrambot.service.TrialPeriodService;
 
@@ -175,7 +174,7 @@ class TrialPeriodControllerTest {
         mockMvc.perform(delete("/trial-periods/id")
                         .param("id", String.valueOf(1L)))
                 .andExpect(status().isOk())
-                .andExpect(content().string("Trial period successfully removed"));
+                .andExpect(content().string("Испытательный срок успешно удалён"));
         verify(trialPeriodService, times(1)).deleteById(1L);
     }
 }
