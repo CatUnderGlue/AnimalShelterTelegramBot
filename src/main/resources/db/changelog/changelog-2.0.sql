@@ -22,3 +22,17 @@ alter table trial_periods
 --changeset pro100:3
 alter table dog_Shelter
     rename column id_shelter to id;
+
+--changeset profmi2022:4
+alter table users
+    add shelter_type varchar(255);
+
+alter table users
+    add shelter_name varchar(255);
+
+--changeset mexx:1
+alter table cat
+    add constraint check_age check (age > 0);
+
+alter table dog
+    add constraint check_age check (age > 0);

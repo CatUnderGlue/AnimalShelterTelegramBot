@@ -2,11 +2,13 @@ package ru.codehunters.zaepestelegrambot.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.codehunters.zaepestelegrambot.exception.AlreadyExistsException;
 import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.TrialPeriod;
 import ru.codehunters.zaepestelegrambot.model.owners.CatOwner;
 import ru.codehunters.zaepestelegrambot.repository.CatOwnerRepo;
 import ru.codehunters.zaepestelegrambot.service.CatOwnerService;
+import ru.codehunters.zaepestelegrambot.service.CatService;
 import ru.codehunters.zaepestelegrambot.service.TrialPeriodService;
 import ru.codehunters.zaepestelegrambot.service.UserService;
 
@@ -20,20 +22,31 @@ public class CatOwnerServiceImpl implements CatOwnerService {
 
     private final CatOwnerRepo catOwnerRepo;
     private final UserService userService;
+    private final CatService catService;
     private final TrialPeriodService trialPeriodService;
 
     @Override
     public CatOwner create(CatOwner catOwner, TrialPeriod.AnimalType animalType, Long animalId)  {
+        if (catService.getById(animalId).getOwnerId() != null) {
+            throw new AlreadyExistsException("У этого кота уже есть хозяин!");
+        }
         trialPeriodService.create(new TrialPeriod(LocalDate.now(), LocalDate.now().plusDays(30),
-                LocalDate.now(), new ArrayList<>(), TrialPeriod.Result.IN_PROGRESS, catOwner.getTelegramId(), animalType, animalId));
+                LocalDate.now().minusDays(1), new ArrayList<>(),
+                TrialPeriod.Result.IN_PROGRESS, catOwner.getTelegramId(), animalType, animalId), animalType);
+        catService.getById(animalId).setOwnerId(catOwner.getTelegramId());
         return catOwnerRepo.save(catOwner);
     }
 
     @Override
     public CatOwner create(Long id, TrialPeriod.AnimalType animalType, Long animalId) {
+        if (catService.getById(animalId).getOwnerId() != null) {
+            throw new AlreadyExistsException("У этого кота уже есть хозяин!");
+        }
         CatOwner catOwner = new CatOwner(userService.getById(id));
         trialPeriodService.create(new TrialPeriod(LocalDate.now(), LocalDate.now().plusDays(30),
-                LocalDate.now(), new ArrayList<>(), TrialPeriod.Result.IN_PROGRESS, id, animalType, animalId));
+                LocalDate.now().minusDays(1), new ArrayList<>(),
+                TrialPeriod.Result.IN_PROGRESS, id, animalType, animalId), animalType);
+        catService.getById(animalId).setOwnerId(id);
         return catOwnerRepo.save(catOwner);
     }
 
@@ -57,10 +70,13 @@ public class CatOwnerServiceImpl implements CatOwnerService {
 
     @Override
     public CatOwner update(CatOwner catOwner) {
-        if (catOwner.getTelegramId() == null || getById(catOwner.getTelegramId()) == null) {
-            throw new NotFoundException("Хозяин кота не найден!");
+        Optional<CatOwner> optionalCatOwner = catOwnerRepo.findById(catOwner.getTelegramId());
+        if (optionalCatOwner.isEmpty()) {
+            throw new NotFoundException("Владелец собаки не найден!");
         }
-        return catOwnerRepo.save(catOwner);
+        CatOwner currentCatOwner = optionalCatOwner.get();
+        EntityUtils.copyNonNullFields(catOwner, currentCatOwner);
+        return catOwnerRepo.save(currentCatOwner);
     }
 
     @Override

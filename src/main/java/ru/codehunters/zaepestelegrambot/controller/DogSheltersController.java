@@ -10,14 +10,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.codehunters.zaepestelegrambot.model.animals.Dog;
 import ru.codehunters.zaepestelegrambot.model.shelters.DogShelter;
-import ru.codehunters.zaepestelegrambot.service.impl.DogShelterServiceImpl;
+import ru.codehunters.zaepestelegrambot.service.ShelterService;
 
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("dogs/shelters")
 @Tag(name = "Собачий приют", description = "CRUD-методы для работы с приютом")
-@RequiredArgsConstructor
 @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Всё хорошо, собачки довольны."),
         @ApiResponse(responseCode = "400", description = "Есть ошибка в параметрах запроса."),
@@ -26,7 +26,7 @@ import java.util.List;
 })
 public class DogSheltersController {
 
-    private final DogShelterServiceImpl dogShelterService;
+    private final ShelterService<DogShelter,Dog> dogShelterService;
 
     @PostMapping("/")
     @Operation(
@@ -76,6 +76,15 @@ public class DogSheltersController {
     )
     public ResponseEntity<List<Dog>> getAnimal(@PathVariable @Parameter(description = "id приюта") long id) {
         return ResponseEntity.ok(dogShelterService.getAnimal(id));
+    }
+
+    @GetMapping("/id{id}")
+    @Operation(
+            summary = "Поиск приюта по id"
+    )
+    public ResponseEntity<DogShelter> getShelterId(@PathVariable @Parameter(description = "id приюта") long id) {
+        DogShelter shelters = (dogShelterService.getSheltersId(id));
+        return ResponseEntity.ok(shelters);
     }
 
     @DeleteMapping("/{id}")

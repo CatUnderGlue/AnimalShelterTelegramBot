@@ -31,6 +31,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public String getShelterById(Long id) {
+        Optional<User> optionalUser = userRepo.findById(id);
+        if (optionalUser.isEmpty()) {
+            throw new NotFoundException("Пользователь не найден!");
+        }
+        User user = optionalUser.get();
+        return user.getShelterType();
+    }
+
+    @Override
     public List<User> getAll() {
         List<User> all = userRepo.findAll();
         if (all.isEmpty()) {
@@ -41,10 +51,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User update(User user) {
-        if (user.getTelegramId() == null || getById(user.getTelegramId()) == null) {
-            throw new NotFoundException("Пользователь не найден!");
+        Optional<User> optionalUser = userRepo.findById(user.getTelegramId());
+        if (optionalUser.isEmpty()){
+           throw new NotFoundException("Пользователь не найден!");
         }
-        return userRepo.save(user);
+        User currentUser = optionalUser.get();
+        EntityUtils.copyNonNullFields(user, currentUser);
+        return userRepo.save(currentUser);
     }
 
     @Override

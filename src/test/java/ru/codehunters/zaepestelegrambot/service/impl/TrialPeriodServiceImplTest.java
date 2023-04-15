@@ -9,7 +9,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.Report;
 import ru.codehunters.zaepestelegrambot.model.TrialPeriod;
+import ru.codehunters.zaepestelegrambot.model.animals.Cat;
+import ru.codehunters.zaepestelegrambot.model.animals.Dog;
 import ru.codehunters.zaepestelegrambot.repository.TrialPeriodRepo;
+import ru.codehunters.zaepestelegrambot.service.CatService;
+import ru.codehunters.zaepestelegrambot.service.DogService;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -21,73 +25,96 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class TrialPeriodServiceImplTest {
-    final Long ID = 1241421L;
-    final Long SECOND_ID = ID + 1;
-    final LocalDate DATE = LocalDate.now();
-    final List<Report> REPORTS_LIST = new ArrayList<>();
-
-    final TrialPeriod VALID_TRIAL_PERIOD = new TrialPeriod(ID, DATE, DATE, DATE, REPORTS_LIST,
-            TrialPeriod.Result.IN_PROGRESS, ID, TrialPeriod.AnimalType.CAT, ID);
-    final TrialPeriod SECOND_VALID_TRIAL_PERIOD = new TrialPeriod(ID, null, null, null, null,
-            null, null, null, SECOND_ID);
-    final TrialPeriod THIRD_VALID_TRIAL_PERIOD = new TrialPeriod(ID, DATE, DATE, DATE, REPORTS_LIST,
-            TrialPeriod.Result.IN_PROGRESS, ID, TrialPeriod.AnimalType.CAT, SECOND_ID);
-    final TrialPeriod INVALID_TRIAL_PERIOD = new TrialPeriod(SECOND_ID, null, DATE, DATE, REPORTS_LIST,
-            TrialPeriod.Result.IN_PROGRESS, ID, TrialPeriod.AnimalType.CAT, ID);
-    final List<TrialPeriod> TRIAL_PERIOD_LIST = List.of(VALID_TRIAL_PERIOD);
-    final List<TrialPeriod> EMPTY_LIST = new ArrayList<>();
+    private final Long id = 1241421L;
+    private final Long secondId = id + 1;
+    private final LocalDate date = LocalDate.now();
+    private final List<Report> reportList = new ArrayList<>();
+    private final Cat cat = new Cat("Name", 2, true, true, id);
+    private final Dog dog = new Dog("Name", 2, true, true, id);
+    private final TrialPeriod validTrialPeriodCat = new TrialPeriod(id, date, date, date, reportList,
+            TrialPeriod.Result.IN_PROGRESS, id, TrialPeriod.AnimalType.CAT, id);
+    private final TrialPeriod validTrialPeriodDog = new TrialPeriod(id, date, date, date, reportList,
+            TrialPeriod.Result.IN_PROGRESS, id, TrialPeriod.AnimalType.DOG, id);
+    private final TrialPeriod secondValidTrialPeriod = new TrialPeriod(id, null, null, null, null,
+            null, null, null, secondId);
+    private final TrialPeriod thirdValidTrialPeriod = new TrialPeriod(id, date, date, date, reportList,
+            TrialPeriod.Result.IN_PROGRESS, id, TrialPeriod.AnimalType.CAT, secondId);
+    private final List<TrialPeriod> trialPeriodList = List.of(validTrialPeriodCat);
+    private final List<TrialPeriod> emptyList = new ArrayList<>();
 
     @Mock
     TrialPeriodRepo trialPeriodRepoMock;
+
+    @Mock
+    CatService catService;
+
+    @Mock
+    DogService dogService;
 
     @InjectMocks
     TrialPeriodServiceImpl trialPeriodService;
 
     @Test
-    @DisplayName("Создаёт и возвращает испытательный срок со всеми полями")
-    void shouldCreateAndReturnTrialPeriodWithAllArgs() {
-        when(trialPeriodRepoMock.save(VALID_TRIAL_PERIOD)).thenReturn(VALID_TRIAL_PERIOD);
-        TrialPeriod actual = trialPeriodService.create(VALID_TRIAL_PERIOD);
-        assertEquals(VALID_TRIAL_PERIOD, actual);
-        verify(trialPeriodRepoMock, times(1)).save(VALID_TRIAL_PERIOD);
+    @DisplayName("Создаёт и возвращает испытательный срок со всеми полями по коту")
+    void shouldCreateAndReturnTrialPeriodWithAllArgsByCAT() {
+        when(trialPeriodRepoMock.save(validTrialPeriodCat)).thenReturn(validTrialPeriodCat);
+        when(catService.getById(id)).thenReturn(cat);
+        TrialPeriod actual = trialPeriodService.create(validTrialPeriodCat, TrialPeriod.AnimalType.CAT);
+        assertEquals(validTrialPeriodCat, actual);
+        verify(trialPeriodRepoMock, times(1)).save(validTrialPeriodCat);
+        verify(catService, times(1)).getById(id);
     }
 
     @Test
-    @DisplayName("Выбрасывает ошибку о пустом или равном null поле, при некорректном параметре")
-    void shouldThrowIllegalArgExWhenCreateTrialPeriod() {
-        assertThrows(IllegalArgumentException.class, () -> trialPeriodService.create(INVALID_TRIAL_PERIOD));
+    @DisplayName("Создаёт и возвращает испытательный срок со всеми полями по собаке")
+    void shouldCreateAndReturnTrialPeriodWithAllArgsByDOG() {
+        when(trialPeriodRepoMock.save(validTrialPeriodDog)).thenReturn(validTrialPeriodDog);
+        when(dogService.getById(id)).thenReturn(dog);
+        TrialPeriod actual = trialPeriodService.create(validTrialPeriodDog, TrialPeriod.AnimalType.DOG);
+        assertEquals(validTrialPeriodDog, actual);
+        verify(trialPeriodRepoMock, times(1)).save(validTrialPeriodDog);
+        verify(dogService, times(1)).getById(id);
+    }
+
+    @Test
+    @DisplayName("Создаёт и возвращает испытательный срок со всеми полями")
+    void shouldCreateAndReturnTrialPeriodWithAllArgs() {
+        when(trialPeriodRepoMock.save(validTrialPeriodCat)).thenReturn(validTrialPeriodCat);
+        TrialPeriod actual = trialPeriodService.create(validTrialPeriodCat);
+        assertEquals(validTrialPeriodCat, actual);
+        verify(trialPeriodRepoMock, times(1)).save(validTrialPeriodCat);
     }
 
     @Test
     @DisplayName("Возвращает испытательный срок при поиске по id")
     void shouldReturnTrialPeriodFoundById() {
-        when(trialPeriodRepoMock.findById(ID)).thenReturn(Optional.of(VALID_TRIAL_PERIOD));
-        TrialPeriod actual = trialPeriodService.getById(ID);
-        assertEquals(VALID_TRIAL_PERIOD, actual);
-        verify(trialPeriodRepoMock, times(1)).findById(ID);
+        when(trialPeriodRepoMock.findById(id)).thenReturn(Optional.of(validTrialPeriodCat));
+        TrialPeriod actual = trialPeriodService.getById(id);
+        assertEquals(validTrialPeriodCat, actual);
+        verify(trialPeriodRepoMock, times(1)).findById(id);
     }
 
     @Test
     @DisplayName("Выбрасывает ошибку, что по указанном id испытательный срок не найден")
     void shouldThrowNotFoundExWhenFindTrialPeriodById() {
-        when(trialPeriodRepoMock.findById(ID)).thenReturn(Optional.empty());
-        assertThrows(NotFoundException.class, () -> trialPeriodService.getById(ID));
-        verify(trialPeriodRepoMock, times(1)).findById(ID);
+        when(trialPeriodRepoMock.findById(id)).thenReturn(Optional.empty());
+        assertThrows(NotFoundException.class, () -> trialPeriodService.getById(id));
+        verify(trialPeriodRepoMock, times(1)).findById(id);
     }
 
     @Test
     @DisplayName("Возвращает список с испытательными сроками")
     void shouldReturnListOfTrialPeriodsWhenGetAllTrialPeriods() {
-        when(trialPeriodRepoMock.findAll()).thenReturn(TRIAL_PERIOD_LIST);
+        when(trialPeriodRepoMock.findAll()).thenReturn(trialPeriodList);
         List<TrialPeriod> actual = trialPeriodService.getAll();
-        assertEquals(TRIAL_PERIOD_LIST, actual);
+        assertEquals(trialPeriodList, actual);
         verify(trialPeriodRepoMock, times(1)).findAll();
     }
 
     @Test
     @DisplayName("Выбрасывает ошибку, что список с испытательными сроками пуст")
     void shouldThrowNotFoundExWhenListOfTrialPeriodIsEmpty() {
-        when(trialPeriodRepoMock.findAll()).thenReturn(EMPTY_LIST);
+        when(trialPeriodRepoMock.findAll()).thenReturn(emptyList);
         assertThrows(NotFoundException.class, () -> trialPeriodService.getAll());
         verify(trialPeriodRepoMock, times(1)).findAll();
     }
@@ -95,52 +122,52 @@ class TrialPeriodServiceImplTest {
     @Test
     @DisplayName("Возвращает список с испытательными сроками по id владельца животного")
     void shouldReturnListOfTrialPeriodsWhenGetAllTrialPeriodsByOwnerId() {
-        when(trialPeriodRepoMock.findAllByOwnerId(ID)).thenReturn(TRIAL_PERIOD_LIST);
-        List<TrialPeriod> actual = trialPeriodService.getAllByOwnerId(ID);
-        assertEquals(TRIAL_PERIOD_LIST, actual);
-        verify(trialPeriodRepoMock, times(1)).findAllByOwnerId(ID);
+        when(trialPeriodRepoMock.findAllByOwnerId(id)).thenReturn(trialPeriodList);
+        List<TrialPeriod> actual = trialPeriodService.getAllByOwnerId(id);
+        assertEquals(trialPeriodList, actual);
+        verify(trialPeriodRepoMock, times(1)).findAllByOwnerId(id);
     }
 
     @Test
     @DisplayName("Выбрасывает ошибку, что список с испытательными сроками по id владельца животного пуст")
     void shouldThrowNotFoundExWhenListOfTrialPeriodByOwnerIdIsEmpty() {
-        when(trialPeriodRepoMock.findAllByOwnerId(ID)).thenReturn(EMPTY_LIST);
-        assertThrows(NotFoundException.class, () -> trialPeriodService.getAllByOwnerId(ID));
-        verify(trialPeriodRepoMock, times(1)).findAllByOwnerId(ID);
+        when(trialPeriodRepoMock.findAllByOwnerId(id)).thenReturn(emptyList);
+        assertThrows(NotFoundException.class, () -> trialPeriodService.getAllByOwnerId(id));
+        verify(trialPeriodRepoMock, times(1)).findAllByOwnerId(id);
     }
 
     @Test
     @DisplayName("Изменяет и возвращает испытательный срок по новому объекту, не затрагивая null поля")
     void shouldUpdateVolunteerWithoutNullFields() {
-        when(trialPeriodRepoMock.findById(ID)).thenReturn(Optional.of(VALID_TRIAL_PERIOD));
-        when(trialPeriodRepoMock.save(THIRD_VALID_TRIAL_PERIOD)).thenReturn(THIRD_VALID_TRIAL_PERIOD);
-        TrialPeriod actual = trialPeriodService.update(SECOND_VALID_TRIAL_PERIOD);
-        assertEquals(THIRD_VALID_TRIAL_PERIOD, actual);
-        verify(trialPeriodRepoMock, times( 1)).findById(ID);
-        verify(trialPeriodRepoMock, times(1)).save(THIRD_VALID_TRIAL_PERIOD);
+        when(trialPeriodRepoMock.findById(id)).thenReturn(Optional.of(validTrialPeriodCat));
+        when(trialPeriodRepoMock.save(thirdValidTrialPeriod)).thenReturn(thirdValidTrialPeriod);
+        TrialPeriod actual = trialPeriodService.update(secondValidTrialPeriod);
+        assertEquals(thirdValidTrialPeriod, actual);
+        verify(trialPeriodRepoMock, times(1)).findById(id);
+        verify(trialPeriodRepoMock, times(1)).save(thirdValidTrialPeriod);
     }
 
     @Test
     @DisplayName("Выбрасывает ошибку, что по указанному объекту испытательный срок не найден. Изменение невозможно.")
     void shouldThrowNotFoundExWhenUpdatingTrialPeriod() {
-        when(trialPeriodRepoMock.findById(ID)).thenReturn(Optional.empty());
-        assertThrows(NotFoundException.class, () -> trialPeriodService.update(VALID_TRIAL_PERIOD));
-        verify(trialPeriodRepoMock, times(1)).findById(ID);
+        when(trialPeriodRepoMock.findById(id)).thenReturn(Optional.empty());
+        assertThrows(NotFoundException.class, () -> trialPeriodService.update(validTrialPeriodCat));
+        verify(trialPeriodRepoMock, times(1)).findById(id);
     }
 
     @Test
     @DisplayName("Выбрасывает ошибку, что по указанному id испытательный срок не найден. Удаление невозможно.")
     void shouldThrowNotFoundExWhenDeletingVolunteerById() {
-        when(trialPeriodRepoMock.findById(ID)).thenReturn(Optional.empty());
-        assertThrows(NotFoundException.class, () -> trialPeriodService.deleteById(ID));
-        verify(trialPeriodRepoMock, times(1)).findById(ID);
+        when(trialPeriodRepoMock.findById(id)).thenReturn(Optional.empty());
+        assertThrows(NotFoundException.class, () -> trialPeriodService.deleteById(id));
+        verify(trialPeriodRepoMock, times(1)).findById(id);
     }
 
     @Test
     @DisplayName("Выбрасывает ошибку, что по объекту испытательный срок не найден. Удаление невозможно.")
     void shouldThrowNotFoundExWhenDeletingVolunteer() {
-        when(trialPeriodRepoMock.findById(ID)).thenReturn(Optional.empty());
-        assertThrows(NotFoundException.class, () -> trialPeriodService.delete(VALID_TRIAL_PERIOD));
-        verify(trialPeriodRepoMock, times(1)).findById(ID);
+        when(trialPeriodRepoMock.findById(id)).thenReturn(Optional.empty());
+        assertThrows(NotFoundException.class, () -> trialPeriodService.delete(validTrialPeriodCat));
+        verify(trialPeriodRepoMock, times(1)).findById(id);
     }
 }

@@ -8,30 +8,45 @@ import ru.codehunters.zaepestelegrambot.model.shelters.CatShelter;
 import ru.codehunters.zaepestelegrambot.repository.CatShelterRepo;
 import ru.codehunters.zaepestelegrambot.service.ShelterService;
 
+
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class CatShelterServiceImpl implements ShelterService<CatShelter, Cat> {
+public class CatShelterServiceImpl implements ShelterService<CatShelter,Cat> {
 
 
     private final CatShelterRepo catRepo;
 
     @Override
-    public CatShelter addShelter(CatShelter catShelter) {
-        return catRepo.save(catShelter);
+    public CatShelter addShelter(CatShelter shelter) {
+        return catRepo.save(shelter);
     }
 
     @Override
     public CatShelter updateShelter(CatShelter catShelter) {
-        Optional<CatShelter> shelterId = catRepo.findById(catShelter.getId());
+        CatShelter currentShelter = getSheltersId(catShelter.getId());
+        EntityUtils.copyNonNullFields(catShelter, currentShelter);
+        return catRepo.save(currentShelter);
+    }
+
+    @Override
+    public CatShelter getSheltersId(long id) {
+        Optional<CatShelter> shelterId = catRepo.findById(id);
         if (shelterId.isEmpty()){
             throw new NotFoundException("Приют не найден. Кошки остались без дома");
         }
-        CatShelter currentShelter = shelterId.get();
-        EntityUtils.copyNonNullFields(catShelter, currentShelter);
-        return catRepo.save(currentShelter);
+        return shelterId.get();
+    }
+
+    @Override
+    public CatShelter getShelterByName(String name) {
+        Optional<CatShelter> shelterId = catRepo.findByName(name);
+        if (shelterId.isEmpty()){
+            throw new NotFoundException("Приют не найден. Кошки остались без дома");
+        }
+        return shelterId.get();
     }
 
     @Override
@@ -41,7 +56,7 @@ public class CatShelterServiceImpl implements ShelterService<CatShelter, Cat> {
 
     @Override
     public List<Cat> getAnimal(long index) {
-        return catRepo.getReferenceById(index).getList();
+        return getSheltersId(index).getList();
     }
 
     @Override
@@ -55,6 +70,5 @@ public class CatShelterServiceImpl implements ShelterService<CatShelter, Cat> {
             throw new NotFoundException("Котятки остались без приюта. Не нашли приют");
         }
         return result;
-
     }
 }
