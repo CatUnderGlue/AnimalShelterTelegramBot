@@ -8,6 +8,7 @@ import ru.codehunters.zaepestelegrambot.repository.DogRepo;
 import ru.codehunters.zaepestelegrambot.service.DogService;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -51,7 +52,7 @@ public class DogServiceImpl implements DogService {
     }
 
     @Override
-    public Collection<Dog> getAll() {
+    public List<Dog> getAll() {
         return dogRepo.findAll();
     }
 
