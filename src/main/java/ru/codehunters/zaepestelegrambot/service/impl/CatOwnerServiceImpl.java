@@ -88,27 +88,18 @@ public class CatOwnerServiceImpl implements CatOwnerService {
                 catService.update(cat);
             }
         }
-        try {
-            catOwnerRepo.deleteById(catOwner.getTelegramId());
-        } catch (Exception e) {
-            throw new NotFoundException("Владелец кота не найден!");
-        }
+        catOwnerRepo.delete(getById(catOwner.getTelegramId()));
     }
 
     @Override
     public void deleteById(Long id) {
         CatOwner catOwner = getById(id);
-        delete(catOwner);
-//        if (catOwner.getCatList() != null) {
-//            for (Cat cat : catOwner.getCatList()) {
-//                cat.setOwnerId(null);
-//                catService.update(cat);
-//            }
-//        }
-//        try {
-//            catOwnerRepo.delete(catOwner);
-//        } catch (Exception e) {
-//            throw new NotFoundException("Владелец кота не найден!");
-//        }
+        if (catOwner.getCatList() != null) {
+            for (Cat cat : catOwner.getCatList()) {
+                cat.setOwnerId(null);
+                catService.update(cat);
+            }
+        }
+        catOwnerRepo.deleteById(id);
     }
 }

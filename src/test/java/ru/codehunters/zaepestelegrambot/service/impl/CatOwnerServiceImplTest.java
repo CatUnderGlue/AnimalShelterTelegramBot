@@ -42,15 +42,12 @@ class CatOwnerServiceImplTest {
             CORRECT_PHONE, null, null);
     final CatOwner VALID_CAT_OWNER_WITH_CAT = new CatOwner(TELEGRAM_ID, CORRECT_FIRST_NAME, CORRECT_LAST_NAME,
             CORRECT_PHONE, LIST_OF_CAT_WITH_OWNER, null);
-    final CatOwner VALID_CAT_OWNER_WITH_CAT2 = new CatOwner(TELEGRAM_ID, CORRECT_FIRST_NAME, CORRECT_LAST_NAME,
-            CORRECT_PHONE, LIST_OF_CAT_WITH_OWNER, null);
     final CatOwner SECOND_VALID_CAT_OWNER = new CatOwner(TELEGRAM_ID, CORRECT_LAST_NAME, null,
             CORRECT_PHONE, null, null);
     final CatOwner THIRD_VALID_CAT_OWNER = new CatOwner(TELEGRAM_ID, CORRECT_LAST_NAME, CORRECT_LAST_NAME,
             CORRECT_PHONE, null, null);
     final List<CatOwner> LIST_OF_CAT_OWNER = List.of(VALID_CAT_OWNER);
     final List<CatOwner> LIST_OF_CAT_OWNER_EMPTY = new ArrayList<>();
-    final Long ID = null;
     final LocalDate DATE = LocalDate.now();
     final List<Report> REPORTS_LIST = new ArrayList<>();
     final TrialPeriod VALID_TRIAL_PERIOD = new TrialPeriod(DATE, DATE.plusDays(30), DATE.minusDays(1), REPORTS_LIST,
@@ -172,7 +169,7 @@ class CatOwnerServiceImplTest {
     @Test
     @DisplayName("Выбрасывает ошибку, если по объекту владелец кота не найден. Удаление невозможно.")
     void shouldThrowNotFoundExWhenDeletingCatOwner() {
-        when(catOwnerRepoMock.findById(TELEGRAM_ID)).thenReturn(Optional.empty());
+        when(catOwnerRepoMock.findById(TELEGRAM_ID)).thenThrow(NotFoundException.class);
         assertThrows(NotFoundException.class, () -> catOwnerService.delete(VALID_CAT_OWNER));
         verify(catOwnerRepoMock, times(1)).findById(TELEGRAM_ID);
     }
@@ -184,7 +181,9 @@ class CatOwnerServiceImplTest {
         when(catOwnerRepoMock.findById(TELEGRAM_ID)).thenReturn(Optional.of(VALID_CAT_OWNER_WITH_CAT));
         doNothing().when(catOwnerRepoMock).delete(VALID_CAT_OWNER_WITH_CAT);
         catOwnerService.delete(VALID_CAT_OWNER_WITH_CAT);
-        verify(catOwnerRepoMock, times(1)).delete(VALID_CAT_OWNER);
+        verify(catOwnerRepoMock, times(1)).delete(VALID_CAT_OWNER_WITH_CAT);
+        verify(catOwnerRepoMock, times(1)).findById(TELEGRAM_ID);
+        verify(catServiceMock, times(1)).update(VALID_CAT_WITH_OWNER);
     }
 
     @Test
@@ -192,8 +191,10 @@ class CatOwnerServiceImplTest {
     void shouldDeleteCatOwnerById() {
         when(catServiceMock.update(VALID_CAT_WITH_OWNER)).thenReturn(VALID_CAT);
         when(catOwnerRepoMock.findById(TELEGRAM_ID)).thenReturn(Optional.of(VALID_CAT_OWNER_WITH_CAT));
-        doNothing().when(catOwnerRepoMock).delete(VALID_CAT_OWNER);
-        catOwnerService.deleteById(TELEGRAM_ID);
-        verify(catOwnerRepoMock, times(1)).delete(VALID_CAT_OWNER);
+        doNothing().when(catOwnerRepoMock).deleteById(VALID_CAT_OWNER_WITH_CAT.getTelegramId());
+        catOwnerService.deleteById(VALID_CAT_OWNER_WITH_CAT.getTelegramId());
+        verify(catOwnerRepoMock, times(1)).deleteById(VALID_CAT_OWNER_WITH_CAT.getTelegramId());
+        verify(catOwnerRepoMock, times(1)).findById(TELEGRAM_ID);
+        verify(catServiceMock, times(1)).update(VALID_CAT_WITH_OWNER);
     }
 }
