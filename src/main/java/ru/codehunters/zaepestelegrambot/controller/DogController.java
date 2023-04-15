@@ -6,10 +6,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.codehunters.zaepestelegrambot.model.animals.Dog;
 import ru.codehunters.zaepestelegrambot.service.DogService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/dogs/")
@@ -27,38 +28,37 @@ public class DogController {
 
     @GetMapping("/id")
     @Operation(summary = "Получение собаки по ID")
-    public ResponseEntity<Object> getById(@RequestParam @Parameter(description = "ID собаки") Long id) {
-        Dog dog = dogService.getById(id);
-        return ResponseEntity.ok().body(dog);
+    public Dog getById(@RequestParam @Parameter(description = "ID собаки") Long id) {
+        return dogService.getById(id);
     }
 
     @PostMapping
     @Operation(summary = "Добавить собаку в приют")
-    public ResponseEntity<Object> create(
+    public Dog create(
             @RequestParam @Parameter(description = "Имя собаки") String name,
             @RequestParam @Parameter(description = "Возраст") int age,
             @RequestParam @Parameter(description = "Здоров?") boolean isHealthy,
             @RequestParam @Parameter(description = "Привит?") boolean vaccinated,
             @RequestParam @Parameter(description = "ID приюта") Long shelterId) {
-        return ResponseEntity.ok(dogService.create(new Dog(name, age, isHealthy, vaccinated, shelterId)));
+        return dogService.create(new Dog(name, age, isHealthy, vaccinated, shelterId));
     }
 
     @GetMapping()
     @Operation(summary = "Получение всех собак")
-    public ResponseEntity<Object> getAll() {
-        return ResponseEntity.ok(dogService.getAll());
+    public List<Dog> getAll() {
+        return dogService.getAll();
     }
 
     @GetMapping("/ownerID")
     @Operation(summary = "Получение собаки по ID хозяина")
-    public ResponseEntity<Object> getOwnerById(@RequestParam @Parameter(description = "ID хозяина собаки") Long id) {
-        return ResponseEntity.ok(dogService.getByUserId(id));
+    public Dog getOwnerById(@RequestParam @Parameter(description = "ID хозяина собаки") Long id) {
+        return dogService.getByUserId(id);
     }
 
 
     @PutMapping
     @Operation(summary = "Изменить информацию о собаке")
-    public ResponseEntity<Object> update(
+    public Dog update(
             @RequestParam @Parameter(description = "ID собаки") Long id,
             @RequestParam(required = false) @Parameter(description = "Имя собаки") String name,
             @RequestParam(required = false) @Parameter(description = "Возраст собаки") Integer age,
@@ -66,13 +66,13 @@ public class DogController {
             @RequestParam(required = false) @Parameter(description = "Привит?") Boolean vaccinated,
             @RequestParam(required = false) @Parameter(description = "ID собачьего приюта") Long shelterId,
             @RequestParam(required = false) @Parameter(description = "ID хозяина") Long ownerId) {
-        return ResponseEntity.ok(dogService.update(new Dog(id, name, age, isHealthy, vaccinated, shelterId, ownerId)));
+        return dogService.update(new Dog(id, name, age, isHealthy, vaccinated, shelterId, ownerId));
     }
 
     @DeleteMapping("/id")
     @Operation(summary = "Удаление собаки")
-    public ResponseEntity<Object> deleteById(@RequestParam Long id) {
+    public String deleteById(@RequestParam Long id) {
         dogService.remove(id);
-        return ResponseEntity.ok().body("Собаку выбросили на улицу");
+        return "Собаку выбросили на улицу";
     }
 }

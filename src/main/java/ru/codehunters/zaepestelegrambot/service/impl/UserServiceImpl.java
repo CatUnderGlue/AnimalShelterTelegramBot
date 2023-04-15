@@ -42,11 +42,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getAll() {
-        List<User> all = userRepo.findAll();
-        if (all.isEmpty()) {
-            throw new NotFoundException("Пользователь не найден!");
-        }
-        return all;
+        return userRepo.findAll();
     }
 
     @Override

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.codehunters.zaepestelegrambot.exception.AlreadyExistsException;
 import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.TrialPeriod;
+import ru.codehunters.zaepestelegrambot.model.animals.Dog;
 import ru.codehunters.zaepestelegrambot.model.owners.DogOwner;
 import ru.codehunters.zaepestelegrambot.repository.DogOwnerRepo;
 import ru.codehunters.zaepestelegrambot.service.DogOwnerService;
@@ -81,11 +82,20 @@ public class DogOwnerServiceImpl implements DogOwnerService {
 
     @Override
     public void delete(DogOwner dogOwner) {
+        for (Dog dog : dogOwner.getDogList()) {
+            dog.setOwnerId(null);
+            dogService.update(dog);
+        }
         dogOwnerRepo.delete(getById(dogOwner.getTelegramId()));
     }
 
     @Override
     public void deleteById(Long id) {
+        for (Dog dog : getById(id).getDogList()) {
+            dog.setOwnerId(null);
+            dogService.update(dog);
+        }
         dogOwnerRepo.deleteById(getById(id).getTelegramId());
     }
 }
+

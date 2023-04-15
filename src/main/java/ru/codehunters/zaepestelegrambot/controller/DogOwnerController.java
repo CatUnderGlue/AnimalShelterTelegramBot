@@ -5,11 +5,12 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.codehunters.zaepestelegrambot.model.TrialPeriod;
 import ru.codehunters.zaepestelegrambot.model.owners.DogOwner;
 import ru.codehunters.zaepestelegrambot.service.DogOwnerService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("dogOwners")
@@ -31,30 +32,30 @@ public class DogOwnerController {
     @Operation(
             summary = "Создать владельца собаки"
     )
-    public ResponseEntity<DogOwner> create(@RequestParam @Parameter(description = "Телеграм id владельца собаки") Long telegramId,
+    public DogOwner create(@RequestParam @Parameter(description = "Телеграм id владельца собаки") Long telegramId,
                                            @RequestParam @Parameter(description = "Имя") String firstName,
                                            @RequestParam @Parameter(description = "Фамилия") String lastName,
                                            @RequestParam @Parameter(description = "Телефон") String phone,
                                            @RequestParam @Parameter(description = "Id собаки") Long animalId) {
-        return ResponseEntity.ok(dogOwnerService.create(new DogOwner(telegramId, firstName, lastName, phone,
-                null, null), TrialPeriod.AnimalType.DOG, animalId));
+        return dogOwnerService.create(new DogOwner(telegramId, firstName, lastName, phone,
+                null, null), TrialPeriod.AnimalType.DOG, animalId);
     }
 
     @PostMapping("/user")
     @Operation(
             summary = "Создать владельца собаки в бд из пользователя"
     )
-    public ResponseEntity<DogOwner> create(@RequestParam @Parameter(description = "Пользователь") Long id,
+    public DogOwner create(@RequestParam @Parameter(description = "Пользователь") Long id,
                                            @RequestParam @Parameter(description = "Id собаки") Long animalId) {
-        return ResponseEntity.ok(dogOwnerService.create(id, TrialPeriod.AnimalType.DOG, animalId));
+        return dogOwnerService.create(id, TrialPeriod.AnimalType.DOG, animalId);
     }
 
     @GetMapping()
     @Operation(
             summary = "Получение списка всех владельцев собак"
     )
-    public ResponseEntity<Object> getAll() {
-        return ResponseEntity.ok(dogOwnerService.getAll());
+    public List<DogOwner> getAll() {
+        return dogOwnerService.getAll();
     }
 
     @GetMapping("id")
@@ -66,21 +67,20 @@ public class DogOwnerController {
             description = "Id владельца собаки",
             example = "1"
     )
-    public ResponseEntity<Object> getById(@RequestParam Long dogOwnerId) {
-        DogOwner dogOwner = dogOwnerService.getById(dogOwnerId);
-        return ResponseEntity.ok().body(dogOwner);
+    public DogOwner getById(@RequestParam Long dogOwnerId) {
+        return dogOwnerService.getById(dogOwnerId);
     }
 
     @PutMapping
     @Operation(
             summary = "Изменить владельца собаки"
     )
-    public ResponseEntity<Object> update(@RequestParam @Parameter(description = "Телеграм id владельца собаки") Long telegramId,
+    public DogOwner update(@RequestParam @Parameter(description = "Телеграм id владельца собаки") Long telegramId,
                                          @RequestParam (required = false) @Parameter(description = "Имя") String firstName,
                                          @RequestParam (required = false) @Parameter(description = "Фамилия") String lastName,
                                          @RequestParam (required = false) @Parameter(description = "Телефон") String phone) {
-        return ResponseEntity.ok(dogOwnerService.update(new DogOwner(telegramId, firstName, lastName, phone,
-                null, null)));
+        return dogOwnerService.update(new DogOwner(telegramId, firstName, lastName, phone,
+                null, null));
     }
 
     @DeleteMapping("id")
@@ -88,8 +88,8 @@ public class DogOwnerController {
             summary = "Удаление владельца собаки по id"
     )
 
-    public ResponseEntity<String> deleteById(@RequestParam @Parameter(description = "Id владельца собаки") Long dogOwnerId) {
+    public String deleteById(@RequestParam @Parameter(description = "Id владельца собаки") Long dogOwnerId) {
         dogOwnerService.deleteById(dogOwnerId);
-        return ResponseEntity.ok().body("Владелец собаки успешно удалён");
+        return "Владелец собаки успешно удалён";
     }
 }

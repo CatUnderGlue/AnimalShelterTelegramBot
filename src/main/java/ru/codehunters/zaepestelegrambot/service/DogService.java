@@ -3,7 +3,7 @@ package ru.codehunters.zaepestelegrambot.service;
 import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.animals.Dog;
 
-import java.util.Collection;
+import java.util.List;
 
 public interface DogService {
     /**
@@ -46,7 +46,7 @@ public interface DogService {
      *
      * @return коллекция всех объектов собаки, находящихся в базе данных
      */
-    Collection<Dog> getAll();
+    List<Dog> getAll();
 
     /**
      * Удаляет запись о собаке с указанным идентификатором из базы данных.
