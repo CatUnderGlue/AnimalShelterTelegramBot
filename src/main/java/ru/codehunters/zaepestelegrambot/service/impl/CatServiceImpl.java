@@ -8,7 +8,7 @@ import ru.codehunters.zaepestelegrambot.repository.CatRepo;
 import ru.codehunters.zaepestelegrambot.service.CatService;
 
 
-import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -54,7 +54,7 @@ public class CatServiceImpl implements CatService {
     }
 
     @Override
-    public Collection<Cat> getAll() {
+    public List<Cat> getAll() {
         return catRepo.findAll();
     }
 

@@ -4,7 +4,7 @@ import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.animals.Cat;
 
 
-import java.util.Collection;
+import java.util.List;
 
 public interface CatService {
 
@@ -48,7 +48,7 @@ public interface CatService {
      *
      * @return коллекция всех объектов кота, находящихся в базе данных
      */
-    Collection<Cat> getAll();
+    List<Cat> getAll();
 
     /**
      * Удаляет запись о коте с указанным идентификатором из базы данных.
