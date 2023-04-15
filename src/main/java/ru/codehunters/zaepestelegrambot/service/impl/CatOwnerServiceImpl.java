@@ -93,13 +93,6 @@ public class CatOwnerServiceImpl implements CatOwnerService {
 
     @Override
     public void deleteById(Long id) {
-        CatOwner catOwner = getById(id);
-        if (catOwner.getCatList() != null) {
-            for (Cat cat : catOwner.getCatList()) {
-                cat.setOwnerId(null);
-                catService.update(cat);
-            }
-        }
-        catOwnerRepo.deleteById(id);
+        delete(getById(id));
     }
 }

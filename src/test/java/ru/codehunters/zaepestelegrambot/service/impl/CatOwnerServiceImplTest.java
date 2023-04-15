@@ -191,10 +191,10 @@ class CatOwnerServiceImplTest {
     void shouldDeleteCatOwnerById() {
         when(catServiceMock.update(VALID_CAT_WITH_OWNER)).thenReturn(VALID_CAT);
         when(catOwnerRepoMock.findById(TELEGRAM_ID)).thenReturn(Optional.of(VALID_CAT_OWNER_WITH_CAT));
-        doNothing().when(catOwnerRepoMock).deleteById(VALID_CAT_OWNER_WITH_CAT.getTelegramId());
+        doNothing().when(catOwnerRepoMock).delete(VALID_CAT_OWNER_WITH_CAT);
         catOwnerService.deleteById(VALID_CAT_OWNER_WITH_CAT.getTelegramId());
-        verify(catOwnerRepoMock, times(1)).deleteById(VALID_CAT_OWNER_WITH_CAT.getTelegramId());
-        verify(catOwnerRepoMock, times(1)).findById(TELEGRAM_ID);
+        verify(catOwnerRepoMock, times(1)).delete(VALID_CAT_OWNER_WITH_CAT);
+        verify(catOwnerRepoMock, times(2)).findById(TELEGRAM_ID);
         verify(catServiceMock, times(1)).update(VALID_CAT_WITH_OWNER);
     }
 }
