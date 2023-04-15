@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.codehunters.zaepestelegrambot.model.animals.Cat;
@@ -14,6 +15,7 @@ import ru.codehunters.zaepestelegrambot.service.ShelterService;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("cats/shelters")
 @Tag(name = "Кошачий приют", description = "CRUD-методы для работы с приютом")
 @ApiResponses(value = {
@@ -24,11 +26,7 @@ import java.util.List;
 })
 public class CatSheltersController {
 
-    private final ShelterService<CatShelter, Cat> catShelterServiceImpl;
-
-    public CatSheltersController(ShelterService<CatShelter, Cat> catShelterServiceImpl) {
-        this.catShelterServiceImpl = catShelterServiceImpl;
-    }
+    private final ShelterService<CatShelter, Cat> catShelterService;
 
     @PostMapping("/")
     @Operation(
@@ -41,7 +39,7 @@ public class CatSheltersController {
                                          @RequestParam @Parameter(description = "Способ связи с охраной") String security,
                                          @RequestParam @Parameter(description = "Рекомендации о технике безопасности на территории приюта") String safetyAdvice
     ) {
-        return ResponseEntity.ok().body(catShelterServiceImpl.addShelter(new CatShelter(name, location, timetable, aboutMe, security, safetyAdvice)));
+        return ResponseEntity.ok().body(catShelterService.addShelter(new CatShelter(name, location, timetable, aboutMe, security, safetyAdvice)));
     }
 
     @PutMapping("/")
@@ -56,7 +54,7 @@ public class CatSheltersController {
                                          @RequestParam(required = false) @Parameter(description = "Способ связи с охраной") String security,
                                          @RequestParam(required = false) @Parameter(description = "Рекомендации о технике безопасности на территории приюта") String safetyAdvice) {
 
-        return ResponseEntity.ok().body(catShelterServiceImpl.updateShelter((new CatShelter(id, name, location, timetable, aboutMe, security, safetyAdvice))));
+        return ResponseEntity.ok().body((catShelterService.updateShelter(new CatShelter(id, name, location, timetable, aboutMe, security, safetyAdvice))));
     }
 
     @GetMapping("/")
@@ -64,7 +62,16 @@ public class CatSheltersController {
             summary = "Список приютов"
     )
     public ResponseEntity<List<CatShelter>> getAll() {
-        List<CatShelter> shelters = catShelterServiceImpl.getShelter();
+        List<CatShelter> shelters = (catShelterService.getShelter());
+        return ResponseEntity.ok(shelters);
+    }
+
+    @GetMapping("/id{id}")
+    @Operation(
+            summary = "Поиск приюта по id"
+    )
+    public ResponseEntity<CatShelter> getShelterId(@PathVariable @Parameter(description = "id приюта") long id) {
+        CatShelter shelters = (catShelterService.getSheltersId(id));
         return ResponseEntity.ok(shelters);
     }
 
@@ -73,7 +80,7 @@ public class CatSheltersController {
             summary = "Список животных приюта"
     )
     public ResponseEntity<List<Cat>> getAnimal(@PathVariable @Parameter(description = "id приюта") long id) {
-        return ResponseEntity.ok(catShelterServiceImpl.getAnimal(id));
+        return ResponseEntity.ok(catShelterService.getAnimal(id));
     }
 
     @DeleteMapping("/{id}")
@@ -82,7 +89,7 @@ public class CatSheltersController {
     )
 
     public ResponseEntity<String> delete(@PathVariable @Parameter(description = "id приюта") long id) {
-        return ResponseEntity.ok(catShelterServiceImpl.delShelter(id));
+        return ResponseEntity.ok(catShelterService.delShelter(id));
     }
 
 }
