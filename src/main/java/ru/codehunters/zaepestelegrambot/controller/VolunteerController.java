@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.codehunters.zaepestelegrambot.model.Volunteer;
 import ru.codehunters.zaepestelegrambot.service.VolunteerService;
@@ -34,49 +33,48 @@ public class VolunteerController {
 
     @PostMapping
     @Operation(summary = "Создать волонтёра")
-    public ResponseEntity<Volunteer> create(@RequestParam @Parameter(description = "Телеграм id волонтёра") Long telegramId,
+    public Volunteer create(@RequestParam @Parameter(description = "Телеграм id волонтёра") Long telegramId,
                                          @RequestParam @Parameter(description = "Имя") String firstName,
                                          @RequestParam @Parameter(description = "Фамилия") String lastName) {
-        return ResponseEntity.ok(volunteerService.create(new Volunteer(telegramId, firstName, lastName)));
+        return volunteerService.create(new Volunteer(telegramId, firstName, lastName));
     }
 
     @GetMapping()
     @Operation(summary = "Получение всех волонтёров")
-    public ResponseEntity<List<Volunteer>> getAll() {
-        return ResponseEntity.ok(volunteerService.getAll());
+    public List<Volunteer> getAll() {
+        return volunteerService.getAll();
     }
 
     @GetMapping("id")
     @Operation(summary = "Получение волонтёра по id")
-    public ResponseEntity<Volunteer> getById(@RequestParam @Parameter(description = "Id волонтёра") Long volunteerId) {
-        Volunteer volunteer = volunteerService.getById(volunteerId);
-        return ResponseEntity.ok().body(volunteer);
+    public Volunteer getById(@RequestParam @Parameter(description = "Id волонтёра") Long volunteerId) {
+        return volunteerService.getById(volunteerId);
     }
 
     @PutMapping
     @Operation(summary = "Изменить волонтёра")
-    public ResponseEntity<Volunteer> update(@RequestParam @Parameter(description = "Телеграм id волонтёра") Long telegramId,
+    public Volunteer update(@RequestParam @Parameter(description = "Телеграм id волонтёра") Long telegramId,
                                          @RequestParam(required = false) @Parameter(description = "Имя") String firstName,
                                          @RequestParam(required = false) @Parameter(description = "Фамилия") String lastName) {
-        return ResponseEntity.ok(volunteerService.update(new Volunteer(telegramId, firstName, lastName)));
+        return volunteerService.update(new Volunteer(telegramId, firstName, lastName));
     }
 
     @DeleteMapping("id")
     @Operation(summary = "Удаление волонтёра по id")
-    public ResponseEntity<String> deleteById(@RequestParam @Parameter(description = "Id волонтёра") Long volunteerId) {
+    public String deleteById(@RequestParam @Parameter(description = "Id волонтёра") Long volunteerId) {
         volunteerService.deleteById(volunteerId);
-        return ResponseEntity.ok().body("Volunteer successfully removed");
+        return "Волонтёр успешно удалён";
     }
 
     @Tag(name = "Сообщения пользователю")
     @PostMapping("warning-message")
     @Operation(summary = "Отправить хозяину предупреждение о правильности отчётов")
-    public ResponseEntity<String> sendWarning(@RequestParam @Parameter(description = "Id хозяина") Long ownerId) {
+    public String sendWarning(@RequestParam @Parameter(description = "Id хозяина") Long ownerId) {
         telegramBot.execute(new SendMessage(ownerId,
                 """
                         Дорогой усыновитель, мы заметили, что ты заполняешь отчет не так подробно, как необходимо.
                         Пожалуйста, подойди ответственнее к этому занятию. В противном случае волонтеры приюта будут обязаны самолично проверять условия содержания животного
                         """));
-        return ResponseEntity.ok().build();
+        return "Сообщение успешно отправлено";
     }
 }

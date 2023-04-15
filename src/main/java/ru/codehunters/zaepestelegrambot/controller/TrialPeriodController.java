@@ -5,13 +5,13 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.codehunters.zaepestelegrambot.model.TrialPeriod;
 import ru.codehunters.zaepestelegrambot.service.TrialPeriodService;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("trial-periods")
@@ -34,27 +34,27 @@ public class TrialPeriodController {
     @Operation(
             summary = "Создать испытательный срок"
     )
-    public ResponseEntity<TrialPeriod> create(@RequestParam @Parameter(description = "Дата начала испытательного срока") LocalDate startDate,
+    public TrialPeriod create(@RequestParam @Parameter(description = "Дата начала испытательного срока") LocalDate startDate,
                                               @RequestParam @Parameter(description = "Состояние") TrialPeriod.Result result,
                                               @RequestParam @Parameter(description = "Id хозяина животного") Long ownerId,
                                               @RequestParam @Parameter(description = "Тип взятого животного") TrialPeriod.AnimalType animalType,
                                               @RequestParam @Parameter(description = "Id животного") Long animalId) {
-        return ResponseEntity.ok(trialPeriodService.create(new TrialPeriod(startDate, startDate.plusDays(30),
-                startDate.minusDays(1), new ArrayList<>(), result, ownerId, animalType, animalId)));
+        return trialPeriodService.create(new TrialPeriod(startDate, startDate.plusDays(30),
+                startDate.minusDays(1), new ArrayList<>(), result, ownerId, animalType, animalId));
     }
 
     @GetMapping()
     @Operation(
             summary = "Получение всех испытательных сроков"
     )
-    public ResponseEntity<Object> getAll() {
-        return ResponseEntity.ok(trialPeriodService.getAll());
+    public List<TrialPeriod> getAll() {
+        return trialPeriodService.getAll();
     }
 
     @GetMapping("owner")
     @Operation(summary = "Получение всех испытательных сроков по id хозяина")
-    public ResponseEntity<Object> getAllByOwnerId(@RequestParam @Parameter(description = "Id хозяина животного") Long ownerId) {
-        return ResponseEntity.ok(trialPeriodService.getAllByOwnerId(ownerId));
+    public List<TrialPeriod> getAllByOwnerId(@RequestParam @Parameter(description = "Id хозяина животного") Long ownerId) {
+        return trialPeriodService.getAllByOwnerId(ownerId);
     }
 
     @GetMapping("id")
@@ -66,15 +66,15 @@ public class TrialPeriodController {
             description = "Id ипытательного срока",
             example = "1"
     )
-    public ResponseEntity<Object> getById(@RequestParam Long id) {
-        return ResponseEntity.ok(trialPeriodService.getById(id));
+    public TrialPeriod getById(@RequestParam Long id) {
+        return trialPeriodService.getById(id);
     }
 
     @PutMapping
     @Operation(
             summary = "Изменить испытательный срок"
     )
-    public ResponseEntity<Object> update(@RequestParam @Parameter(description = "Id испытательного срока") Long id,
+    public TrialPeriod update(@RequestParam @Parameter(description = "Id испытательного срока") Long id,
                                          @RequestParam(required = false) @Parameter(description = "Дата начала испытательного срока") LocalDate startDate,
                                          @RequestParam(required = false) @Parameter(description = "Дата окончания испытательного срока") LocalDate endDate,
                                          @RequestParam(required = false) @Parameter(description = "Дата последнего отчёта") LocalDate lastReportDate,
@@ -82,14 +82,14 @@ public class TrialPeriodController {
                                          @RequestParam(required = false) @Parameter(description = "Id хозяина животного") Long ownerId,
                                          @RequestParam(required = false) @Parameter(description = "Тип взятого животного") TrialPeriod.AnimalType animalType,
                                          @RequestParam(required = false) @Parameter(description = "Id животного") Long animalId) {
-        return ResponseEntity.ok(trialPeriodService.update(new TrialPeriod(id, startDate, endDate,
-                lastReportDate, new ArrayList<>(), result, ownerId, animalType, animalId)));
+        return trialPeriodService.update(new TrialPeriod(id, startDate, endDate,
+                lastReportDate, new ArrayList<>(), result, ownerId, animalType, animalId));
     }
 
     @DeleteMapping("id")
     @Operation(summary = "Удаление испытательного срока по id")
-    public ResponseEntity<String> deleteById(@RequestParam @Parameter(description = "Id испытательного срока") Long id) {
+    public String deleteById(@RequestParam @Parameter(description = "Id испытательного срока") Long id) {
         trialPeriodService.deleteById(id);
-        return ResponseEntity.ok().body("Trial period successfully removed");
+        return "Испытательный срок успешно удалён";
     }
 }

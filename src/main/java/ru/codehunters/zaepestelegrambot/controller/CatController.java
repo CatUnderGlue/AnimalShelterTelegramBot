@@ -6,10 +6,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.codehunters.zaepestelegrambot.model.animals.Cat;
 import ru.codehunters.zaepestelegrambot.service.CatService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("cats")
@@ -27,38 +28,37 @@ public class CatController {
 
     @GetMapping("/id")
     @Operation(summary = "Получение кота по ID")
-    public ResponseEntity<Object> getById(@RequestParam @Parameter(description = "ID кота") Long id) {
-        Cat cat = catService.getById(id);
-        return ResponseEntity.ok().body(cat);
+    public Cat getById(@RequestParam @Parameter(description = "ID кота") Long id) {
+        return catService.getById(id);
     }
 
     @PostMapping
     @Operation(summary = "Добавить кота в приют")
-    public ResponseEntity<Object> create(
+    public Cat create(
             @RequestParam @Parameter(description = "Имя кота") String name,
             @RequestParam @Parameter(description = "Возраст") int age,
             @RequestParam @Parameter(description = "Здоров?") boolean isHealthy,
             @RequestParam @Parameter(description = "Привит?") boolean vaccinated,
             @RequestParam @Parameter(description = "ID приюта") Long shelterId) {
-        return ResponseEntity.ok(catService.create(new Cat(name, age, isHealthy, vaccinated, shelterId)));
+        return catService.create(new Cat(name, age, isHealthy, vaccinated, shelterId));
     }
 
     @GetMapping()
     @Operation(summary = "Получение всех котов")
-    public ResponseEntity<Object> getAll() {
-        return ResponseEntity.ok(catService.getAll());
+    public List<Cat> getAll() {
+        return catService.getAll();
     }
 
     @GetMapping("/ownerID")
     @Operation(summary = "Получение информации о хозяине кота по ID")
-    public ResponseEntity<Object> getOwnerById(@RequestParam @Parameter(description = "ID хозяина") Long id) {
-        return ResponseEntity.ok(catService.getByUserId(id));
+    public Cat getOwnerById(@RequestParam @Parameter(description = "ID хозяина") Long id) {
+        return catService.getByUserId(id);
     }
 
 
     @PutMapping
     @Operation(summary = "Изменить информацию о коте")
-    public ResponseEntity<Object> update(
+    public Cat update(
             @RequestParam @Parameter(description = "ID кота") Long id,
             @RequestParam(required = false) @Parameter(description = "Имя кота") String name,
             @RequestParam(required = false) @Parameter(description = "Возраст кота") Integer age,
@@ -66,14 +66,14 @@ public class CatController {
             @RequestParam(required = false) @Parameter(description = "Привит?") Boolean vaccinated,
             @RequestParam(required = false) @Parameter(description = "ID кошачьего приюта") Long shelterId,
             @RequestParam(required = false) @Parameter(description = "ID хозяина") Long ownerId) {
-        return ResponseEntity.ok(catService.update(new Cat(id, name, age, isHealthy, vaccinated, shelterId, ownerId)));
+        return catService.update(new Cat(id, name, age, isHealthy, vaccinated, shelterId, ownerId));
     }
 
     @DeleteMapping("/id")
     @Operation(summary = "Удаление кота")
-    public ResponseEntity<Object> deleteById(@RequestParam Long id) {
+    public String deleteById(@RequestParam Long id) {
         catService.remove(id);
-        return ResponseEntity.ok().body("Кота выбросили на улицу");
+        return "Кота выбросили на улицу";
     }
 
 }

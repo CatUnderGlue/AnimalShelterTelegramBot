@@ -5,11 +5,12 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.codehunters.zaepestelegrambot.model.TrialPeriod;
 import ru.codehunters.zaepestelegrambot.model.owners.CatOwner;
 import ru.codehunters.zaepestelegrambot.service.CatOwnerService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("catOwners")
@@ -31,30 +32,30 @@ public class CatOwnerController {
     @Operation(
             summary = "Создать владельца кота"
     )
-    public ResponseEntity<CatOwner> create(@RequestParam @Parameter(description = "Телеграм id владельца кота") Long telegramId,
+    public CatOwner create(@RequestParam @Parameter(description = "Телеграм id владельца кота") Long telegramId,
                                            @RequestParam @Parameter(description = "Имя") String firstName,
                                            @RequestParam @Parameter(description = "Фамилия") String lastName,
                                            @RequestParam @Parameter(description = "Телефон") String phone,
                                            @RequestParam @Parameter(description = "Id кота") Long animalId) {
-        return ResponseEntity.ok(catOwnerService.create(new CatOwner(telegramId, firstName, lastName, phone,
-                null, null), TrialPeriod.AnimalType.CAT, animalId));
+        return catOwnerService.create(new CatOwner(telegramId, firstName, lastName, phone,
+                null, null), TrialPeriod.AnimalType.CAT, animalId);
     }
 
     @PostMapping("/user")
     @Operation(
             summary = "Создать хозяина кота в бд из пользователя"
     )
-    public ResponseEntity<CatOwner> create(@RequestParam @Parameter(description = "Пользователь") Long id,
+    public CatOwner create(@RequestParam @Parameter(description = "Пользователь") Long id,
                                            @RequestParam @Parameter(description = "Id кота") Long animalId) {
-        return ResponseEntity.ok(catOwnerService.create(id, TrialPeriod.AnimalType.CAT, animalId));
+        return catOwnerService.create(id, TrialPeriod.AnimalType.CAT, animalId);
     }
 
     @GetMapping()
     @Operation(
             summary = "Получение списка всех владельцев котов"
     )
-    public ResponseEntity<Object> getAll() {
-        return ResponseEntity.ok(catOwnerService.getAll());
+    public List<CatOwner> getAll() {
+        return catOwnerService.getAll();
     }
 
     @GetMapping("id")
@@ -62,21 +63,20 @@ public class CatOwnerController {
             summary = "Получение владельца кота по id"
     )
 
-    public ResponseEntity<Object> getById(@RequestParam @Parameter(description = "Id владельца кота") Long catOwnerId) {
-        CatOwner catOwner = catOwnerService.getById(catOwnerId);
-        return ResponseEntity.ok().body(catOwner);
+    public CatOwner getById(@RequestParam @Parameter(description = "Id владельца кота") Long catOwnerId) {
+        return catOwnerService.getById(catOwnerId);
     }
 
     @PutMapping
     @Operation(
             summary = "Изменить владельца кота"
     )
-    public ResponseEntity<Object> update(@RequestParam @Parameter(description = "Телеграм id владельца кота") Long telegramId,
+    public CatOwner update(@RequestParam @Parameter(description = "Телеграм id владельца кота") Long telegramId,
                                          @RequestParam(required = false) @Parameter(description = "Имя") String firstName,
                                          @RequestParam(required = false) @Parameter(description = "Фамилия") String lastName,
                                          @RequestParam(required = false) @Parameter(description = "Телефон") String phone) {
-        return ResponseEntity.ok(catOwnerService.update(new CatOwner(telegramId, firstName, lastName, phone,
-                null, null)));
+        return catOwnerService.update(new CatOwner(telegramId, firstName, lastName, phone,
+                null, null));
     }
 
     @DeleteMapping("id")
@@ -84,8 +84,8 @@ public class CatOwnerController {
             summary = "Удаление владельца кота по id"
     )
 
-    public ResponseEntity<String> deleteById(@RequestParam @Parameter(description = "Id владельца кота") Long catOwnerId) {
+    public String deleteById(@RequestParam @Parameter(description = "Id владельца кота") Long catOwnerId) {
         catOwnerService.deleteById(catOwnerId);
-        return ResponseEntity.ok().body("Владелец кота успешно удалён");
+        return "Владелец кота успешно удалён";
     }
 }
