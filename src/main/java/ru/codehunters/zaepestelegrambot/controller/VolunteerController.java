@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.codehunters.zaepestelegrambot.model.Volunteer;
 import ru.codehunters.zaepestelegrambot.service.VolunteerService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("volunteers")
 @Tag(name = "Волонтёр", description = "CRUD-методы для работы с волонтёрами")
@@ -32,7 +34,7 @@ public class VolunteerController {
 
     @PostMapping
     @Operation(summary = "Создать волонтёра")
-    public ResponseEntity<Object> create(@RequestParam @Parameter(description = "Телеграм id волонтёра") Long telegramId,
+    public ResponseEntity<Volunteer> create(@RequestParam @Parameter(description = "Телеграм id волонтёра") Long telegramId,
                                          @RequestParam @Parameter(description = "Имя") String firstName,
                                          @RequestParam @Parameter(description = "Фамилия") String lastName) {
         return ResponseEntity.ok(volunteerService.create(new Volunteer(telegramId, firstName, lastName)));
@@ -40,20 +42,20 @@ public class VolunteerController {
 
     @GetMapping()
     @Operation(summary = "Получение всех волонтёров")
-    public ResponseEntity<Object> getAll() {
+    public ResponseEntity<List<Volunteer>> getAll() {
         return ResponseEntity.ok(volunteerService.getAll());
     }
 
     @GetMapping("id")
     @Operation(summary = "Получение волонтёра по id")
-    public ResponseEntity<Object> getById(@RequestParam @Parameter(description = "Id волонтёра") Long volunteerId) {
+    public ResponseEntity<Volunteer> getById(@RequestParam @Parameter(description = "Id волонтёра") Long volunteerId) {
         Volunteer volunteer = volunteerService.getById(volunteerId);
         return ResponseEntity.ok().body(volunteer);
     }
 
     @PutMapping
     @Operation(summary = "Изменить волонтёра")
-    public ResponseEntity<Object> update(@RequestParam @Parameter(description = "Телеграм id волонтёра") Long telegramId,
+    public ResponseEntity<Volunteer> update(@RequestParam @Parameter(description = "Телеграм id волонтёра") Long telegramId,
                                          @RequestParam(required = false) @Parameter(description = "Имя") String firstName,
                                          @RequestParam(required = false) @Parameter(description = "Фамилия") String lastName) {
         return ResponseEntity.ok(volunteerService.update(new Volunteer(telegramId, firstName, lastName)));
