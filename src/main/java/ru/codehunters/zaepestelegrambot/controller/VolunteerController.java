@@ -63,7 +63,7 @@ public class VolunteerController {
     @Operation(summary = "Удаление волонтёра по id")
     public ResponseEntity<String> deleteById(@RequestParam @Parameter(description = "Id волонтёра") Long volunteerId) {
         volunteerService.deleteById(volunteerId);
-        return ResponseEntity.ok().body("Волонтёр успешно удалён");
+        return ResponseEntity.ok().body("Volunteer successfully removed");
     }
 
     @Tag(name = "Сообщения пользователю")
