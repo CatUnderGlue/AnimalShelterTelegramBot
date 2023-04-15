@@ -8,7 +8,6 @@ import ru.codehunters.zaepestelegrambot.repository.CatRepo;
 import ru.codehunters.zaepestelegrambot.service.CatService;
 
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 

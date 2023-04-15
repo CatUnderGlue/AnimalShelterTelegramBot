@@ -7,7 +7,6 @@ import ru.codehunters.zaepestelegrambot.model.animals.Dog;
 import ru.codehunters.zaepestelegrambot.repository.DogRepo;
 import ru.codehunters.zaepestelegrambot.service.DogService;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
