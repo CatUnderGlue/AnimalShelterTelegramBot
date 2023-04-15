@@ -27,7 +27,13 @@ public class ReplyMarkup {
                 new KeyboardButton("Приют для собак"));
         replyKeyboardMarkup.addRow(new KeyboardButton("Позвать волонтёра"),
                 new KeyboardButton("Отправить форму отчёта"));
-        returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, "Выберите приют:");
+        returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId,
+                """
+                Рады приветствовать Вас в нашем боте!
+                У нас здесь живут друзья разных пород и размеров - от веселых щенков до ласковых котиков.
+                Мы надеемся, что ты найдешь своего идеального друга здесь
+                Выберите приют:
+                """);
     }
 
     public void sendMenuStage(long chatId) {
@@ -46,8 +52,8 @@ public class ReplyMarkup {
         List<KeyboardButton> buttons = new ArrayList<>();
         shelters.forEach(shelter -> buttons.add(new KeyboardButton(shelter.getName())));
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(buttons.toArray(new KeyboardButton[0]));
-        returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, "Список кошачьих приютов");
         replyKeyboardMarkup.addRow(new KeyboardButton("Главное меню"));
+        returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, "Список кошачьих приютов");
     }
 
     public void sendListMenuDog(long chatId) {
@@ -55,8 +61,8 @@ public class ReplyMarkup {
         List<KeyboardButton> buttons = new ArrayList<>();
         shelters.forEach(shelter -> buttons.add(new KeyboardButton(shelter.getName())));
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(buttons.toArray(new KeyboardButton[0]));
-        returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, "Список собачьих приютов");
         replyKeyboardMarkup.addRow(new KeyboardButton("Главное меню"));
+        returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, "Список собачьих приютов");
     }
 
     public void sendMenuCat(long chatId) {
