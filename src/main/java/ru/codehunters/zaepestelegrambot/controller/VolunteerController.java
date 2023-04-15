@@ -69,7 +69,7 @@ public class VolunteerController {
     }
 
     @Tag(name = "Сообщения пользователю")
-    @PostMapping("warning_message")
+    @PostMapping("warning-message")
     @Operation(summary = "Отправить хозяину предупреждение о правильности отчётов")
     public ResponseEntity<String> sendWarning(@RequestParam @Parameter(description = "Id хозяина") Long ownerId) {
         telegramBot.execute(new SendMessage(ownerId,

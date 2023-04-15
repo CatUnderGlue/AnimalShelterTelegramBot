@@ -109,7 +109,7 @@ class VolunteerControllerTest {
     @Test
     @DisplayName("Отправляет сообщения волонтёрам")
     void shouldSendMessageToVolunteers() throws Exception {
-        mockMvc.perform(post("/volunteers/warning_message")
+        mockMvc.perform(post("/volunteers/warning-message")
                         .param("ownerId", FIRST_VALID_VOLUNTEER.getTelegramId().toString()))
                 .andExpect(status().isOk());
         verify(telegramBot, times(1)).execute(any(SendMessage.class));

@@ -52,7 +52,7 @@ public class ReportController {
         return ResponseEntity.ok(reportService.getAll());
     }
 
-    @GetMapping("trialId")
+    @GetMapping("trial-id")
     @Operation(
             summary = "Получение всех отчётов по id испытательного срока"
     )
@@ -60,7 +60,7 @@ public class ReportController {
         return ResponseEntity.ok(reportService.gelAllByTrialPeriodId(id));
     }
 
-    @GetMapping("dateandtrial")
+    @GetMapping("date-and-trial")
     @Operation(
             summary = "Получение отчёта по дате и id испытательного срока"
     )

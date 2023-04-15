@@ -31,17 +31,17 @@ class ReportControllerTest {
     @MockBean
     ReportService reportService;
 
-    private static final Report FIRST_VALID_REPORT = new Report(1L, "photoid", "ration", "health",
+    private final Report firstValidReport = new Report(1L, "photoid", "ration", "health",
             "behavior", LocalDate.now(), 1L);
-    private static final Report SECOND_VALID_REPORT = new Report(2L, "photoid2", "ration2", "health2",
+    private final Report secondValidReport = new Report(2L, "photoid2", "ration2", "health2",
             "behavior2", LocalDate.now(), 2L);
 
-    private static final List<Report> REPORT_LIST = List.of(FIRST_VALID_REPORT, SECOND_VALID_REPORT);
+    private final List<Report> reportList = List.of(firstValidReport, secondValidReport);
 
     @Test
     @DisplayName("Должен создать и вернуть отчёт с нужными параметрами")
     void shouldCreateAndReturnReport() throws Exception {
-        when(reportService.create(any(Report.class))).thenReturn(FIRST_VALID_REPORT);
+        when(reportService.create(any(Report.class))).thenReturn(firstValidReport);
         mockMvc.perform(post("/reports")
                         .param("photoId", "photoid")
                         .param("foodRation", "ration")
@@ -62,7 +62,7 @@ class ReportControllerTest {
     @Test
     @DisplayName("Должен вернуть список со всеми отчётами")
     void shouldReturnListOfAllReports() throws Exception {
-        when(reportService.getAll()).thenReturn(REPORT_LIST);
+        when(reportService.getAll()).thenReturn(reportList);
         mockMvc.perform(get("/reports"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[0].id").value(1L))
@@ -83,8 +83,8 @@ class ReportControllerTest {
     @Test
     @DisplayName("Должен вернуть список с отчётами конкретного испытательного срока")
     void shouldReturnListOfReportsByTrialId() throws Exception {
-        when(reportService.gelAllByTrialPeriodId(1L)).thenReturn(REPORT_LIST);
-        mockMvc.perform(get("/reports/trialId")
+        when(reportService.gelAllByTrialPeriodId(1L)).thenReturn(reportList);
+        mockMvc.perform(get("/reports/trial-id")
                         .param("id", String.valueOf(1L)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[0].id").value(1L))
@@ -105,8 +105,8 @@ class ReportControllerTest {
     @Test
     @DisplayName("Должен вернуть отчёт конкретного испытательного срока по дате")
     void shouldReturnReportByTrialIdAndDate() throws Exception {
-        when(reportService.getByDateAndTrialId(LocalDate.now(), 1L)).thenReturn(FIRST_VALID_REPORT);
-        mockMvc.perform(get("/reports/dateandtrial")
+        when(reportService.getByDateAndTrialId(LocalDate.now(), 1L)).thenReturn(firstValidReport);
+        mockMvc.perform(get("/reports/date-and-trial")
                         .param("id", String.valueOf(1L))
                         .param("date", String.valueOf(LocalDate.now())))
                 .andExpect(status().isOk())
@@ -122,9 +122,9 @@ class ReportControllerTest {
     @Test
     @DisplayName("Должен вернуть отчёт по ID")
     void shouldReturnReportFoundById() throws Exception {
-        when(reportService.getById(FIRST_VALID_REPORT.getId())).thenReturn(FIRST_VALID_REPORT);
+        when(reportService.getById(firstValidReport.getId())).thenReturn(firstValidReport);
         mockMvc.perform(get("/reports/id")
-                        .param("reportId", String.valueOf(FIRST_VALID_REPORT.getId()))
+                        .param("reportId", String.valueOf(firstValidReport.getId()))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(1L))
@@ -133,13 +133,13 @@ class ReportControllerTest {
                 .andExpect(jsonPath("generalHealth").value("health"))
                 .andExpect(jsonPath("behaviorChanges").value("behavior"))
                 .andExpect(jsonPath("trialPeriodId").value(1L));
-        verify(reportService, times(1)).getById(FIRST_VALID_REPORT.getId());
+        verify(reportService, times(1)).getById(firstValidReport.getId());
     }
 
     @Test
     @DisplayName("Должен обновить и вернуть отчёт с новыми параметрами")
     void shouldUpdateAndReturnReport() throws Exception {
-        when(reportService.update(any(Report.class))).thenReturn(FIRST_VALID_REPORT);
+        when(reportService.update(any(Report.class))).thenReturn(firstValidReport);
         mockMvc.perform(put("/reports")
                         .param("id", "1")
                         .param("photoId", "photoid")

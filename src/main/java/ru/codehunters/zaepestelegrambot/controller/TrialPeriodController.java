@@ -14,7 +14,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 @RestController
-@RequestMapping("trialperiods")
+@RequestMapping("trial-periods")
 @Tag(name = "Испытательный срок", description = "CRUD-методы для работы с испытательными сроками")
 @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Всё хорошо, запрос выполнился."),
@@ -90,6 +90,6 @@ public class TrialPeriodController {
     @Operation(summary = "Удаление испытательного срока по id")
     public ResponseEntity<String> deleteById(@RequestParam @Parameter(description = "Id испытательного срока") Long id) {
         trialPeriodService.deleteById(id);
-        return ResponseEntity.ok().body("Испытательный срок успешно удалён");
+        return ResponseEntity.ok().body("Trial period successfully removed");
     }
 }
