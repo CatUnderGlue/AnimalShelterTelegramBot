@@ -1,5 +1,6 @@
 package ru.codehunters.zaepestelegrambot.controller;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -16,7 +17,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 @WebMvcTest(CatController.class)
 @ExtendWith(MockitoExtension.class)
-public class CatControllerTest {
+class CatControllerTest {
     @Autowired
     MockMvc mockMvc;
     @MockBean
@@ -26,6 +27,7 @@ public class CatControllerTest {
     static final Cat BORIS = new Cat(2L, "Boris", 3, false, false, 1L, 1L);
 
     @Test
+    @DisplayName("Возвращает кота по id")
     void getByIdShouldReturnCorrectCat() throws Exception {
         when(catService.getById(VALID_CAT.getId())).thenReturn(VALID_CAT);
         mockMvc.perform(get("/cats/id?id=1"))
@@ -42,6 +44,7 @@ public class CatControllerTest {
     }
 
     @Test
+    @DisplayName("Создаёт и возвращает кота со всеми полями")
     void createShouldCreateNewCat() throws Exception {
         when(catService.create(any(Cat.class))).thenReturn(VALID_CAT);
         mockMvc.perform(post("/cats")
@@ -61,6 +64,7 @@ public class CatControllerTest {
     }
 
     @Test
+    @DisplayName("Получает список всех котов")
     void getAllShouldGetAllCats() throws Exception {
         List<Cat> list = List.of(VALID_CAT,BORIS);
         when(catService.getAll()).thenReturn(list);
@@ -85,6 +89,7 @@ public class CatControllerTest {
     }
 
     @Test
+    @DisplayName("Возвращает кота по id хозяина")
     void getOwnerByIdShouldReturnCorrectCat() throws Exception {
     when(catService.getByUserId(VALID_CAT.getOwnerId())).thenReturn(VALID_CAT);
         mockMvc.perform(get("/cats/ownerID?id=1"))
@@ -102,6 +107,7 @@ public class CatControllerTest {
     }
 
     @Test
+    @DisplayName("Обновляет и возвращает кота по новому объекту")
     void updateShouldUpdateCat() throws Exception {
         when(catService.update(any(Cat.class))).thenReturn(NEW_CAT);
         mockMvc.perform(put("/cats")
@@ -126,6 +132,7 @@ public class CatControllerTest {
     }
 
     @Test
+    @DisplayName("Удаляет кота по id")
     void deleteByIdShouldDeleteCat() throws Exception {
         mockMvc.perform(delete("/cats/id?id=1"))
                 .andExpect(status().isOk())

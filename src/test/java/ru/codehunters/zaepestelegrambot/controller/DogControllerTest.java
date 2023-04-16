@@ -1,5 +1,6 @@
 package ru.codehunters.zaepestelegrambot.controller;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -18,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(DogController.class)
 @ExtendWith(MockitoExtension.class)
-public class DogControllerTest {
+class DogControllerTest {
     @Autowired
     MockMvc mockMvc;
     @MockBean
@@ -28,6 +29,7 @@ public class DogControllerTest {
     static final Dog BORIS = new Dog(2L, "Boris", 3, false, false, 1L, 1L);
 
     @Test
+    @DisplayName("Возвращает собаку со всеми полями")
     void getByIdShouldReturnCorrectDog() throws Exception {
         when(dogService.getById(VALID_DOG.getId())).thenReturn(VALID_DOG);
         mockMvc.perform(get("/dogs/id?id=1"))
@@ -44,6 +46,7 @@ public class DogControllerTest {
     }
 
     @Test
+    @DisplayName("Создаёт и возвращает собаку со всеми полями")
     void createShouldCreateNewDog() throws Exception {
         when(dogService.create(any(Dog.class))).thenReturn(VALID_DOG);
         mockMvc.perform(post("/dogs")
@@ -63,6 +66,7 @@ public class DogControllerTest {
     }
 
     @Test
+    @DisplayName("Получает список всех собак")
     void getAllShouldGetAllDogs() throws Exception {
         List<Dog> list = List.of(VALID_DOG,BORIS);
         when(dogService.getAll()).thenReturn(list);
@@ -87,6 +91,7 @@ public class DogControllerTest {
     }
 
     @Test
+    @DisplayName("Возвращает собаку по id хозяина")
     void getOwnerByIdShouldReturnCorrectDog() throws Exception {
     when(dogService.getByUserId(VALID_DOG.getOwnerId())).thenReturn(VALID_DOG);
         mockMvc.perform(get("/dogs/ownerID?id=1"))
@@ -104,6 +109,7 @@ public class DogControllerTest {
     }
 
     @Test
+    @DisplayName("Обновляет и возвращает собаку по новому объекту")
     void updateShouldUpdateDog() throws Exception {
         when(dogService.update(any(Dog.class))).thenReturn(NEW_DOG);
         mockMvc.perform(put("/dogs")
@@ -128,6 +134,7 @@ public class DogControllerTest {
     }
 
     @Test
+    @DisplayName("Удаление собаки")
     void deleteByIdShouldDeleteDog() throws Exception {
         mockMvc.perform(delete("/dogs/id?id=1"))
                 .andExpect(status().isOk())
