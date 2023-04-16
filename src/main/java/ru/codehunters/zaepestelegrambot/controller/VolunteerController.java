@@ -24,6 +24,7 @@ import java.util.List;
 })
 public class VolunteerController {
     private final VolunteerService volunteerService;
+
     private final TelegramBot telegramBot;
 
     public VolunteerController(VolunteerService volunteerService, TelegramBot telegramBot) {

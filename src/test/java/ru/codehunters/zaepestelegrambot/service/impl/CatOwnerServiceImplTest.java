@@ -29,29 +29,29 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class CatOwnerServiceImplTest {
 
-    final Long CAT_ID = 1L;
-    final Long TELEGRAM_ID = 1L;
-    final String CORRECT_FIRST_NAME = "Leopold";
-    final String CORRECT_LAST_NAME = "Lodkin";
-    final String CORRECT_PHONE = "258934";
-    final Cat VALID_CAT = new Cat(CAT_ID, null, null, null, null, null, null);
-    final Cat VALID_CAT_WITH_OWNER = new Cat(CAT_ID, "Kot", 1, true, true, TELEGRAM_ID, 1L);
-    final List<Cat> LIST_OF_CAT_WITH_OWNER = List.of(VALID_CAT_WITH_OWNER);
-    final User VALID_USER = new User(TELEGRAM_ID, CORRECT_FIRST_NAME, CORRECT_LAST_NAME, CORRECT_PHONE);
-    final CatOwner VALID_CAT_OWNER = new CatOwner(TELEGRAM_ID, CORRECT_FIRST_NAME, CORRECT_LAST_NAME,
-            CORRECT_PHONE, null, null);
-    final CatOwner VALID_CAT_OWNER_WITH_CAT = new CatOwner(TELEGRAM_ID, CORRECT_FIRST_NAME, CORRECT_LAST_NAME,
-            CORRECT_PHONE, LIST_OF_CAT_WITH_OWNER, null);
-    final CatOwner SECOND_VALID_CAT_OWNER = new CatOwner(TELEGRAM_ID, CORRECT_LAST_NAME, null,
-            CORRECT_PHONE, null, null);
-    final CatOwner THIRD_VALID_CAT_OWNER = new CatOwner(TELEGRAM_ID, CORRECT_LAST_NAME, CORRECT_LAST_NAME,
-            CORRECT_PHONE, null, null);
-    final List<CatOwner> LIST_OF_CAT_OWNER = List.of(VALID_CAT_OWNER);
-    final List<CatOwner> LIST_OF_CAT_OWNER_EMPTY = new ArrayList<>();
-    final LocalDate DATE = LocalDate.now();
-    final List<Report> REPORTS_LIST = new ArrayList<>();
-    final TrialPeriod VALID_TRIAL_PERIOD = new TrialPeriod(DATE, DATE.plusDays(30), DATE.minusDays(1), REPORTS_LIST,
-            TrialPeriod.Result.IN_PROGRESS, TELEGRAM_ID, TrialPeriod.AnimalType.CAT, CAT_ID);
+    private final Long catId = 1L;
+    private final Long telegramId = 1L;
+    private final String correctFirstName = "Leopold";
+    private final String correctLastName = "Lodkin";
+    private final String correctPhone = "258934";
+    private final Cat validCat = new Cat(catId, null, null, null, null, null, null);
+    private final Cat validCatWithOwner = new Cat(catId, "Kot", 1, true, true, telegramId, 1L);
+    private final List<Cat> listOfCatWithOwner = List.of(validCatWithOwner);
+    private final User validUser = new User(telegramId, correctFirstName, correctLastName, correctPhone);
+    private final CatOwner validCatOwner = new CatOwner(telegramId, correctFirstName, correctLastName,
+            correctPhone, null, null);
+    private final CatOwner validCatOwnerWithCat = new CatOwner(telegramId, correctFirstName, correctLastName,
+            correctPhone, listOfCatWithOwner, null);
+    private final CatOwner secondValidCatOwner = new CatOwner(telegramId, correctLastName, null,
+            correctPhone, null, null);
+    private final CatOwner thirdValidCatOwner = new CatOwner(telegramId, correctLastName, correctLastName,
+            correctPhone, null, null);
+    private final List<CatOwner> listOfCatOwner = List.of(validCatOwner);
+    private final List<CatOwner> listOfCatOwnerEmpty = new ArrayList<>();
+    private final LocalDate date = LocalDate.now();
+    private final List<Report> reportList = new ArrayList<>();
+    private final TrialPeriod validTrialPeriod = new TrialPeriod(date, date.plusDays(30), date.minusDays(1), reportList,
+            TrialPeriod.Result.IN_PROGRESS, telegramId, TrialPeriod.AnimalType.CAT, catId);
 
     @Mock
     CatOwnerRepo catOwnerRepoMock;
@@ -71,97 +71,97 @@ class CatOwnerServiceImplTest {
     @Test
     @DisplayName("Создаёт и возвращает владельца кота со всеми полями, кроме временных")
     void shouldCreateAndReturnCatOwnerWithAllArgs() {
-        when(catServiceMock.getById(CAT_ID)).thenReturn(VALID_CAT);
-        when(catOwnerRepoMock.save(VALID_CAT_OWNER)).thenReturn(VALID_CAT_OWNER);
-        when(trialPeriodServiceMock.create(VALID_TRIAL_PERIOD, TrialPeriod.AnimalType.CAT)).thenReturn(VALID_TRIAL_PERIOD);
-        CatOwner actual = catOwnerService.create(VALID_CAT_OWNER, TrialPeriod.AnimalType.CAT, CAT_ID);
-        assertEquals(VALID_CAT_OWNER, actual);
-        verify(catOwnerRepoMock, times(1)).save(VALID_CAT_OWNER);
+        when(catServiceMock.getById(catId)).thenReturn(validCat);
+        when(catOwnerRepoMock.save(validCatOwner)).thenReturn(validCatOwner);
+        when(trialPeriodServiceMock.create(validTrialPeriod, TrialPeriod.AnimalType.CAT)).thenReturn(validTrialPeriod);
+        CatOwner actual = catOwnerService.create(validCatOwner, TrialPeriod.AnimalType.CAT, catId);
+        assertEquals(validCatOwner, actual);
+        verify(catOwnerRepoMock, times(1)).save(validCatOwner);
     }
 
     @Test
     @DisplayName("Выбрасывает ошибку, если у кота уже есть владелец")
     void shouldThrowAlreadyExistsExceptionWhenCatHasOwner() {
-        when(catServiceMock.getById(CAT_ID)).thenReturn(VALID_CAT_WITH_OWNER);
-        assertThrows(AlreadyExistsException.class, () -> catOwnerService.create(VALID_CAT_OWNER, TrialPeriod.AnimalType.CAT, CAT_ID));
+        when(catServiceMock.getById(catId)).thenReturn(validCatWithOwner);
+        assertThrows(AlreadyExistsException.class, () -> catOwnerService.create(validCatOwner, TrialPeriod.AnimalType.CAT, catId));
     }
 
     @Test
     @DisplayName("Создаёт из пользователя и возвращает владельца кота со всеми полями, кроме временных")
     void shouldCreateFromUserAndReturnCatOwnerWithAllArgs() {
-        when(catServiceMock.getById(CAT_ID)).thenReturn(VALID_CAT);
-        when(catOwnerRepoMock.save(VALID_CAT_OWNER)).thenReturn(VALID_CAT_OWNER);
-        when(trialPeriodServiceMock.create(VALID_TRIAL_PERIOD, TrialPeriod.AnimalType.CAT)).thenReturn(VALID_TRIAL_PERIOD);
-        when(userServiceMock.getById(TELEGRAM_ID)).thenReturn(VALID_USER);
-        CatOwner actual = catOwnerService.create(TELEGRAM_ID, TrialPeriod.AnimalType.CAT, CAT_ID);
-        assertEquals(VALID_CAT_OWNER, actual);
-        verify(catOwnerRepoMock, times(1)).save(VALID_CAT_OWNER);
+        when(catServiceMock.getById(catId)).thenReturn(validCat);
+        when(catOwnerRepoMock.save(validCatOwner)).thenReturn(validCatOwner);
+        when(trialPeriodServiceMock.create(validTrialPeriod, TrialPeriod.AnimalType.CAT)).thenReturn(validTrialPeriod);
+        when(userServiceMock.getById(telegramId)).thenReturn(validUser);
+        CatOwner actual = catOwnerService.create(telegramId, TrialPeriod.AnimalType.CAT, catId);
+        assertEquals(validCatOwner, actual);
+        verify(catOwnerRepoMock, times(1)).save(validCatOwner);
     }
 
     @Test
     @DisplayName("Выбрасывает ошибку, если у кота уже есть владелец")
     void shouldThrowAlreadyExistsExceptionWhenCatHasOwner2() {
-        when(catServiceMock.getById(CAT_ID)).thenReturn(VALID_CAT_WITH_OWNER);
-        assertThrows(AlreadyExistsException.class, () -> catOwnerService.create(TELEGRAM_ID, TrialPeriod.AnimalType.CAT, CAT_ID));
+        when(catServiceMock.getById(catId)).thenReturn(validCatWithOwner);
+        assertThrows(AlreadyExistsException.class, () -> catOwnerService.create(telegramId, TrialPeriod.AnimalType.CAT, catId));
     }
 
     @Test
     @DisplayName("Возвращает владельца кота при поиске по id")
     void shouldReturnCatOwnerFoundById() {
-        when(catOwnerRepoMock.findById(TELEGRAM_ID)).thenReturn(Optional.of(VALID_CAT_OWNER));
-        CatOwner actual = catOwnerService.getById(TELEGRAM_ID);
-        assertEquals(VALID_CAT_OWNER, actual);
-        verify(catOwnerRepoMock, times(1)).findById(TELEGRAM_ID);
+        when(catOwnerRepoMock.findById(telegramId)).thenReturn(Optional.of(validCatOwner));
+        CatOwner actual = catOwnerService.getById(telegramId);
+        assertEquals(validCatOwner, actual);
+        verify(catOwnerRepoMock, times(1)).findById(telegramId);
     }
 
     @Test
     @DisplayName("Выбрасывает ошибку, если по указанному id владелец кота не найден")
     void shouldThrowNotFoundExWhenFindCatOwnerById() {
-        when(catOwnerRepoMock.findById(TELEGRAM_ID)).thenReturn(Optional.empty());
-        assertThrows(NotFoundException.class, () -> catOwnerService.getById(TELEGRAM_ID));
-        verify(catOwnerRepoMock, times(1)).findById(TELEGRAM_ID);
+        when(catOwnerRepoMock.findById(telegramId)).thenReturn(Optional.empty());
+        assertThrows(NotFoundException.class, () -> catOwnerService.getById(telegramId));
+        verify(catOwnerRepoMock, times(1)).findById(telegramId);
     }
     @Test
     @DisplayName("Возвращает список с владельцами котов")
     void shouldReturnListOfCatOwnersWhenGetAllCatOwner() {
-        when(catOwnerRepoMock.findAll()).thenReturn(LIST_OF_CAT_OWNER);
+        when(catOwnerRepoMock.findAll()).thenReturn(listOfCatOwner);
         List<CatOwner> actual = catOwnerService.getAll();
-        assertEquals(LIST_OF_CAT_OWNER, actual);
+        assertEquals(listOfCatOwner, actual);
         verify(catOwnerRepoMock, times(1)).findAll();
     }
 
     @Test
     @DisplayName("Выбрасывает ошибку, если владельцев котов нет")
     void shouldThrowNotFoundExWhenCatOwnerListIsEmpty() {
-        when(catOwnerRepoMock.findAll()).thenReturn(LIST_OF_CAT_OWNER_EMPTY);
+        when(catOwnerRepoMock.findAll()).thenReturn(listOfCatOwnerEmpty);
         assertThrows(NotFoundException.class, () -> catOwnerService.getAll());
     }
 
     @Test
     @DisplayName("Изменяет и возвращает владельца кота по новому объекту, не затрагивая null поля")
     void shouldUpdateCatOwnerWithoutNullFields() {
-        when(catOwnerRepoMock.findById(TELEGRAM_ID)).thenReturn(Optional.of(VALID_CAT_OWNER));
-        when(catOwnerRepoMock.save(THIRD_VALID_CAT_OWNER)).thenReturn(THIRD_VALID_CAT_OWNER);
-        CatOwner actual = catOwnerService.update(SECOND_VALID_CAT_OWNER);
-        assertEquals(THIRD_VALID_CAT_OWNER, actual);
-        verify(catOwnerRepoMock, times( 1)).findById(TELEGRAM_ID);
-        verify(catOwnerRepoMock, times(1)).save(THIRD_VALID_CAT_OWNER);
+        when(catOwnerRepoMock.findById(telegramId)).thenReturn(Optional.of(validCatOwner));
+        when(catOwnerRepoMock.save(thirdValidCatOwner)).thenReturn(thirdValidCatOwner);
+        CatOwner actual = catOwnerService.update(secondValidCatOwner);
+        assertEquals(thirdValidCatOwner, actual);
+        verify(catOwnerRepoMock, times( 1)).findById(telegramId);
+        verify(catOwnerRepoMock, times(1)).save(thirdValidCatOwner);
     }
 
     @Test
     @DisplayName("Выбрасывает ошибку, если по указанному объекту владелец кота не найден. Изменение невозможно.")
     void shouldThrowNotFoundExWhenUpdatingCatOwner() {
-        when(catOwnerRepoMock.findById(TELEGRAM_ID)).thenReturn(Optional.empty());
-        assertThrows(NotFoundException.class, () -> catOwnerService.update(VALID_CAT_OWNER));
-        verify(catOwnerRepoMock, times(1)).findById(TELEGRAM_ID);
+        when(catOwnerRepoMock.findById(telegramId)).thenReturn(Optional.empty());
+        assertThrows(NotFoundException.class, () -> catOwnerService.update(validCatOwner));
+        verify(catOwnerRepoMock, times(1)).findById(telegramId);
     }
 
     @Test
     @DisplayName("Выбрасывает ошибку, если по указанному id владелец кота не найден. Удаление невозможно.")
     void shouldThrowNotFoundExWhenDeletingCatOwnerById() {
-        when(catOwnerRepoMock.findById(TELEGRAM_ID)).thenReturn(Optional.empty());
-        assertThrows(NotFoundException.class, () -> catOwnerService.deleteById(TELEGRAM_ID));
-        verify(catOwnerRepoMock, times(1)).findById(TELEGRAM_ID);
+        when(catOwnerRepoMock.findById(telegramId)).thenReturn(Optional.empty());
+        assertThrows(NotFoundException.class, () -> catOwnerService.deleteById(telegramId));
+        verify(catOwnerRepoMock, times(1)).findById(telegramId);
     }
 
 
@@ -169,32 +169,32 @@ class CatOwnerServiceImplTest {
     @Test
     @DisplayName("Выбрасывает ошибку, если по объекту владелец кота не найден. Удаление невозможно.")
     void shouldThrowNotFoundExWhenDeletingCatOwner() {
-        when(catOwnerRepoMock.findById(TELEGRAM_ID)).thenThrow(NotFoundException.class);
-        assertThrows(NotFoundException.class, () -> catOwnerService.delete(VALID_CAT_OWNER));
-        verify(catOwnerRepoMock, times(1)).findById(TELEGRAM_ID);
+        when(catOwnerRepoMock.findById(telegramId)).thenThrow(NotFoundException.class);
+        assertThrows(NotFoundException.class, () -> catOwnerService.delete(validCatOwner));
+        verify(catOwnerRepoMock, times(1)).findById(telegramId);
     }
 
     @Test
     @DisplayName("Удаляет владельца у кота по объекту.")
     void shouldDeleteCatOwner() {
-        when(catServiceMock.update(VALID_CAT_WITH_OWNER)).thenReturn(VALID_CAT);
-        when(catOwnerRepoMock.findById(TELEGRAM_ID)).thenReturn(Optional.of(VALID_CAT_OWNER_WITH_CAT));
-        doNothing().when(catOwnerRepoMock).delete(VALID_CAT_OWNER_WITH_CAT);
-        catOwnerService.delete(VALID_CAT_OWNER_WITH_CAT);
-        verify(catOwnerRepoMock, times(1)).delete(VALID_CAT_OWNER_WITH_CAT);
-        verify(catOwnerRepoMock, times(1)).findById(TELEGRAM_ID);
-        verify(catServiceMock, times(1)).update(VALID_CAT_WITH_OWNER);
+        when(catServiceMock.update(validCatWithOwner)).thenReturn(validCat);
+        when(catOwnerRepoMock.findById(telegramId)).thenReturn(Optional.of(validCatOwnerWithCat));
+        doNothing().when(catOwnerRepoMock).delete(validCatOwnerWithCat);
+        catOwnerService.delete(validCatOwnerWithCat);
+        verify(catOwnerRepoMock, times(1)).delete(validCatOwnerWithCat);
+        verify(catOwnerRepoMock, times(1)).findById(telegramId);
+        verify(catServiceMock, times(1)).update(validCatWithOwner);
     }
 
     @Test
     @DisplayName("Удаляет владельца у кота по id.")
     void shouldDeleteCatOwnerById() {
-        when(catServiceMock.update(VALID_CAT_WITH_OWNER)).thenReturn(VALID_CAT);
-        when(catOwnerRepoMock.findById(TELEGRAM_ID)).thenReturn(Optional.of(VALID_CAT_OWNER_WITH_CAT));
-        doNothing().when(catOwnerRepoMock).delete(VALID_CAT_OWNER_WITH_CAT);
-        catOwnerService.deleteById(VALID_CAT_OWNER_WITH_CAT.getTelegramId());
-        verify(catOwnerRepoMock, times(1)).delete(VALID_CAT_OWNER_WITH_CAT);
-        verify(catOwnerRepoMock, times(2)).findById(TELEGRAM_ID);
-        verify(catServiceMock, times(1)).update(VALID_CAT_WITH_OWNER);
+        when(catServiceMock.update(validCatWithOwner)).thenReturn(validCat);
+        when(catOwnerRepoMock.findById(telegramId)).thenReturn(Optional.of(validCatOwnerWithCat));
+        doNothing().when(catOwnerRepoMock).delete(validCatOwnerWithCat);
+        catOwnerService.deleteById(validCatOwnerWithCat.getTelegramId());
+        verify(catOwnerRepoMock, times(1)).delete(validCatOwnerWithCat);
+        verify(catOwnerRepoMock, times(2)).findById(telegramId);
+        verify(catServiceMock, times(1)).update(validCatWithOwner);
     }
 }

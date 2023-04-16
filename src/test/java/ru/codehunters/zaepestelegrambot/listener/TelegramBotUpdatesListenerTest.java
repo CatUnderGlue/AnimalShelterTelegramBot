@@ -2,9 +2,12 @@ package ru.codehunters.zaepestelegrambot.listener;
 
 import com.pengrad.telegrambot.BotUtils;
 import com.pengrad.telegrambot.TelegramBot;
+import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.request.GetFile;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.request.SendPhoto;
+import com.pengrad.telegrambot.response.GetFileResponse;
 import com.pengrad.telegrambot.response.SendResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -15,13 +18,13 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
-import ru.codehunters.zaepestelegrambot.model.Information;
-import ru.codehunters.zaepestelegrambot.model.User;
-import ru.codehunters.zaepestelegrambot.model.Volunteer;
+import ru.codehunters.zaepestelegrambot.model.*;
 import ru.codehunters.zaepestelegrambot.model.animals.Cat;
 import ru.codehunters.zaepestelegrambot.model.animals.Dog;
 import ru.codehunters.zaepestelegrambot.model.shelters.CatShelter;
 import ru.codehunters.zaepestelegrambot.model.shelters.DogShelter;
+import ru.codehunters.zaepestelegrambot.service.ReportService;
+import ru.codehunters.zaepestelegrambot.service.TrialPeriodService;
 import ru.codehunters.zaepestelegrambot.service.UserService;
 import ru.codehunters.zaepestelegrambot.service.VolunteerService;
 import ru.codehunters.zaepestelegrambot.service.impl.CatShelterServiceImpl;
@@ -31,6 +34,8 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -51,6 +56,10 @@ class TelegramBotUpdatesListenerTest {
     DogShelterServiceImpl dogShelterService;
     @Mock
     VolunteerService volunteerService;
+    @Mock
+    ReportService reportService;
+    @Mock
+    TrialPeriodService trialPeriodService;
     @InjectMocks
     TelegramBotUpdatesListener telegramBotUpdatesListener;
     private final SendResponse sendResponse = BotUtils.fromJson("""
@@ -58,6 +67,14 @@ class TelegramBotUpdatesListenerTest {
             "ok": true
             }
             """, SendResponse.class);
+    private final GetFileResponse getFileResponse = BotUtils.fromJson("""
+            {
+            "ok": true,
+            "file": {
+                "file_id": "qwerty"
+                }
+            }
+            """, GetFileResponse.class);
 
     private final String messageTextJson;
 
@@ -70,6 +87,10 @@ class TelegramBotUpdatesListenerTest {
         }
     }
 
+    private final byte[] photo = Files.readAllBytes(
+            Paths.get(Objects.requireNonNull(UpdatesListener.class.getResource("/static/img/Cat.jpg")).toURI())
+    );
+
     private final User catUser = new User(777L, "CatUnderGlue", "", "", "CAT", "SomeShelterName");
     private final User dogUser = new User(777L, "CatUnderGlue", "", "", "DOG", "SomeShelterName");
     private final CatShelter catShelter = new CatShelter(1L, "SomeShelterName", "location",
@@ -78,6 +99,14 @@ class TelegramBotUpdatesListenerTest {
             "timetable", "about me", "security", "safety advice");
     private final Cat cat = new Cat(1L, "CatName", 2, true, true, null, 1L);
     private final Dog dog = new Dog(1L, "DogName", 2, true, true, null, 1L);
+    private final Report report = new Report(1L, "qwerty", "ration",
+            "health", "behavior", LocalDate.now(), 1L);
+    private final TrialPeriod trialPeriod = new TrialPeriod(1L, LocalDate.now(), LocalDate.now().plusDays(30),
+            LocalDate.now().minusDays(1), List.of(report), TrialPeriod.Result.IN_PROGRESS,
+            1L, TrialPeriod.AnimalType.CAT, 1L);
+
+    TelegramBotUpdatesListenerTest() throws IOException, URISyntaxException {
+    }
 
     @Test
     void handleStartCommand() {
@@ -245,6 +274,7 @@ class TelegramBotUpdatesListenerTest {
         Assertions.assertEquals(update.message().chat().id(), actual.getParameters().get("chat_id"));
         Assertions.assertEquals("Все о собаках", actual.getParameters().get("text"));
     }
+
     @Test
     void handleAnimalDatingCommands() {
         Update update = BotUtils.fromJson(messageTextJson.replace("%text%", "Правила знакомства c кошкой"), Update.class);
@@ -288,6 +318,7 @@ class TelegramBotUpdatesListenerTest {
         Assertions.assertEquals(update.message().chat().id(), actual.getParameters().get("chat_id"));
         Assertions.assertEquals(Information.LIST_OF_REASON_FOR_DENY, actual.getParameters().get("text"));
     }
+
     @Test
     void handleRecommendationsForAnimalCommands() {
         when(userService.getById(any())).thenThrow(NotFoundException.class);
@@ -369,10 +400,10 @@ class TelegramBotUpdatesListenerTest {
         SendPhoto actual = argumentCaptor.getValue();
         Assertions.assertEquals(update.message().chat().id(), actual.getParameters().get("chat_id"));
         Assertions.assertEquals("""
-                    Рацион: ваш текст;
-                    Самочувствие: ваш текст;
-                    Поведение: ваш текст;
-                    """, actual.getParameters().get("caption"));
+                Рацион: ваш текст;
+                Самочувствие: ваш текст;
+                Поведение: ваш текст;
+                """, actual.getParameters().get("caption"));
     }
 
     @Test
@@ -413,6 +444,23 @@ class TelegramBotUpdatesListenerTest {
         actual = argumentCaptor.getValue();
         Assertions.assertEquals(update.message().chat().id(), actual.getParameters().get("chat_id"));
         Assertions.assertEquals("Информация о собачьем приюте", actual.getParameters().get("text"));
+    }
+
+    @Test
+    void handleSendVolunteerReportPhotoCommand() throws IOException {
+        when(telegramBot.execute(any(GetFile.class))).thenReturn(getFileResponse);
+        when(reportService.getById(any())).thenReturn(report);
+        when(trialPeriodService.getById(1L)).thenReturn(trialPeriod);
+        when(telegramBot.getFileContent(any())).thenReturn(photo);
+        telegramBotUpdatesListener.sendReportPhotoToVolunteer(1L, 1L);
+        ArgumentCaptor<SendPhoto> argumentCaptor = ArgumentCaptor.forClass(SendPhoto.class);
+        Mockito.verify(telegramBot, times(2)).execute(argumentCaptor.capture());
+        SendPhoto actual = argumentCaptor.getValue();
+        Assertions.assertEquals(1L, actual.getParameters().get("chat_id"));
+        Assertions.assertEquals("""
+                Id владельца: 1
+                Id испытательного срока: 1
+                Id отчёта:1""", actual.getParameters().get("caption"));
     }
 
     private SendMessage catShelterTester(Update update) {
