@@ -60,6 +60,6 @@ public class CatServiceImpl implements CatService {
 
     @Override
     public void remove(Long id) {
-        catRepo.deleteById(id);
+        catRepo.deleteById(getById(id).getId());
     }
 }

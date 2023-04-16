@@ -45,7 +45,7 @@ public class DogServiceImpl implements DogService {
         if (dogId.isEmpty()){
             throw new NotFoundException("Пса нет");
         }
-        Dog currentDog = getById(dog.getId());
+        Dog currentDog = dogId.get();
         EntityUtils.copyNonNullFields(dog, currentDog);
         return dogRepo.save(currentDog);
     }
@@ -57,6 +57,6 @@ public class DogServiceImpl implements DogService {
 
     @Override
     public void remove(Long id) {
-        dogRepo.deleteById(id);
+        dogRepo.deleteById(getById(id).getId());
     }
 }
