@@ -10,6 +10,7 @@ import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.animals.Cat;
 import ru.codehunters.zaepestelegrambot.repository.CatRepo;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,16 +20,17 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class CatServiceImplTest {
 
-    final Long ID = 1L;
-    final String VALID_NAME = "CAT";
-    final String NEW_NAME = "Ferdinande";
-    final Integer AGE = 1;
-    final boolean IS_HEALTHY = true;
-    final boolean VACCINATED = true;
-    final Long OWNER_ID = 312123412412L;
-    final Long SHELTER_ID = 1L;
-    final Cat VALID_CAT = new Cat(ID, VALID_NAME, AGE, IS_HEALTHY, VACCINATED, OWNER_ID, SHELTER_ID);
-    final Cat NEW_CAT = new Cat(ID, NEW_NAME, AGE, null, null, null, null);
+    static final Long ID = 1L;
+    static final String VALID_NAME = "CAT";
+    static final String NEW_NAME = "Ferdinande";
+    static final Integer AGE = 1;
+    static final boolean IS_HEALTHY = true;
+    static final boolean VACCINATED = true;
+    static final Long OWNER_ID = 312123412412L;
+    static final Long SHELTER_ID = 1L;
+    static final Cat VALID_CAT = new Cat(ID, VALID_NAME, AGE, IS_HEALTHY, VACCINATED, OWNER_ID, SHELTER_ID);
+    static final Cat NEW_CAT = new Cat(ID, NEW_NAME, AGE, null, null, null, null);
+    static final Cat RESULTED_CAT = new Cat(ID, NEW_NAME, AGE, IS_HEALTHY, VACCINATED, OWNER_ID, SHELTER_ID);
 
     @Mock
     CatRepo catRepoMock;
@@ -72,22 +74,51 @@ class CatServiceImplTest {
         assertEquals(VALID_CAT, result);
     }
 
+    @DisplayName("Выбрасывает ошибку, когда нет хозяина кота по данному ID")
+    @Test
+    void shouldThrowNotFoundExceptionWhenReturnCatByOwnerId() {
+        when(catRepoMock.findByOwnerId(OWNER_ID)).thenReturn(Optional.empty());
+        assertThrows(NotFoundException.class, () -> out.getByUserId(OWNER_ID));
+        verify(catRepoMock, times(1)).findByOwnerId(OWNER_ID);
+    }
+
     @DisplayName("Обновляет и возвращает кота по новому объекту, не принимая null поля")
     @Test
     void shouldUpdateCatWithoutNullFields() {
         when(catRepoMock.findById(ID)).thenReturn(Optional.of(VALID_CAT));
-        when(catRepoMock.save(NEW_CAT)).thenReturn(NEW_CAT);
-
-
+        when(catRepoMock.save(RESULTED_CAT)).thenReturn(RESULTED_CAT);
+        Cat result = out.update(NEW_CAT);
+        assertEquals(RESULTED_CAT, result);
+        verify(catRepoMock, times(1)).findById(ID);
+        verify(catRepoMock, times(1)).save(RESULTED_CAT);
     }
+
+    @DisplayName("Выбрасывает ошибку, когда по данному id кота нет. Обновление не возможно")
+    @Test
+    void shouldThrowNotFoundExceptionWhenUpdateCatId() {
+        when(catRepoMock.findById(ID)).thenReturn(Optional.empty());
+        assertThrows(NotFoundException.class, () -> out.update(NEW_CAT));
+        verify(catRepoMock, times(1)).findById(ID);
+    }
+
 
     @DisplayName("Получает список всех котов")
     @Test
-    void getAll() {
+    void shouldCollectAllCat() {
+        List<Cat> list = List.of(NEW_CAT);
+        when(catRepoMock.findAll()).thenReturn(list);
+        List<Cat> actual = out.getAll();
+        assertEquals(list, actual);
+        verify(catRepoMock, times(1)).findAll();
+
     }
 
-    @DisplayName("Удаляет кота по id")
+    @DisplayName("Удаляет кота по id и выбрасывает ошибку если кот не найден")
     @Test
-    void remove() {
+    void shouldThrowNotFoundExceptionWhenDelCatId() {
+        when(catRepoMock.findById(ID)).thenReturn(Optional.empty());
+        assertThrows(NotFoundException.class, () -> out.remove(ID));
+        verify(catRepoMock, times(1)).findById(ID);
     }
+
 }
