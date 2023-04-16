@@ -117,9 +117,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                                 } catch (NotFoundException e) {
                                     userService.create(new User(chatId, chat.firstName(), chat.lastName(), ""));
                                 }
-                                sendMessage(chatId, "Рады приветствовать Вас в нашем боте!");
-                                sendMessage(chatId, "У нас здесь живут друзья разных пород и размеров - от веселых щенков до ласковых" +
-                                        " котиков. Мы надеемся, что ты найдешь своего идеального друга здесь");
                                 replyMarkup.sendStartMenu(chatId);
                             }
                             case "Приют для кошек" -> {
@@ -212,7 +209,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                                     } else if (user.getShelterType().equals("DOG")) {
                                         sendMessage(chatId, dogShelterService.getShelterByName(user.getShelterName()).getAboutMe());
                                     }
-
                                 } catch (Exception e) {
                                     logger.error(e.getMessage(), e);
                                 }
@@ -252,16 +248,16 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                                 logger.info("Часто задаваемые вопросы - ID:{}",chatId);
                                 User user = userService.getById(chatId);
                                 if (user.getShelterType().equals("CAT")) {
-                                    replyMarkup.Cat(chatId);
+                                    replyMarkup.menuCat(chatId);
                                 } else if (user.getShelterType().equals("DOG")) {
-                                    replyMarkup.Dog(chatId);
+                                    replyMarkup.menuDog(chatId);
                                 }
                             }
-                            case "Все о кошках", "Назад в \"Все о кошках\"" -> {
+                            case "Назад в \"Все о кошках\"" -> {
                                 logger.info("Все о кошках - ID:{}",chatId);
                                 replyMarkup.menuCat(chatId);
                             }
-                            case "Все о собаках", "Назад в \"Все о собаках\"" -> {
+                            case "Назад в \"Все о собаках\"" -> {
                                 logger.info("Все о собаках - ID:{}",chatId);
                                 replyMarkup.menuDog(chatId);
                             }
@@ -316,6 +312,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                             case "Позвать волонтёра", "Позвать волонтера" -> {
                                 logger.info("Позвать волонтера - ID:{}",chatId);
                                 sendMessageToVolunteers(message);
+                                sendMessage(chatId, "Первый освободившийся волонтёр ответит вам в ближайшее время");
                             }
                         }
                     });
@@ -328,7 +325,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     private void sendMessage(Long chatId, String message) {
         SendResponse sendResponse = telegramBot.execute(new SendMessage(chatId, message));
         if (!sendResponse.isOk()) {
-            System.out.printf("\nОшибка во время отправки сообщения: %s\n", sendResponse.description());
+            logger.error(sendResponse.description());
         }
     }
 

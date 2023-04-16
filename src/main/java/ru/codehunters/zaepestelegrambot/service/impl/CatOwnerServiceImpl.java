@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.codehunters.zaepestelegrambot.exception.AlreadyExistsException;
 import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.TrialPeriod;
+import ru.codehunters.zaepestelegrambot.model.animals.Cat;
 import ru.codehunters.zaepestelegrambot.model.owners.CatOwner;
 import ru.codehunters.zaepestelegrambot.repository.CatOwnerRepo;
 import ru.codehunters.zaepestelegrambot.service.CatOwnerService;
@@ -63,7 +64,7 @@ public class CatOwnerServiceImpl implements CatOwnerService {
     public List<CatOwner> getAll() {
         List<CatOwner> all = catOwnerRepo.findAll();
         if (all.isEmpty()) {
-            throw new NotFoundException("Хозяин кота не найден!");
+            throw new NotFoundException("Владельцев котов нет!");
         }
         return all;
     }
@@ -72,7 +73,7 @@ public class CatOwnerServiceImpl implements CatOwnerService {
     public CatOwner update(CatOwner catOwner) {
         Optional<CatOwner> optionalCatOwner = catOwnerRepo.findById(catOwner.getTelegramId());
         if (optionalCatOwner.isEmpty()) {
-            throw new NotFoundException("Владелец собаки не найден!");
+            throw new NotFoundException("Владелец кота не найден!");
         }
         CatOwner currentCatOwner = optionalCatOwner.get();
         EntityUtils.copyNonNullFields(catOwner, currentCatOwner);
@@ -81,11 +82,17 @@ public class CatOwnerServiceImpl implements CatOwnerService {
 
     @Override
     public void delete(CatOwner catOwner) {
+        if (catOwner.getCatList() != null) {
+            for (Cat cat : catOwner.getCatList()) {
+                cat.setOwnerId(null);
+                catService.update(cat);
+            }
+        }
         catOwnerRepo.delete(getById(catOwner.getTelegramId()));
     }
 
     @Override
     public void deleteById(Long id) {
-        catOwnerRepo.deleteById(getById(id).getTelegramId());
+        delete(getById(id));
     }
 }

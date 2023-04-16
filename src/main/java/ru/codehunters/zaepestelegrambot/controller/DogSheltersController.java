@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.codehunters.zaepestelegrambot.model.animals.Dog;
 import ru.codehunters.zaepestelegrambot.model.shelters.DogShelter;
@@ -32,21 +31,21 @@ public class DogSheltersController {
     @Operation(
             summary = "Регистрация нового собачьего приюта."
     )
-    public ResponseEntity<Object> create(@RequestParam @Parameter(description = "Название приюта") String name,
+    public DogShelter create(@RequestParam @Parameter(description = "Название приюта") String name,
                                          @RequestParam @Parameter(description = "Адрес и схема проезда") String location,
                                          @RequestParam @Parameter(description = "Расписание работы приюта") String timetable,
                                          @RequestParam @Parameter(description = "О приюте") String aboutMe,
                                          @RequestParam @Parameter(description = "Способ связи с охраной") String security,
                                          @RequestParam @Parameter(description = "Рекомендации о технике безопасности на территории приюта") String safetyAdvice
     ) {
-        return ResponseEntity.ok().body(dogShelterService.addShelter(new DogShelter(name, location, timetable, aboutMe, security, safetyAdvice)));
+        return dogShelterService.addShelter(new DogShelter(name, location, timetable, aboutMe, security, safetyAdvice));
     }
 
     @PutMapping("/")
     @Operation(
             summary = "Обновление информации о приюте"
     )
-    public ResponseEntity<Object> update(@RequestParam @Parameter(description = "id приюта") long id,
+    public DogShelter update(@RequestParam @Parameter(description = "id приюта") long id,
                                          @RequestParam(required = false)
                                          @Parameter(description = "Название приюта") String name,
                                          @RequestParam(required = false)
@@ -59,32 +58,31 @@ public class DogSheltersController {
                                              @Parameter(description = "Способ связи с охраной") String security,
                                          @RequestParam(required = false)
                                              @Parameter(description = "Рекомендации о технике безопасности на территории приюта") String safetyAdvice) {
-        return ResponseEntity.ok().body(dogShelterService.updateShelter((new DogShelter(id, name, location, timetable, aboutMe, security, safetyAdvice))));
+        return dogShelterService.updateShelter((new DogShelter(id, name, location, timetable, aboutMe, security, safetyAdvice)));
     }
 
     @GetMapping("/")
     @Operation(
             summary = "Список приютов"
     )
-    public ResponseEntity<List<DogShelter>> getAll() {
-        return ResponseEntity.ok(dogShelterService.getShelter());
+    public List<DogShelter> getAll() {
+        return dogShelterService.getShelter();
     }
 
     @GetMapping("/list{id}")
     @Operation(
             summary = "Список животных приюта"
     )
-    public ResponseEntity<List<Dog>> getAnimal(@PathVariable @Parameter(description = "id приюта") long id) {
-        return ResponseEntity.ok(dogShelterService.getAnimal(id));
+    public List<Dog> getAnimal(@PathVariable @Parameter(description = "id приюта") long id) {
+        return dogShelterService.getAnimal(id);
     }
 
     @GetMapping("/id{id}")
     @Operation(
             summary = "Поиск приюта по id"
     )
-    public ResponseEntity<DogShelter> getShelterId(@PathVariable @Parameter(description = "id приюта") long id) {
-        DogShelter shelters = (dogShelterService.getSheltersId(id));
-        return ResponseEntity.ok(shelters);
+    public DogShelter getShelterId(@PathVariable @Parameter(description = "id приюта") long id) {
+        return (dogShelterService.getSheltersId(id));
     }
 
     @DeleteMapping("/{id}")
@@ -92,8 +90,8 @@ public class DogSheltersController {
             summary = "Удаление приюта"
     )
 
-    public ResponseEntity<String> delete(@PathVariable @Parameter(description = "id приюта") long id) {
-        return ResponseEntity.ok(dogShelterService.delShelter(id));
+    public String delete(@PathVariable @Parameter(description = "id приюта") long id) {
+        return dogShelterService.delShelter(id);
     }
 
 }

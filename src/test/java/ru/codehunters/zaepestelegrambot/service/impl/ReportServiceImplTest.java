@@ -24,32 +24,28 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class ReportServiceImplTest {
 
-    final Long ID = 1234567890L;
-    final Long SECOND_ID = 1234567890L + 1;
-    final String TEXT = "ваш текст";
-    final String PHOTO_ID = "qewgsdjgsdoiypofsdffhnsu";
-    final String CAPTION = """
+    private final Long id = 1234567890L;
+    private final Long secondId = 1234567890L + 1;
+    private final String text = "ваш текст";
+    private final String photoId = "qewgsdjgsdoiypofsdffhnsu";
+    private final String caption = """
             Рацион: ваш текст;
             Самочувствие: ваш текст;
             Поведение: ваш текст;
             """;
-    final LocalDate DATE_NOW = LocalDate.now();
-    final Report VALID_REPORT = new Report(ID, PHOTO_ID, TEXT, TEXT, TEXT,
-            DATE_NOW, ID);
-    final Report VALID_REPORT_WITHOUT_ID = new Report(PHOTO_ID, TEXT, TEXT, TEXT,
-            DATE_NOW, ID);
-    final Report SECOND_VALID_REPORT = new Report(ID, null, null, null, null,
-            null, SECOND_ID);
-    final Report THIRD_VALID_REPORT = new Report(ID, PHOTO_ID, TEXT, TEXT, TEXT,
-            DATE_NOW, SECOND_ID);
-    final List<Report> REPORTS_LIST = List.of(VALID_REPORT);
-    final List<Report> EMPTY_LIST = new ArrayList<>();
-    final TrialPeriod TRIAL_PERIOD_WITH_REPORT = new TrialPeriod(ID, DATE_NOW, DATE_NOW, DATE_NOW,
-            REPORTS_LIST, TrialPeriod.Result.IN_PROGRESS, ID, TrialPeriod.AnimalType.CAT, ID);
-    final TrialPeriod TRIAL_PERIOD_WITHOUT_REPORT = new TrialPeriod(ID, DATE_NOW, DATE_NOW, DATE_NOW.minusDays(1),
-            new ArrayList<>(), TrialPeriod.Result.IN_PROGRESS, ID, TrialPeriod.AnimalType.CAT, ID);
-    final List<TrialPeriod> TRIAL_PERIOD_LIST_WITH_REPORT = List.of(TRIAL_PERIOD_WITH_REPORT);
-    final List<TrialPeriod> TRIAL_PERIOD_LIST_WITHOUT_REPORT = List.of(TRIAL_PERIOD_WITHOUT_REPORT);
+    private final LocalDate dateNow = LocalDate.now();
+    private final Report validReport = new Report(id, photoId, text, text, text, dateNow, id);
+    private final Report validReportWithoutId = new Report(photoId, text, text, text, dateNow, id);
+    private final Report secondValidReport = new Report(id, photoId, null, null, null, null, secondId);
+    private final Report thirdValidReport = new Report(id, photoId, text, text, text, dateNow, secondId);
+    private final List<Report> reportList = List.of(validReport);
+    private final List<Report> emptyList = new ArrayList<>();
+    private final TrialPeriod trialPeriodWithReport = new TrialPeriod(id, dateNow, dateNow, dateNow,
+            reportList, TrialPeriod.Result.IN_PROGRESS, id, TrialPeriod.AnimalType.CAT, id);
+    private final TrialPeriod trialPeriodWithoutReport = new TrialPeriod(id, dateNow, dateNow, dateNow.minusDays(1),
+            new ArrayList<>(), TrialPeriod.Result.IN_PROGRESS, id, TrialPeriod.AnimalType.CAT, id);
+    private final List<TrialPeriod> trialPeriodListWithReport = List.of(trialPeriodWithReport);
+    private final List<TrialPeriod> trialPeriodListWithoutReport = List.of(trialPeriodWithoutReport);
 
     @Mock
     ReportRepo reportRepoMock;
@@ -63,59 +59,59 @@ class ReportServiceImplTest {
     @Test
     @DisplayName("Создаёт и возвращает отчёт со всеми полями")
     void shouldCreateAndReturnReportWithAllArgs() {
-        when(reportRepoMock.save(VALID_REPORT)).thenReturn(VALID_REPORT);
-        Report actual = reportService.create(VALID_REPORT);
-        assertEquals(VALID_REPORT, actual);
-        verify(reportRepoMock, times(1)).save(VALID_REPORT);
+        when(reportRepoMock.save(validReport)).thenReturn(validReport);
+        Report actual = reportService.create(validReport);
+        assertEquals(validReport, actual);
+        verify(reportRepoMock, times(1)).save(validReport);
     }
 
     @Test
     @DisplayName("Возвращает отчёт при поиске по id")
     void shouldReturnReportFoundById() {
-        when(reportRepoMock.findById(ID)).thenReturn(Optional.of(VALID_REPORT));
-        Report actual = reportService.getById(ID);
-        assertEquals(VALID_REPORT, actual);
-        verify(reportRepoMock, times(1)).findById(ID);
+        when(reportRepoMock.findById(id)).thenReturn(Optional.of(validReport));
+        Report actual = reportService.getById(id);
+        assertEquals(validReport, actual);
+        verify(reportRepoMock, times(1)).findById(id);
     }
 
     @Test
     @DisplayName("Выбрасывает ошибку, что по указанном id отчёт не найден")
     void shouldThrowNotFoundExWhenFindReportById() {
-        when(reportRepoMock.findById(ID)).thenReturn(Optional.empty());
-        assertThrows(NotFoundException.class, () -> reportService.getById(ID));
-        verify(reportRepoMock, times(1)).findById(ID);
+        when(reportRepoMock.findById(id)).thenReturn(Optional.empty());
+        assertThrows(NotFoundException.class, () -> reportService.getById(id));
+        verify(reportRepoMock, times(1)).findById(id);
     }
 
     @Test
     @DisplayName("Возвращает отчёт при поиске по дате и id испытательного срока")
     void shouldReturnReportFoundByDateAndTrialId() {
-        when(reportRepoMock.findByReceiveDateAndTrialPeriodId(DATE_NOW, ID)).thenReturn(Optional.of(VALID_REPORT));
-        Report actual = reportService.getByDateAndTrialId(DATE_NOW, ID);
-        assertEquals(VALID_REPORT, actual);
-        verify(reportRepoMock, times(1)).findByReceiveDateAndTrialPeriodId(DATE_NOW, ID);
+        when(reportRepoMock.findByReceiveDateAndTrialPeriodId(dateNow, id)).thenReturn(Optional.of(validReport));
+        Report actual = reportService.getByDateAndTrialId(dateNow, id);
+        assertEquals(validReport, actual);
+        verify(reportRepoMock, times(1)).findByReceiveDateAndTrialPeriodId(dateNow, id);
     }
 
     @Test
     @DisplayName("Выбрасывает ошибку, что по указанным дате и id испытательного срока отчёт не найден")
     void shouldThrowNotFoundExWhenFindReportByDateAndTrialId() {
-        when(reportRepoMock.findByReceiveDateAndTrialPeriodId(DATE_NOW, ID)).thenReturn(Optional.empty());
-        assertThrows(NotFoundException.class, () -> reportService.getByDateAndTrialId(DATE_NOW, ID));
-        verify(reportRepoMock, times(1)).findByReceiveDateAndTrialPeriodId(DATE_NOW, ID);
+        when(reportRepoMock.findByReceiveDateAndTrialPeriodId(dateNow, id)).thenReturn(Optional.empty());
+        assertThrows(NotFoundException.class, () -> reportService.getByDateAndTrialId(dateNow, id));
+        verify(reportRepoMock, times(1)).findByReceiveDateAndTrialPeriodId(dateNow, id);
     }
 
     @Test
     @DisplayName("Возвращает список с отчётами")
     void shouldReturnListOfReportsWhenGetAllReports() {
-        when(reportRepoMock.findAll()).thenReturn(REPORTS_LIST);
+        when(reportRepoMock.findAll()).thenReturn(reportList);
         List<Report> actual = reportService.getAll();
-        assertEquals(REPORTS_LIST, actual);
+        assertEquals(reportList, actual);
         verify(reportRepoMock, times(1)).findAll();
     }
 
     @Test
     @DisplayName("Выбрасывает ошибку, что список с отчётами пуст")
     void shouldThrowNotFoundExWhenListOfReportsIsEmpty() {
-        when(reportRepoMock.findAll()).thenReturn(EMPTY_LIST);
+        when(reportRepoMock.findAll()).thenReturn(emptyList);
         assertThrows(NotFoundException.class, () -> reportService.getAll());
         verify(reportRepoMock, times(1)).findAll();
     }
@@ -123,89 +119,89 @@ class ReportServiceImplTest {
     @Test
     @DisplayName("Возвращает список с отчётами по id испытательного срока")
     void shouldReturnListOfReportsWhenGetAllReportsByOTrialId() {
-        when(reportRepoMock.findAllByTrialPeriodId(ID)).thenReturn(REPORTS_LIST);
-        List<Report> actual = reportService.gelAllByTrialPeriodId(ID);
-        assertEquals(REPORTS_LIST, actual);
-        verify(reportRepoMock, times(1)).findAllByTrialPeriodId(ID);
+        when(reportRepoMock.findAllByTrialPeriodId(id)).thenReturn(reportList);
+        List<Report> actual = reportService.gelAllByTrialPeriodId(id);
+        assertEquals(reportList, actual);
+        verify(reportRepoMock, times(1)).findAllByTrialPeriodId(id);
     }
 
     @Test
     @DisplayName("Выбрасывает ошибку, что список с отчётами по id испытательного срока пуст")
     void shouldThrowNotFoundExWhenListOfReportsByTrialIdIsEmpty() {
-        when(reportRepoMock.findAllByTrialPeriodId(ID)).thenReturn(EMPTY_LIST);
-        assertThrows(NotFoundException.class, () -> reportService.gelAllByTrialPeriodId(ID));
-        verify(reportRepoMock, times(1)).findAllByTrialPeriodId(ID);
+        when(reportRepoMock.findAllByTrialPeriodId(id)).thenReturn(emptyList);
+        assertThrows(NotFoundException.class, () -> reportService.gelAllByTrialPeriodId(id));
+        verify(reportRepoMock, times(1)).findAllByTrialPeriodId(id);
     }
 
     @Test
     @DisplayName("Изменяет и возвращает отчёт по новому объекту, не затрагивая null поля")
     void shouldUpdateVolunteerWithoutNullFields() {
-        when(reportRepoMock.findById(ID)).thenReturn(Optional.of(VALID_REPORT));
-        when(reportRepoMock.save(THIRD_VALID_REPORT)).thenReturn(THIRD_VALID_REPORT);
-        Report actual = reportService.update(SECOND_VALID_REPORT);
-        assertEquals(THIRD_VALID_REPORT, actual);
-        verify(reportRepoMock, times( 1)).findById(ID);
-        verify(reportRepoMock, times(1)).save(THIRD_VALID_REPORT);
+        when(reportRepoMock.findById(id)).thenReturn(Optional.of(validReport));
+        when(reportRepoMock.save(thirdValidReport)).thenReturn(thirdValidReport);
+        Report actual = reportService.update(secondValidReport);
+        assertEquals(thirdValidReport, actual);
+        verify(reportRepoMock, times( 1)).findById(id);
+        verify(reportRepoMock, times(1)).save(thirdValidReport);
     }
 
     @Test
     @DisplayName("Выбрасывает ошибку, что по указанному объекту отчёт не найден. Изменение невозможно.")
     void shouldThrowNotFoundExWhenUpdatingReport() {
-        when(reportRepoMock.findById(ID)).thenReturn(Optional.empty());
-        assertThrows(NotFoundException.class, () -> reportService.update(VALID_REPORT));
-        verify(reportRepoMock, times(1)).findById(ID);
+        when(reportRepoMock.findById(id)).thenReturn(Optional.empty());
+        assertThrows(NotFoundException.class, () -> reportService.update(validReport));
+        verify(reportRepoMock, times(1)).findById(id);
     }
 
     @Test
     @DisplayName("Выбрасывает ошибку, что по указанному id отчёт не найден. Удаление невозможно.")
     void shouldThrowNotFoundExWhenDeletingReportById() {
-        when(reportRepoMock.findById(ID)).thenReturn(Optional.empty());
-        assertThrows(NotFoundException.class, () -> reportService.deleteById(ID));
-        verify(reportRepoMock, times(1)).findById(ID);
+        when(reportRepoMock.findById(id)).thenReturn(Optional.empty());
+        assertThrows(NotFoundException.class, () -> reportService.deleteById(id));
+        verify(reportRepoMock, times(1)).findById(id);
     }
 
     @Test
     @DisplayName("Выбрасывает ошибку, что по объекту отчёт не найден. Удаление невозможно.")
     void shouldThrowNotFoundExWhenDeletingReport() {
-        when(reportRepoMock.findById(ID)).thenReturn(Optional.empty());
-        assertThrows(NotFoundException.class, () -> reportService.delete(VALID_REPORT));
-        verify(reportRepoMock, times(1)).findById(ID);
+        when(reportRepoMock.findById(id)).thenReturn(Optional.empty());
+        assertThrows(NotFoundException.class, () -> reportService.delete(validReport));
+        verify(reportRepoMock, times(1)).findById(id);
     }
 
     @Test
     @DisplayName("Создаёт отчёт по данным из телеграма")
     void shouldCreateReportBasedOnDataFromTelegram() {
-        when(trialPeriodService.getAllByOwnerId(ID)).thenReturn(TRIAL_PERIOD_LIST_WITHOUT_REPORT);
-        when(trialPeriodService.update(TRIAL_PERIOD_WITHOUT_REPORT)).thenReturn(TRIAL_PERIOD_WITH_REPORT);
-        when(reportRepoMock.save(VALID_REPORT_WITHOUT_ID)).thenReturn(VALID_REPORT);
-        Report actual = reportService.createFromTelegram(PHOTO_ID, CAPTION, ID);
-        assertEquals(VALID_REPORT, actual);
-        verify(trialPeriodService, times(1)).getAllByOwnerId(ID);
-        verify(trialPeriodService, times(1)).update(TRIAL_PERIOD_WITHOUT_REPORT);
-        verify(reportRepoMock, times(1)).save(VALID_REPORT_WITHOUT_ID);
+        when(trialPeriodService.getAllByOwnerId(id)).thenReturn(trialPeriodListWithoutReport);
+        when(trialPeriodService.update(trialPeriodWithoutReport)).thenReturn(trialPeriodWithReport);
+        when(reportRepoMock.save(validReportWithoutId)).thenReturn(validReport);
+        Report actual = reportService.createFromTelegram(photoId, caption, id);
+        assertEquals(validReport, actual);
+        verify(trialPeriodService, times(1)).getAllByOwnerId(id);
+        verify(trialPeriodService, times(1)).update(trialPeriodWithoutReport);
+        verify(reportRepoMock, times(1)).save(validReportWithoutId);
     }
 
     @Test
     @DisplayName("Выбрасывает ошибку при попытке создать отчёт повторно в один день.")
     void shouldThrowAlreadyExistsExceptionWhenLastReportDateEqualsNow() {
-        when(trialPeriodService.getAllByOwnerId(ID)).thenReturn(TRIAL_PERIOD_LIST_WITH_REPORT);
-        assertThrows(AlreadyExistsException.class, () -> reportService.createFromTelegram(PHOTO_ID, CAPTION, ID));
-        verify(trialPeriodService, times(1)).getAllByOwnerId(ID);
+        when(trialPeriodService.getAllByOwnerId(id)).thenReturn(trialPeriodListWithReport);
+        assertThrows(AlreadyExistsException.class, () -> reportService.createFromTelegram(photoId, caption, id));
+        verify(trialPeriodService, times(1)).getAllByOwnerId(id);
     }
 
     @Test
     @DisplayName("Выбрасывает ошибку при попытке создать отчёт без описания.")
     void shouldThrowIllegalArgumentExceptionWhenCaptionIsBlankOrNull() {
-        when(trialPeriodService.getAllByOwnerId(ID)).thenReturn(TRIAL_PERIOD_LIST_WITHOUT_REPORT);
-        assertThrows(IllegalArgumentException.class, () -> reportService.createFromTelegram(PHOTO_ID, "", ID));
-        verify(trialPeriodService, times(1)).getAllByOwnerId(ID);
+        when(trialPeriodService.getAllByOwnerId(id)).thenReturn(trialPeriodListWithoutReport);
+        assertThrows(IllegalArgumentException.class, () -> reportService.createFromTelegram(photoId, "", id));
+        verify(trialPeriodService, times(1)).getAllByOwnerId(id);
     }
 
     @Test
     @DisplayName("Выбрасывает ошибку при попытке создать отчёт с неправильным описанием.")
     void shouldThrowIllegalArgumentExceptionWhenCaptionIsIllegal() {
-        when(trialPeriodService.getAllByOwnerId(ID)).thenReturn(TRIAL_PERIOD_LIST_WITHOUT_REPORT);
-        assertThrows(IllegalArgumentException.class, () -> reportService.createFromTelegram(PHOTO_ID, TEXT, ID));
-        verify(trialPeriodService, times(1)).getAllByOwnerId(ID);
+        when(trialPeriodService.getAllByOwnerId(id)).thenReturn(trialPeriodListWithoutReport);
+        assertThrows(IllegalArgumentException.class, () -> reportService.createFromTelegram(photoId, text, id));
+        verify(trialPeriodService, times(1)).getAllByOwnerId(id);
     }
 }
