@@ -13,7 +13,7 @@ import ru.codehunters.zaepestelegrambot.service.DogService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/dogs/")
+@RequestMapping("/dogs")
 @Tag(name = "Собаки", description = "CRUD-методы для работы с собаками")
 @RequiredArgsConstructor
 @ApiResponses(value = {
