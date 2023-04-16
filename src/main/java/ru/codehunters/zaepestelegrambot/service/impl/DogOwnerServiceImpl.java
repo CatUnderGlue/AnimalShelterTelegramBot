@@ -82,20 +82,18 @@ public class DogOwnerServiceImpl implements DogOwnerService {
 
     @Override
     public void delete(DogOwner dogOwner) {
-        for (Dog dog : dogOwner.getDogList()) {
-            dog.setOwnerId(null);
-            dogService.update(dog);
+        if (dogOwner.getDogList() != null) {
+            for (Dog dog : dogOwner.getDogList()) {
+                dog.setOwnerId(null);
+                dogService.update(dog);
+            }
         }
         dogOwnerRepo.delete(getById(dogOwner.getTelegramId()));
     }
 
     @Override
     public void deleteById(Long id) {
-        for (Dog dog : getById(id).getDogList()) {
-            dog.setOwnerId(null);
-            dogService.update(dog);
-        }
-        dogOwnerRepo.deleteById(getById(id).getTelegramId());
+        delete(getById(id));
     }
 }
 
