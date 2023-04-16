@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("cats/shelters")
+@RequestMapping("/cats/shelters")
 @Tag(name = "Кошачий приют", description = "CRUD-методы для работы с приютом")
 @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Всё хорошо, кошки довольны."),
