@@ -338,7 +338,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                         "Id отчёта:" + reportId);
                 telegramBot.execute(sendPhoto);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                logger.error(e.getMessage(), e);
             }
         }
     }

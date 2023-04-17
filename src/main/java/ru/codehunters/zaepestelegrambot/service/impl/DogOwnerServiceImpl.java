@@ -27,6 +27,7 @@ public class DogOwnerServiceImpl implements DogOwnerService {
     private final DogService dogService;
     private final TrialPeriodService trialPeriodService;
 
+
     @Override
     public DogOwner create(DogOwner dogOwner, TrialPeriod.AnimalType animalType, Long animalId) {
         if (dogService.getById(animalId).getOwnerId() != null) {
@@ -56,7 +57,7 @@ public class DogOwnerServiceImpl implements DogOwnerService {
     public DogOwner getById(Long id) {
         Optional<DogOwner> optionalDogOwner = dogOwnerRepo.findById(id);
         if (optionalDogOwner.isEmpty()) {
-            throw new NotFoundException("Владелец собаки не найден!");
+            throw new NotFoundException("Хозяин собаки не найден!");
         }
         return optionalDogOwner.get();
     }
@@ -65,7 +66,7 @@ public class DogOwnerServiceImpl implements DogOwnerService {
     public List<DogOwner> getAll() {
         List<DogOwner> all = dogOwnerRepo.findAll();
         if (all.isEmpty()) {
-            throw new NotFoundException("Владелец собаки не найден!");
+            throw new NotFoundException("Владельцев собак нет!");
         }
         return all;
     }
