@@ -18,12 +18,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.Information;
 import ru.codehunters.zaepestelegrambot.model.TrialPeriod;
 import ru.codehunters.zaepestelegrambot.model.User;
 import ru.codehunters.zaepestelegrambot.model.Volunteer;
+import ru.codehunters.zaepestelegrambot.model.animals.Cat;
+import ru.codehunters.zaepestelegrambot.model.animals.Dog;
 import ru.codehunters.zaepestelegrambot.replymarkup.ReplyMarkup;
+import ru.codehunters.zaepestelegrambot.repository.UserRepo;
 import ru.codehunters.zaepestelegrambot.service.ReportService;
 import ru.codehunters.zaepestelegrambot.service.TrialPeriodService;
 import ru.codehunters.zaepestelegrambot.service.UserService;
@@ -47,6 +49,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
     private final TelegramBot telegramBot;
     private final UserService userService;
+    private final UserRepo userRepo;
     private final CatShelterServiceImpl catShelterService;
     private final DogShelterServiceImpl dogShelterService;
     private final VolunteerService volunteerService;
@@ -71,12 +74,10 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                         Long chatId = message.chat().id();
                         Chat chat = message.chat();
                         String text = message.text();
-
-                        try {
-                            userService.getById(chatId);
-                        } catch (NotFoundException e) {
+                        if (!userRepo.existsById(chatId)) {
                             userService.create(new User(chatId, chat.firstName(), chat.lastName(), ""));
                         }
+                        User user = userService.getById(chatId);
 
                         if (message.photo() != null) {
                             getReport(message);
@@ -90,31 +91,25 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                             return;
                         }
 
-                        try {
-                            User user = userService.getById(chatId);
-                            String shelterType = user.getShelterType();
-                            if (shelterType != null) {
-                                if (shelterType.equals("DOG")) {
-                                    dogShelterService.getShelter().forEach(dogShelter -> {
-                                        if (dogShelter.getName().equals(text)) {
-                                            user.setShelterName(dogShelter.getName());
-                                            replyMarkup.sendMenuDog(chatId);
-                                            userService.update(user);
-                                        }
-                                    });
-                                } else if (shelterType.equals("CAT")) {
-                                    catShelterService.getShelter().forEach(catShelter -> {
-                                        if (catShelter.getName().equals(text)) {
-                                            user.setShelterName(catShelter.getName());
-                                            replyMarkup.sendMenuCat(chatId);
-                                            userService.update(user);
-                                        }
-
-                                    });
-                                }
+                        String shelterType = user.getShelterType();
+                        if (shelterType != null) {
+                            if (shelterType.equals("DOG")) {
+                                dogShelterService.getShelter().forEach(dogShelter -> {
+                                    if (dogShelter.getName().equals(text)) {
+                                        user.setShelterName(dogShelter.getName());
+                                        replyMarkup.sendMenuDog(chatId);
+                                        userService.update(user);
+                                    }
+                                });
+                            } else if (shelterType.equals("CAT")) {
+                                catShelterService.getShelter().forEach(catShelter -> {
+                                    if (catShelter.getName().equals(text)) {
+                                        user.setShelterName(catShelter.getName());
+                                        replyMarkup.sendMenuCat(chatId);
+                                        userService.update(user);
+                                    }
+                                });
                             }
-                        } catch (Exception e) {
-                            logger.error(e.getMessage(), e);
                         }
 
                         switch (text) {
@@ -122,32 +117,11 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                                 logger.info("Запустили бота/выбрали приют - ID:{}", chatId);
                                 replyMarkup.sendStartMenu(chatId);
                             }
-                            case "Приют для кошек" -> {
-                                logger.info("Вызвано меню выбора приюта для кошек - ID:{}", chatId);
-                                try {
-                                    User user = userService.getById(chatId);
-                                    user.setShelterType("CAT");
-                                    userService.update(user);
-                                } catch (Exception e) {
-                                    logger.error(e.getMessage(), e);
-                                }
-                                replyMarkup.sendMenuStage(chatId);
-                            }
-                            case "Приют для собак" -> {
-                                logger.info("Вызвано меню выбора приюта для собак - ID:{}", chatId);
-                                try {
-                                    User user = userService.getById(chatId);
-                                    user.setShelterType("DOG");
-                                    userService.update(user);
-                                } catch (Exception e) {
-                                    logger.error(e.getMessage(), e);
-                                }
-                                replyMarkup.sendMenuStage(chatId);
-                            }
-
+                            case "Приют для кошек" -> sendMenuStage("CAT", chatId);
+                            case "Приют для собак" -> sendMenuStage("DOG", chatId);
                             case "Узнать информацию о приюте" -> {
                                 logger.info("Узнать информацию о приюте - ID:{}", chatId);
-                                String shelterType = userService.getShelterById(chatId);
+                                shelterType = userService.getShelterById(chatId);
                                 if ("CAT".equals(shelterType)) {
                                     replyMarkup.sendListMenuCat(chatId);
                                 } else if ("DOG".equals(shelterType)) {
@@ -156,7 +130,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                             }
                             case "Главное меню" -> {
                                 logger.info("Главное меню - ID:{}", chatId);
-                                User user = userService.getById(chatId);
                                 user.setShelterType(null);
                                 user.setShelterName(null);
                                 userService.update(user);
@@ -164,69 +137,36 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                             }
                             case "Расписание работы" -> {
                                 logger.info("Расписание работы - ID:{}", chatId);
-                                try {
-                                    User user = userService.getById(chatId);
-                                    if (user.getShelterType().equals("CAT")) {
-                                        sendMessage(chatId, catShelterService.getShelterByName(user.getShelterName()).getTimetable());
-                                    } else if (user.getShelterType().equals("DOG")) {
-                                        sendMessage(chatId, dogShelterService.getShelterByName(user.getShelterName()).getTimetable());
-                                    }
-                                } catch (NotFoundException e) {
-                                    logger.error(e.getMessage(), e);
+                                if (user.getShelterType().equals("CAT")) {
+                                    sendMessage(chatId, catShelterService.getShelterByName(user.getShelterName()).getTimetable());
+                                } else if (user.getShelterType().equals("DOG")) {
+                                    sendMessage(chatId, dogShelterService.getShelterByName(user.getShelterName()).getTimetable());
                                 }
                             }
                             case "Список кошек" -> {
                                 logger.info("Список кошек - ID:{}", chatId);
-                                try {
-                                    User user = userService.getById(chatId);
-                                    StringBuilder sb = new StringBuilder();
-                                    catShelterService.getShelterByName(user.getShelterName()).getList()
-                                            .forEach(cat -> sb
-                                                    .append(cat).append("\n")
-                                                    .append("============").append("\n"));
-                                    sendMessage(chatId, sb.toString());
-                                } catch (Exception e) {
-                                    logger.error(e.getMessage(), e);
-                                }
+                                List<Cat> catList = catShelterService.getShelterByName(user.getShelterName()).getList();
+                                sendMessage(chatId, getStringFromList(catList));
                             }
                             case "Список собачек" -> {
                                 logger.info("Список собак - ID:{}", chatId);
-                                try {
-                                    User user = userService.getById(chatId);
-                                    StringBuilder sb = new StringBuilder();
-                                    dogShelterService.getShelterByName(user.getShelterName()).getList()
-                                            .forEach(dog -> sb
-                                                    .append(dog).append("\n")
-                                                    .append("============").append("\n"));
-                                    sendMessage(chatId, sb.toString());
-                                } catch (Exception e) {
-                                    logger.error(e.getMessage(), e);
-                                }
+                                List<Dog> dogList = dogShelterService.getShelterByName(user.getShelterName()).getList();
+                                sendMessage(chatId, getStringFromList(dogList));
                             }
                             case "О приюте" -> {
                                 logger.info("О приюте - ID:{}", chatId);
-                                try {
-                                    User user = userService.getById(chatId);
-                                    if (user.getShelterType().equals("CAT")) {
-                                        sendMessage(chatId, catShelterService.getShelterByName(user.getShelterName()).getAboutMe());
-                                    } else if (user.getShelterType().equals("DOG")) {
-                                        sendMessage(chatId, dogShelterService.getShelterByName(user.getShelterName()).getAboutMe());
-                                    }
-                                } catch (Exception e) {
-                                    logger.error(e.getMessage(), e);
+                                if (user.getShelterType().equals("CAT")) {
+                                    sendMessage(chatId, catShelterService.getShelterByName(user.getShelterName()).getAboutMe());
+                                } else if (user.getShelterType().equals("DOG")) {
+                                    sendMessage(chatId, dogShelterService.getShelterByName(user.getShelterName()).getAboutMe());
                                 }
                             }
                             case "Рекомендации о ТБ" -> {
                                 logger.info("Рекомендации о ТБ - ID:{}", chatId);
-                                try {
-                                    User user = userService.getById(chatId);
-                                    if (user.getShelterType().equals("CAT")) {
-                                        sendMessage(chatId, catShelterService.getShelterByName(user.getShelterName()).getSafetyAdvice());
-                                    } else if (user.getShelterType().equals("DOG")) {
-                                        sendMessage(chatId, dogShelterService.getShelterByName(user.getShelterName()).getSafetyAdvice());
-                                    }
-                                } catch (NotFoundException e) {
-                                    logger.error(e.getMessage(), e);
+                                if (user.getShelterType().equals("CAT")) {
+                                    sendMessage(chatId, catShelterService.getShelterByName(user.getShelterName()).getSafetyAdvice());
+                                } else if (user.getShelterType().equals("DOG")) {
+                                    sendMessage(chatId, dogShelterService.getShelterByName(user.getShelterName()).getSafetyAdvice());
                                 }
                             }
                             case "Как отправить свои данные для связи" -> {
@@ -236,20 +176,14 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
                             case "Контактные данные охраны" -> {
                                 logger.info("Контактные данные охраны - ID:{}", chatId);
-                                try {
-                                    User user = userService.getById(chatId);
-                                    if (user.getShelterType().equals("CAT")) {
-                                        sendMessage(chatId, catShelterService.getShelterByName(user.getShelterName()).getSecurity());
-                                    } else if (user.getShelterType().equals("DOG")) {
-                                        sendMessage(chatId, dogShelterService.getShelterByName(user.getShelterName()).getSecurity());
-                                    }
-                                } catch (NotFoundException e) {
-                                    logger.error(e.getMessage(), e);
+                                if (user.getShelterType().equals("CAT")) {
+                                    sendMessage(chatId, catShelterService.getShelterByName(user.getShelterName()).getSecurity());
+                                } else if (user.getShelterType().equals("DOG")) {
+                                    sendMessage(chatId, dogShelterService.getShelterByName(user.getShelterName()).getSecurity());
                                 }
                             }
                             case "Часто задаваемые вопросы" -> {
                                 logger.info("Часто задаваемые вопросы - ID:{}", chatId);
-                                User user = userService.getById(chatId);
                                 if (user.getShelterType().equals("CAT")) {
                                     replyMarkup.menuCat(chatId);
                                 } else if (user.getShelterType().equals("DOG")) {
@@ -405,6 +339,23 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         } catch (Exception e) {
             sendMessage(chatId, e.getMessage());
         }
+    }
+
+    private void sendMenuStage(String shelterType, Long chatId) {
+        logger.info("Вызвано меню выбора приюта - ID:{}", chatId);
+        ReplyMarkup replyMarkup = new ReplyMarkup(telegramBot, catShelterService, dogShelterService);
+        User user = userService.getById(chatId);
+        user.setShelterType(shelterType);
+        userService.update(user);
+        replyMarkup.sendMenuStage(chatId);
+    }
+
+    private String getStringFromList(List<?> list) {
+        StringBuilder sb = new StringBuilder();
+        list.forEach(o -> sb.append(o)
+                .append("\n")
+                .append("============").append("\n"));
+        return sb.toString();
     }
 
     @Scheduled(cron = "@daily")

@@ -17,12 +17,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.*;
 import ru.codehunters.zaepestelegrambot.model.animals.Cat;
 import ru.codehunters.zaepestelegrambot.model.animals.Dog;
 import ru.codehunters.zaepestelegrambot.model.shelters.CatShelter;
 import ru.codehunters.zaepestelegrambot.model.shelters.DogShelter;
+import ru.codehunters.zaepestelegrambot.repository.UserRepo;
 import ru.codehunters.zaepestelegrambot.service.ReportService;
 import ru.codehunters.zaepestelegrambot.service.TrialPeriodService;
 import ru.codehunters.zaepestelegrambot.service.UserService;
@@ -60,6 +60,8 @@ class TelegramBotUpdatesListenerTest {
     ReportService reportService;
     @Mock
     TrialPeriodService trialPeriodService;
+    @Mock
+    UserRepo userRepo;
     @InjectMocks
     TelegramBotUpdatesListener telegramBotUpdatesListener;
     private final SendResponse sendResponse = BotUtils.fromJson("""
@@ -111,7 +113,7 @@ class TelegramBotUpdatesListenerTest {
     @Test
     void handleStartCommand() {
         Update update = BotUtils.fromJson(messageTextJson.replace("%text%", "/start"), Update.class);
-        when(userService.getById(any())).thenThrow(NotFoundException.class);
+        when(userService.getById(any())).thenReturn(catUser);
         SendMessage actual = getSendMessage(update);
         Assertions.assertEquals(update.message().chat().id(), actual.getParameters().get("chat_id"));
         Assertions.assertEquals(
@@ -126,7 +128,7 @@ class TelegramBotUpdatesListenerTest {
     @Test
     void handleChooseCatsSheltersCommand() {
         Update update = BotUtils.fromJson(messageTextJson.replace("%text%", "Приют для кошек"), Update.class);
-        when(userService.getById(any())).thenThrow(NotFoundException.class);
+        when(userService.getById(any())).thenReturn(catUser);
         SendMessage actual = getSendMessage(update);
         Assertions.assertEquals(update.message().chat().id(), actual.getParameters().get("chat_id"));
         Assertions.assertEquals("Выберите:", actual.getParameters().get("text"));
@@ -135,7 +137,7 @@ class TelegramBotUpdatesListenerTest {
     @Test
     void handleChooseDogsSheltersCommand() {
         Update update = BotUtils.fromJson(messageTextJson.replace("%text%", "Приют для собак"), Update.class);
-        when(userService.getById(any())).thenThrow(NotFoundException.class);
+        when(userService.getById(any())).thenReturn(dogUser);
         SendMessage actual = getSendMessage(update);
         Assertions.assertEquals(update.message().chat().id(), actual.getParameters().get("chat_id"));
         Assertions.assertEquals("Выберите:", actual.getParameters().get("text"));
@@ -144,7 +146,7 @@ class TelegramBotUpdatesListenerTest {
     @Test
     void handleListOfSheltersCommands() {
         Update update = BotUtils.fromJson(messageTextJson.replace("%text%", "Узнать информацию о приюте"), Update.class);
-        when(userService.getById(any())).thenThrow(NotFoundException.class);
+        when(userService.getById(any())).thenReturn(catUser);
 
         when(userService.getShelterById(any())).thenReturn("CAT");
         SendMessage actual = getSendMessage(update);
@@ -231,7 +233,7 @@ class TelegramBotUpdatesListenerTest {
 
     @Test
     void handleContactCommand() {
-        when(userService.getById(any())).thenThrow(NotFoundException.class);
+        when(userService.getById(any())).thenReturn(catUser);
         Update update = BotUtils.fromJson(messageTextJson.replace("%text%", "Как отправить свои данные для связи"), Update.class);
         SendMessage actual = getSendMessage(update);
         Assertions.assertEquals(update.message().chat().id(), actual.getParameters().get("chat_id"));
@@ -265,7 +267,7 @@ class TelegramBotUpdatesListenerTest {
     @Test
     void handleBackToFAQCommands() {
         Update update = BotUtils.fromJson(messageTextJson.replace("%text%", "Назад в \\\"Все о кошках\\\""), Update.class);
-        when(userService.getById(any())).thenThrow(NotFoundException.class);
+        when(userService.getById(any())).thenReturn(catUser);
         SendMessage actual = getSendMessage(update);
         Assertions.assertEquals(update.message().chat().id(), actual.getParameters().get("chat_id"));
         Assertions.assertEquals("Все о кошках", actual.getParameters().get("text"));
@@ -278,7 +280,7 @@ class TelegramBotUpdatesListenerTest {
     @Test
     void handleAnimalDatingCommands() {
         Update update = BotUtils.fromJson(messageTextJson.replace("%text%", "Правила знакомства c кошкой"), Update.class);
-        when(userService.getById(any())).thenThrow(NotFoundException.class);
+        when(userService.getById(any())).thenReturn(catUser);
         SendMessage actual = getSendMessage(update);
         Assertions.assertEquals(update.message().chat().id(), actual.getParameters().get("chat_id"));
         Assertions.assertEquals(Information.ANIMAL_DATING_RULES, actual.getParameters().get("text"));
@@ -291,7 +293,7 @@ class TelegramBotUpdatesListenerTest {
     @Test
     void handleAnimalTransportationCommands() {
         Update update = BotUtils.fromJson(messageTextJson.replace("%text%", "Перевозка кошки"), Update.class);
-        when(userService.getById(any())).thenThrow(NotFoundException.class);
+        when(userService.getById(any())).thenReturn(catUser);
         SendMessage actual = getSendMessage(update);
         Assertions.assertEquals(update.message().chat().id(), actual.getParameters().get("chat_id"));
         Assertions.assertEquals(Information.TRANSPORTATION_OF_THE_ANIMAL, actual.getParameters().get("text"));
@@ -304,7 +306,7 @@ class TelegramBotUpdatesListenerTest {
     @Test
     void handleDocumentsListCommand() {
         Update update = BotUtils.fromJson(messageTextJson.replace("%text%", "Необходимые документы"), Update.class);
-        when(userService.getById(any())).thenThrow(NotFoundException.class);
+        when(userService.getById(any())).thenReturn(catUser);
         SendMessage actual = getSendMessage(update);
         Assertions.assertEquals(update.message().chat().id(), actual.getParameters().get("chat_id"));
         Assertions.assertEquals(Information.LIST_OF_DOCUMENTS, actual.getParameters().get("text"));
@@ -313,7 +315,7 @@ class TelegramBotUpdatesListenerTest {
     @Test
     void handleReasonsForDenyCommand() {
         Update update = BotUtils.fromJson(messageTextJson.replace("%text%", "Список причин для отказа выдачи питомца"), Update.class);
-        when(userService.getById(any())).thenThrow(NotFoundException.class);
+        when(userService.getById(any())).thenReturn(catUser);
         SendMessage actual = getSendMessage(update);
         Assertions.assertEquals(update.message().chat().id(), actual.getParameters().get("chat_id"));
         Assertions.assertEquals(Information.LIST_OF_REASON_FOR_DENY, actual.getParameters().get("text"));
@@ -321,7 +323,7 @@ class TelegramBotUpdatesListenerTest {
 
     @Test
     void handleRecommendationsForAnimalCommands() {
-        when(userService.getById(any())).thenThrow(NotFoundException.class);
+        when(userService.getById(any())).thenReturn(catUser);
         Update update = BotUtils.fromJson(messageTextJson.replace("%text%", "Рекомендации для собак"), Update.class);
         SendMessage actual = getSendMessage(update);
         Assertions.assertEquals(update.message().chat().id(), actual.getParameters().get("chat_id"));
@@ -335,7 +337,7 @@ class TelegramBotUpdatesListenerTest {
     @Test
     void handleImprovementForLittleAnimalCommands() {
         Update update = BotUtils.fromJson(messageTextJson.replace("%text%", "Обустройство щенка"), Update.class);
-        when(userService.getById(any())).thenThrow(NotFoundException.class);
+        when(userService.getById(any())).thenReturn(catUser);
         SendMessage actual = getSendMessage(update);
         Assertions.assertEquals(update.message().chat().id(), actual.getParameters().get("chat_id"));
         Assertions.assertEquals(Information.RECOMMENDATIONS_HOME_IMPROVEMENT_KITTEN_PUPPY, actual.getParameters().get("text"));
@@ -348,7 +350,7 @@ class TelegramBotUpdatesListenerTest {
     @Test
     void handleImprovementForAdultAnimalCommands() {
         Update update = BotUtils.fromJson(messageTextJson.replace("%text%", "Обустройство взрослой собаки"), Update.class);
-        when(userService.getById(any())).thenThrow(NotFoundException.class);
+        when(userService.getById(any())).thenReturn(catUser);
         SendMessage actual = getSendMessage(update);
         Assertions.assertEquals(update.message().chat().id(), actual.getParameters().get("chat_id"));
         Assertions.assertEquals(Information.RECOMMENDATIONS_HOME_IMPROVEMENT_ADULT_ANIMAL, actual.getParameters().get("text"));
@@ -361,7 +363,7 @@ class TelegramBotUpdatesListenerTest {
     @Test
     void handleImprovementForDisabledAnimalCommands() {
         Update update = BotUtils.fromJson(messageTextJson.replace("%text%", "Обустройство собаки с ограниченными возможностями"), Update.class);
-        when(userService.getById(any())).thenThrow(NotFoundException.class);
+        when(userService.getById(any())).thenReturn(catUser);
         SendMessage actual = getSendMessage(update);
         Assertions.assertEquals(update.message().chat().id(), actual.getParameters().get("chat_id"));
         Assertions.assertEquals(Information.RECOMMENDATIONS_HOME_IMPROVEMENT_DISABLED_ANIMAL, actual.getParameters().get("text"));
@@ -374,7 +376,7 @@ class TelegramBotUpdatesListenerTest {
     @Test
     void handleDogHandlersAdviseCommand() {
         Update update = BotUtils.fromJson(messageTextJson.replace("%text%", "Советы кинолога"), Update.class);
-        when(userService.getById(any())).thenThrow(NotFoundException.class);
+        when(userService.getById(any())).thenReturn(dogUser);
         SendMessage actual = getSendMessage(update);
         Assertions.assertEquals(update.message().chat().id(), actual.getParameters().get("chat_id"));
         Assertions.assertEquals(Information.DOG_HANDLERS_ADVICE, actual.getParameters().get("text"));
@@ -383,7 +385,7 @@ class TelegramBotUpdatesListenerTest {
     @Test
     void handleDogHandlersContactsCommand() {
         Update update = BotUtils.fromJson(messageTextJson.replace("%text%", "Проверенные кинологи для обращения"), Update.class);
-        when(userService.getById(any())).thenThrow(NotFoundException.class);
+        when(userService.getById(any())).thenReturn(dogUser);
         SendMessage actual = getSendMessage(update);
         Assertions.assertEquals(update.message().chat().id(), actual.getParameters().get("chat_id"));
         Assertions.assertEquals(Information.DOG_HANDLERS_CONTACTS, actual.getParameters().get("text"));
@@ -392,7 +394,7 @@ class TelegramBotUpdatesListenerTest {
     @Test
     void handleSendReportExampleCommand() {
         Update update = BotUtils.fromJson(messageTextJson.replace("%text%", "Отправить форму отчёта"), Update.class);
-        when(userService.getById(any())).thenThrow(NotFoundException.class);
+        when(userService.getById(any())).thenReturn(catUser);
         telegramBotUpdatesListener.process(Collections.singletonList(update));
         ArgumentCaptor<SendPhoto> argumentCaptor = ArgumentCaptor.forClass(SendPhoto.class);
         Mockito.verify(telegramBot).execute(argumentCaptor.capture());
@@ -409,7 +411,7 @@ class TelegramBotUpdatesListenerTest {
     @Test
     void handleSendMessageToVolunteersCommand() {
         Update update = BotUtils.fromJson(messageTextJson.replace("%text%", "Позвать волонтёра"), Update.class);
-        when(userService.getById(any())).thenThrow(NotFoundException.class);
+        when(userService.getById(any())).thenReturn(catUser);
         when(volunteerService.getAll()).thenReturn(List.of(new Volunteer(123L, "firstName", "lastName")));
         when(telegramBot.execute(any())).thenReturn(sendResponse);
         telegramBotUpdatesListener.process(Collections.singletonList(update));
