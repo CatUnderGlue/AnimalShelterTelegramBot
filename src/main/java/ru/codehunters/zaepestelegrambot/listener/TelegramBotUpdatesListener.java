@@ -69,6 +69,12 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                         Chat chat = message.chat();
                         String text = message.text();
 
+                        try {
+                            userService.getById(chatId);
+                        } catch (NotFoundException e) {
+                            userService.create(new User(chatId, chat.firstName(), chat.lastName(), ""));
+                        }
+
                         if (message.photo() != null) {
                             getReport(message);
                             return;
@@ -111,11 +117,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                         switch (text) {
                             case "/start", "К выбору приютов" -> {
                                 logger.info("Запустили бота/выбрали приют - ID:{}", chatId);
-                                try {
-                                    userService.getById(chatId);
-                                } catch (NotFoundException e) {
-                                    userService.create(new User(chatId, chat.firstName(), chat.lastName(), ""));
-                                }
                                 replyMarkup.sendStartMenu(chatId);
                             }
                             case "Приют для кошек" -> {
