@@ -10,11 +10,14 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.codehunters.zaepestelegrambot.model.animals.Cat;
 import ru.codehunters.zaepestelegrambot.service.impl.CatServiceImpl;
+
 import java.util.List;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 @WebMvcTest(CatController.class)
 @ExtendWith(MockitoExtension.class)
 class CatControllerTest {
@@ -40,7 +43,7 @@ class CatControllerTest {
                 .andExpect(jsonPath("ownerId").value(1L))
                 .andExpect(jsonPath("shelterId").value(1L));
 
-        verify(catService,times(1)).getById(VALID_CAT.getId());
+        verify(catService, times(1)).getById(VALID_CAT.getId());
     }
 
     @Test
@@ -48,11 +51,11 @@ class CatControllerTest {
     void createShouldCreateNewCat() throws Exception {
         when(catService.create(any(Cat.class))).thenReturn(VALID_CAT);
         mockMvc.perform(post("/cats")
-                        .param("name","Cat")
-                        .param("age","12")
-                        .param("isHealthy","true")
-                        .param("vaccinated","true")
-                        .param("shelterId","1"))
+                        .param("name", "Cat")
+                        .param("age", "12")
+                        .param("isHealthy", "true")
+                        .param("vaccinated", "true")
+                        .param("shelterId", "1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(1L))
                 .andExpect(jsonPath("name").value("Cat"))
@@ -66,7 +69,7 @@ class CatControllerTest {
     @Test
     @DisplayName("Получает список всех котов")
     void getAllShouldGetAllCats() throws Exception {
-        List<Cat> list = List.of(VALID_CAT,BORIS);
+        List<Cat> list = List.of(VALID_CAT, BORIS);
         when(catService.getAll()).thenReturn(list);
         mockMvc.perform(get("/cats"))
                 .andExpect(status().isOk())
@@ -85,13 +88,13 @@ class CatControllerTest {
                 .andExpect(jsonPath("$[1].ownerId").value(1L))
                 .andExpect(jsonPath("$[1].shelterId").value(1L));
 
-        verify(catService,times(1)).getAll();
+        verify(catService, times(1)).getAll();
     }
 
     @Test
     @DisplayName("Возвращает кота по id хозяина")
     void getOwnerByIdShouldReturnCorrectCat() throws Exception {
-    when(catService.getByUserId(VALID_CAT.getOwnerId())).thenReturn(VALID_CAT);
+        when(catService.getByUserId(VALID_CAT.getOwnerId())).thenReturn(VALID_CAT);
         mockMvc.perform(get("/cats/ownerID?id=1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(1))
@@ -102,7 +105,7 @@ class CatControllerTest {
                 .andExpect(jsonPath("ownerId").value(1L))
                 .andExpect(jsonPath("shelterId").value(1L));
 
-        verify(catService,times(1)).getByUserId(VALID_CAT.getOwnerId());
+        verify(catService, times(1)).getByUserId(VALID_CAT.getOwnerId());
 
     }
 
@@ -111,13 +114,13 @@ class CatControllerTest {
     void updateShouldUpdateCat() throws Exception {
         when(catService.update(any(Cat.class))).thenReturn(NEW_CAT);
         mockMvc.perform(put("/cats")
-                .param("id", "1")
-                .param("name", "Mittens")
-                .param("age", "3")
-                .param("isHealthy", "false")
-                .param("vaccinated", "false")
-                .param("ownerId", "1")
-                .param("shelterId", "1"))
+                        .param("id", "1")
+                        .param("name", "Mittens")
+                        .param("age", "3")
+                        .param("isHealthy", "false")
+                        .param("vaccinated", "false")
+                        .param("ownerId", "1")
+                        .param("shelterId", "1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(1))
                 .andExpect(jsonPath("name").value("Mittens"))

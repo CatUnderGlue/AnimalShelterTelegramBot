@@ -42,7 +42,7 @@ public class DogServiceImpl implements DogService {
     @Override
     public Dog update(Dog dog) {
         Optional<Dog> dogId = dogRepo.findById(dog.getId());
-        if (dogId.isEmpty()){
+        if (dogId.isEmpty()) {
             throw new NotFoundException("Пса нет");
         }
         Dog currentDog = dogId.get();

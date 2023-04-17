@@ -32,11 +32,11 @@ public class CatSheltersController {
             summary = "Регистрация нового кошачьего приюта."
     )
     public CatShelter create(@RequestParam @Parameter(description = "Название приюта") String name,
-                                         @RequestParam @Parameter(description = "Адрес и схема проезда") String location,
-                                         @RequestParam @Parameter(description = "Расписание работы приюта") String timetable,
-                                         @RequestParam @Parameter(description = "О приюте") String aboutMe,
-                                         @RequestParam @Parameter(description = "Способ связи с охраной") String security,
-                                         @RequestParam @Parameter(description = "Рекомендации о технике безопасности на территории приюта") String safetyAdvice
+                             @RequestParam @Parameter(description = "Адрес и схема проезда") String location,
+                             @RequestParam @Parameter(description = "Расписание работы приюта") String timetable,
+                             @RequestParam @Parameter(description = "О приюте") String aboutMe,
+                             @RequestParam @Parameter(description = "Способ связи с охраной") String security,
+                             @RequestParam @Parameter(description = "Рекомендации о технике безопасности на территории приюта") String safetyAdvice
     ) {
         return catShelterService.addShelter(new CatShelter(name, location, timetable, aboutMe, security, safetyAdvice));
     }
@@ -46,12 +46,12 @@ public class CatSheltersController {
             summary = "Обновление информации о приюте"
     )
     public CatShelter update(@RequestParam @Parameter(description = "id приюта") long id,
-                                         @RequestParam(required = false) @Parameter(description = "Название приюта") String name,
-                                         @RequestParam(required = false) @Parameter(description = "Адрес и схема проезда") String location,
-                                         @RequestParam(required = false) @Parameter(description = "Расписание работы приюта") String timetable,
-                                         @RequestParam(required = false) @Parameter(description = "О приюте") String aboutMe,
-                                         @RequestParam(required = false) @Parameter(description = "Способ связи с охраной") String security,
-                                         @RequestParam(required = false) @Parameter(description = "Рекомендации о технике безопасности на территории приюта") String safetyAdvice) {
+                             @RequestParam(required = false) @Parameter(description = "Название приюта") String name,
+                             @RequestParam(required = false) @Parameter(description = "Адрес и схема проезда") String location,
+                             @RequestParam(required = false) @Parameter(description = "Расписание работы приюта") String timetable,
+                             @RequestParam(required = false) @Parameter(description = "О приюте") String aboutMe,
+                             @RequestParam(required = false) @Parameter(description = "Способ связи с охраной") String security,
+                             @RequestParam(required = false) @Parameter(description = "Рекомендации о технике безопасности на территории приюта") String safetyAdvice) {
 
         return catShelterService.updateShelter(new CatShelter(id, name, location, timetable, aboutMe, security, safetyAdvice));
     }

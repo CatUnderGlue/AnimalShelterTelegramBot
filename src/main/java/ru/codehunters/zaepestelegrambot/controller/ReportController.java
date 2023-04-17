@@ -38,10 +38,10 @@ public class ReportController {
             summary = "Создать отчёт"
     )
     public Report create(@RequestParam @Parameter(description = "Id фотографии") String photoId,
-                                         @RequestParam @Parameter(description = "Рацион животного") String foodRation,
-                                         @RequestParam @Parameter(description = "Общее самочувствие и привыкание к новому месту") String generalHealth,
-                                         @RequestParam @Parameter(description = "Изменение в поведении") String behaviorChanges,
-                                         @RequestParam @Parameter(description = "Id испытательного срока") Long trialPeriodId) {
+                         @RequestParam @Parameter(description = "Рацион животного") String foodRation,
+                         @RequestParam @Parameter(description = "Общее самочувствие и привыкание к новому месту") String generalHealth,
+                         @RequestParam @Parameter(description = "Изменение в поведении") String behaviorChanges,
+                         @RequestParam @Parameter(description = "Id испытательного срока") Long trialPeriodId) {
         return reportService.create(new Report(photoId, foodRation, generalHealth, behaviorChanges, LocalDate.now(), trialPeriodId));
     }
 
@@ -80,7 +80,7 @@ public class ReportController {
     }
     )
     public Report getByDateAndTrialId(@RequestParam @Parameter(description = "Дата получения отчёта") LocalDate date,
-                                                      @RequestParam @Parameter(description = "id испытательного срока") Long id) {
+                                      @RequestParam @Parameter(description = "id испытательного срока") Long id) {
         return reportService.getByDateAndTrialId(date, id);
     }
 
@@ -95,12 +95,12 @@ public class ReportController {
             summary = "Изменить отчёт"
     )
     public Report update(@RequestParam @Parameter(description = "Id отчёта") Long id,
-                                         @RequestParam(required = false) @Parameter(description = "Id фотографии") String photoId,
-                                         @RequestParam(required = false) @Parameter(description = "Рацион животного") String foodRation,
-                                         @RequestParam(required = false) @Parameter(description = "Общее самочувствие и привыкание к новому месту") String generalHealth,
-                                         @RequestParam(required = false) @Parameter(description = "Изменение в поведении") String behaviorChanges,
-                                         @RequestParam(required = false) @Parameter(description = "Дата получения") LocalDate receiveDate,
-                                         @RequestParam(required = false) @Parameter(description = "Id испытательного срока") Long trialPeriodId) {
+                         @RequestParam(required = false) @Parameter(description = "Id фотографии") String photoId,
+                         @RequestParam(required = false) @Parameter(description = "Рацион животного") String foodRation,
+                         @RequestParam(required = false) @Parameter(description = "Общее самочувствие и привыкание к новому месту") String generalHealth,
+                         @RequestParam(required = false) @Parameter(description = "Изменение в поведении") String behaviorChanges,
+                         @RequestParam(required = false) @Parameter(description = "Дата получения") LocalDate receiveDate,
+                         @RequestParam(required = false) @Parameter(description = "Id испытательного срока") Long trialPeriodId) {
         return reportService.update(new Report(id, photoId, foodRation, generalHealth, behaviorChanges, receiveDate, trialPeriodId));
     }
 

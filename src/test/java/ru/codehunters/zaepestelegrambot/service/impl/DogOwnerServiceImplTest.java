@@ -120,6 +120,7 @@ class DogOwnerServiceImplTest {
         assertThrows(NotFoundException.class, () -> dogOwnerService.getById(telegramId));
         verify(dogOwnerRepoMock, times(1)).findById(telegramId);
     }
+
     @Test
     @DisplayName("Возвращает список с владельцами собак")
     void shouldReturnListOfDogOwnersWhenGetAllDogOwner() {
@@ -143,7 +144,7 @@ class DogOwnerServiceImplTest {
         when(dogOwnerRepoMock.save(thirdValidDogOwner)).thenReturn(thirdValidDogOwner);
         DogOwner actual = dogOwnerService.update(secondValidDogOwner);
         assertEquals(thirdValidDogOwner, actual);
-        verify(dogOwnerRepoMock, times( 1)).findById(telegramId);
+        verify(dogOwnerRepoMock, times(1)).findById(telegramId);
         verify(dogOwnerRepoMock, times(1)).save(thirdValidDogOwner);
     }
 
@@ -162,7 +163,6 @@ class DogOwnerServiceImplTest {
         assertThrows(NotFoundException.class, () -> dogOwnerService.deleteById(telegramId));
         verify(dogOwnerRepoMock, times(1)).findById(telegramId);
     }
-
 
 
     @Test

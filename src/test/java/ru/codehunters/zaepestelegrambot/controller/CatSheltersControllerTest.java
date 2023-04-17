@@ -55,7 +55,7 @@ class CatSheltersControllerTest {
                 .andExpect(jsonPath("aboutMe").value("am"))
                 .andExpect(jsonPath("security").value("sec"))
                 .andExpect(jsonPath("safetyAdvice").value("sa"));
-        verify(catShelterService,times(1)).addShelter(any(CatShelter.class));
+        verify(catShelterService, times(1)).addShelter(any(CatShelter.class));
 
     }
 
@@ -80,7 +80,7 @@ class CatSheltersControllerTest {
                 .andExpect(jsonPath("aboutMe").value("am"))
                 .andExpect(jsonPath("security").value("sec"))
                 .andExpect(jsonPath("safetyAdvice").value("sa"));
-        verify(catShelterService,times(1)).updateShelter(any(CatShelter.class));
+        verify(catShelterService, times(1)).updateShelter(any(CatShelter.class));
 
 
     }
@@ -105,7 +105,7 @@ class CatSheltersControllerTest {
     @DisplayName("Должен вернуть приют по id")
     void getShelterId() throws Exception {
         when(catShelterService.getSheltersId(currentCatShelter.getId())).thenReturn(currentCatShelter);
-        mockMvc.perform(get("/cats/shelters/id"+currentCatShelter.getId()))
+        mockMvc.perform(get("/cats/shelters/id" + currentCatShelter.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(1L))
                 .andExpect(jsonPath("name").value("name"))
@@ -121,7 +121,7 @@ class CatSheltersControllerTest {
     @DisplayName("Должен вернуть список с животными приюта")
     void getAnimal() throws Exception {
         when(catShelterService.getAnimal(currentCatShelter.getId())).thenReturn(animalList);
-        mockMvc.perform(get("/cats/shelters/list"+currentCatShelter.getId()))
+        mockMvc.perform(get("/cats/shelters/list" + currentCatShelter.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[0].id").value(1L))
                 .andExpect(jsonPath("$.[0].name").value("Барсик"))

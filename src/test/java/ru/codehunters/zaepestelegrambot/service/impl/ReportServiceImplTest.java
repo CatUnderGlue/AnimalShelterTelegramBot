@@ -140,7 +140,7 @@ class ReportServiceImplTest {
         when(reportRepoMock.save(thirdValidReport)).thenReturn(thirdValidReport);
         Report actual = reportService.update(secondValidReport);
         assertEquals(thirdValidReport, actual);
-        verify(reportRepoMock, times( 1)).findById(id);
+        verify(reportRepoMock, times(1)).findById(id);
         verify(reportRepoMock, times(1)).save(thirdValidReport);
     }
 

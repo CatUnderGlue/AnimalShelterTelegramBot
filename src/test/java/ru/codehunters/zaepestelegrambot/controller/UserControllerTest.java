@@ -29,8 +29,9 @@ class UserControllerTest {
     @MockBean
     UserService userService;
     private final User firstValidUser = new User(1L, "Petr", "Ivanov", "256318");
-    private final User secondValidUser = new User(2L, "Petr", "Petrov","365845");
+    private final User secondValidUser = new User(2L, "Petr", "Petrov", "365845");
     private final List<User> userList = List.of(firstValidUser, secondValidUser);
+
     @Test
     @DisplayName("Должен создать и вернуть пользователя с нужными параметрами")
     void shouldCreateAndReturnUser() throws Exception {

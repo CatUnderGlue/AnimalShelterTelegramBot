@@ -17,7 +17,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepo userRepo;
 
     @Override
-    public User create(User user)  {
+    public User create(User user) {
         return userRepo.save(user);
     }
 
@@ -48,8 +48,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public User update(User user) {
         Optional<User> optionalUser = userRepo.findById(user.getTelegramId());
-        if (optionalUser.isEmpty()){
-           throw new NotFoundException("Пользователь не найден!");
+        if (optionalUser.isEmpty()) {
+            throw new NotFoundException("Пользователь не найден!");
         }
         User currentUser = optionalUser.get();
         EntityUtils.copyNonNullFields(user, currentUser);

@@ -12,7 +12,7 @@ public class MainController {
     @Operation(
             summary = "Главная страница приложения"
     )
-    public String mainPage(){
+    public String mainPage() {
         return "Home";
     }
 }

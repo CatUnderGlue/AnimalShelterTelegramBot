@@ -30,7 +30,7 @@ class CatOwnerControllerTest {
     @MockBean
     CatOwnerService catOwnerService;
     private final CatOwner firstValidCatOwner = new CatOwner(1L, "Petr", "Ivanov", "256318", null, null);
-    private final CatOwner secondValidCatOwner = new CatOwner(2L, "Petr", "Petrov","365845", null, null);
+    private final CatOwner secondValidCatOwner = new CatOwner(2L, "Petr", "Petrov", "365845", null, null);
     private final List<CatOwner> catOwnerList = List.of(firstValidCatOwner, secondValidCatOwner);
 
     @Test

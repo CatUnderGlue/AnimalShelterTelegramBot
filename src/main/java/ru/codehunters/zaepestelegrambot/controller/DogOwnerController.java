@@ -33,10 +33,10 @@ public class DogOwnerController {
             summary = "Создать владельца собаки"
     )
     public DogOwner create(@RequestParam @Parameter(description = "Телеграм id владельца собаки") Long telegramId,
-                                           @RequestParam @Parameter(description = "Имя") String firstName,
-                                           @RequestParam @Parameter(description = "Фамилия") String lastName,
-                                           @RequestParam @Parameter(description = "Телефон") String phone,
-                                           @RequestParam @Parameter(description = "Id собаки") Long animalId) {
+                           @RequestParam @Parameter(description = "Имя") String firstName,
+                           @RequestParam @Parameter(description = "Фамилия") String lastName,
+                           @RequestParam @Parameter(description = "Телефон") String phone,
+                           @RequestParam @Parameter(description = "Id собаки") Long animalId) {
         return dogOwnerService.create(new DogOwner(telegramId, firstName, lastName, phone,
                 null, null), TrialPeriod.AnimalType.DOG, animalId);
     }
@@ -46,7 +46,7 @@ public class DogOwnerController {
             summary = "Создать владельца собаки в бд из пользователя"
     )
     public DogOwner create(@RequestParam @Parameter(description = "Пользователь") Long id,
-                                           @RequestParam @Parameter(description = "Id собаки") Long animalId) {
+                           @RequestParam @Parameter(description = "Id собаки") Long animalId) {
         return dogOwnerService.create(id, TrialPeriod.AnimalType.DOG, animalId);
     }
 
@@ -76,9 +76,9 @@ public class DogOwnerController {
             summary = "Изменить владельца собаки"
     )
     public DogOwner update(@RequestParam @Parameter(description = "Телеграм id владельца собаки") Long telegramId,
-                                         @RequestParam (required = false) @Parameter(description = "Имя") String firstName,
-                                         @RequestParam (required = false) @Parameter(description = "Фамилия") String lastName,
-                                         @RequestParam (required = false) @Parameter(description = "Телефон") String phone) {
+                           @RequestParam(required = false) @Parameter(description = "Имя") String firstName,
+                           @RequestParam(required = false) @Parameter(description = "Фамилия") String lastName,
+                           @RequestParam(required = false) @Parameter(description = "Телефон") String phone) {
         return dogOwnerService.update(new DogOwner(telegramId, firstName, lastName, phone,
                 null, null));
     }

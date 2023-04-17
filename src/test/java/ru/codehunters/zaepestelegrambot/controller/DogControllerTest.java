@@ -10,7 +10,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.codehunters.zaepestelegrambot.model.animals.Dog;
 import ru.codehunters.zaepestelegrambot.service.impl.DogServiceImpl;
+
 import java.util.List;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -42,7 +44,7 @@ class DogControllerTest {
                 .andExpect(jsonPath("ownerId").value(1L))
                 .andExpect(jsonPath("shelterId").value(1L));
 
-        verify(dogService,times(1)).getById(VALID_DOG.getId());
+        verify(dogService, times(1)).getById(VALID_DOG.getId());
     }
 
     @Test
@@ -50,11 +52,11 @@ class DogControllerTest {
     void createShouldCreateNewDog() throws Exception {
         when(dogService.create(any(Dog.class))).thenReturn(VALID_DOG);
         mockMvc.perform(post("/dogs")
-                        .param("name","Dog")
-                        .param("age","12")
-                        .param("isHealthy","true")
-                        .param("vaccinated","true")
-                        .param("shelterId","1"))
+                        .param("name", "Dog")
+                        .param("age", "12")
+                        .param("isHealthy", "true")
+                        .param("vaccinated", "true")
+                        .param("shelterId", "1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(1L))
                 .andExpect(jsonPath("name").value("Dog"))
@@ -68,7 +70,7 @@ class DogControllerTest {
     @Test
     @DisplayName("Получает список всех собак")
     void getAllShouldGetAllDogs() throws Exception {
-        List<Dog> list = List.of(VALID_DOG,BORIS);
+        List<Dog> list = List.of(VALID_DOG, BORIS);
         when(dogService.getAll()).thenReturn(list);
         mockMvc.perform(get("/dogs"))
                 .andExpect(status().isOk())
@@ -87,13 +89,13 @@ class DogControllerTest {
                 .andExpect(jsonPath("$[1].ownerId").value(1L))
                 .andExpect(jsonPath("$[1].shelterId").value(1L));
 
-        verify(dogService,times(1)).getAll();
+        verify(dogService, times(1)).getAll();
     }
 
     @Test
     @DisplayName("Возвращает собаку по id хозяина")
     void getOwnerByIdShouldReturnCorrectDog() throws Exception {
-    when(dogService.getByUserId(VALID_DOG.getOwnerId())).thenReturn(VALID_DOG);
+        when(dogService.getByUserId(VALID_DOG.getOwnerId())).thenReturn(VALID_DOG);
         mockMvc.perform(get("/dogs/ownerID?id=1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(1))
@@ -104,7 +106,7 @@ class DogControllerTest {
                 .andExpect(jsonPath("ownerId").value(1L))
                 .andExpect(jsonPath("shelterId").value(1L));
 
-        verify(dogService,times(1)).getByUserId(VALID_DOG.getOwnerId());
+        verify(dogService, times(1)).getByUserId(VALID_DOG.getOwnerId());
 
     }
 
@@ -113,13 +115,13 @@ class DogControllerTest {
     void updateShouldUpdateDog() throws Exception {
         when(dogService.update(any(Dog.class))).thenReturn(NEW_DOG);
         mockMvc.perform(put("/dogs")
-                .param("id", "1")
-                .param("name", "Mittens")
-                .param("age", "3")
-                .param("isHealthy", "false")
-                .param("vaccinated", "false")
-                .param("shelterId", "1")
-                .param("ownerId", "1"))
+                        .param("id", "1")
+                        .param("name", "Mittens")
+                        .param("age", "3")
+                        .param("isHealthy", "false")
+                        .param("vaccinated", "false")
+                        .param("shelterId", "1")
+                        .param("ownerId", "1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(1))
                 .andExpect(jsonPath("name").value("Mittens"))

@@ -31,7 +31,7 @@ class DogOwnerControllerTest {
     @MockBean
     DogOwnerService dogOwnerService;
     private final DogOwner firstValidDogOwner = new DogOwner(1L, "Petr", "Ivanov", "256318", null, null);
-    private final DogOwner secondValidDogOwner = new DogOwner(2L, "Petr", "Petrov","365845", null, null);
+    private final DogOwner secondValidDogOwner = new DogOwner(2L, "Petr", "Petrov", "365845", null, null);
     private final List<DogOwner> dogOwnerList = List.of(firstValidDogOwner, secondValidDogOwner);
 
     @Test

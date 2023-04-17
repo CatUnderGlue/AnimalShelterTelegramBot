@@ -1,7 +1,6 @@
 package ru.codehunters.zaepestelegrambot.service;
 
 import ru.codehunters.zaepestelegrambot.model.TrialPeriod;
-import ru.codehunters.zaepestelegrambot.model.owners.CatOwner;
 import ru.codehunters.zaepestelegrambot.model.owners.DogOwner;
 
 import java.util.List;
@@ -10,6 +9,7 @@ public interface DogOwnerService {
 
     /**
      * Создание и сохранение хозяина собаки в бд
+     *
      * @param dogOwner Хозяин собаки для сохранения в бд
      * @return Сохранённый хозяин собаки
      */
@@ -17,6 +17,7 @@ public interface DogOwnerService {
 
     /**
      * Создание хозяина собаки в бд из пользователя
+     *
      * @param id Пользователь из бота для сохранения в бд в качестве хозяина собаки
      * @return Сохранённый хозяин собаки
      */
@@ -24,6 +25,7 @@ public interface DogOwnerService {
 
     /**
      * Получение хозяина собаки по id
+     *
      * @param id Id хозяина собаки
      * @return Полученный из бд хозяин собаки
      */
@@ -36,6 +38,7 @@ public interface DogOwnerService {
 
     /**
      * Изменение хозяина собаки
+     *
      * @param dogOwner хозяин собаки
      * @return Изменённый хозяин собаки
      */
@@ -48,6 +51,7 @@ public interface DogOwnerService {
 
     /**
      * Удаление хозяина собаки по id
+     *
      * @param id Id хозяина собаки
      */
     void deleteById(Long id);

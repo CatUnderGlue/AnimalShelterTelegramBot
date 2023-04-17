@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "catowner")
-public class CatOwner{
+public class CatOwner {
 
     @Id
     @Column
@@ -36,7 +36,7 @@ public class CatOwner{
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "ownerId")
     private List<TrialPeriod> trialPeriodList;
 
-    public CatOwner(User user){
+    public CatOwner(User user) {
         this.telegramId = user.getTelegramId();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();

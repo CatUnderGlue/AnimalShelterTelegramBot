@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class CatOwnerServiceImpl implements CatOwnerService {
@@ -27,7 +28,7 @@ public class CatOwnerServiceImpl implements CatOwnerService {
     private final TrialPeriodService trialPeriodService;
 
     @Override
-    public CatOwner create(CatOwner catOwner, TrialPeriod.AnimalType animalType, Long animalId)  {
+    public CatOwner create(CatOwner catOwner, TrialPeriod.AnimalType animalType, Long animalId) {
         if (catService.getById(animalId).getOwnerId() != null) {
             throw new AlreadyExistsException("У этого кота уже есть хозяин!");
         }

@@ -44,6 +44,7 @@ class UserServiceImplTest {
         assertEquals(validUser, actual);
         verify(userRepoMock, times(1)).save(validUser);
     }
+
     @Test
     @DisplayName("Возвращает пользователя при поиске по id")
     void shouldReturnUserFoundById() {
@@ -77,6 +78,7 @@ class UserServiceImplTest {
         assertThrows(NotFoundException.class, () -> userService.getById(telegramId));
         verify(userRepoMock, times(1)).findById(telegramId);
     }
+
     @Test
     @DisplayName("Возвращает список с пользователями")
     void shouldReturnListOfUsersWhenGetAllUser() {
@@ -93,7 +95,7 @@ class UserServiceImplTest {
         when(userRepoMock.save(thirdValidUser)).thenReturn(thirdValidUser);
         User actual = userService.update(secondValidUser);
         assertEquals(thirdValidUser, actual);
-        verify(userRepoMock, times( 1)).findById(telegramId);
+        verify(userRepoMock, times(1)).findById(telegramId);
         verify(userRepoMock, times(1)).save(thirdValidUser);
     }
 

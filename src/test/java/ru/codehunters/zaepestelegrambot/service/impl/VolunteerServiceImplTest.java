@@ -84,7 +84,7 @@ class VolunteerServiceImplTest {
         when(volunteerRepoMock.save(thirdValidVolunteer)).thenReturn(thirdValidVolunteer);
         Volunteer actual = volunteerService.update(secondValidVolunteer);
         assertEquals(thirdValidVolunteer, actual);
-        verify(volunteerRepoMock, times( 1)).findById(telegramId);
+        verify(volunteerRepoMock, times(1)).findById(telegramId);
         verify(volunteerRepoMock, times(1)).save(thirdValidVolunteer);
     }
 

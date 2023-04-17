@@ -8,7 +8,7 @@ import ru.codehunters.zaepestelegrambot.model.animals.Cat;
 import java.util.Optional;
 
 @Repository
-public interface CatRepo extends JpaRepository<Cat,Long> {
+public interface CatRepo extends JpaRepository<Cat, Long> {
 
     Optional<Cat> findByOwnerId(Long id); // Поиск кота по telegramId пользователя
 

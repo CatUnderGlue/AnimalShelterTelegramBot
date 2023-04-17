@@ -5,6 +5,7 @@ import java.util.List;
 public interface ShelterService<T, D> {
     /**
      * Сохранить приют в БД
+     *
      * @param shelter объект приют
      * @return сохранение приюта в БД
      */
@@ -13,13 +14,15 @@ public interface ShelterService<T, D> {
 
     /**
      * Обновление данных приюта
+     *
      * @param shelter объект приют
      * @return shelter объект приют
      */
 
     T updateShelter(T shelter);
 
-    /** Получение приюта по id
+    /**
+     * Получение приюта по id
      *
      * @param id приюта
      * @return приют
@@ -30,12 +33,15 @@ public interface ShelterService<T, D> {
 
     /**
      * Выдача списка приютов
+     *
      * @return List со списком приютов
      */
 
     List<T> getShelter();
+
     /**
      * Выдача списка животных приютов
+     *
      * @param index индекс приюта
      * @return List со списком приютов
      */
@@ -44,6 +50,7 @@ public interface ShelterService<T, D> {
 
     /**
      * Удаление приюта
+     *
      * @param index номер
      */
     String delShelter(long index);

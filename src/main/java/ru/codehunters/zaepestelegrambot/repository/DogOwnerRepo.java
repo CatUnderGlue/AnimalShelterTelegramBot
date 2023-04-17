@@ -5,6 +5,6 @@ import org.springframework.stereotype.Repository;
 import ru.codehunters.zaepestelegrambot.model.owners.DogOwner;
 
 @Repository
-public interface DogOwnerRepo extends JpaRepository<DogOwner,Long> {
+public interface DogOwnerRepo extends JpaRepository<DogOwner, Long> {
 
 }

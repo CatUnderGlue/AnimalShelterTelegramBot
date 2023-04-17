@@ -35,8 +35,8 @@ public class VolunteerController {
     @PostMapping
     @Operation(summary = "Создать волонтёра")
     public Volunteer create(@RequestParam @Parameter(description = "Телеграм id волонтёра") Long telegramId,
-                                         @RequestParam @Parameter(description = "Имя") String firstName,
-                                         @RequestParam @Parameter(description = "Фамилия") String lastName) {
+                            @RequestParam @Parameter(description = "Имя") String firstName,
+                            @RequestParam @Parameter(description = "Фамилия") String lastName) {
         return volunteerService.create(new Volunteer(telegramId, firstName, lastName));
     }
 
@@ -55,8 +55,8 @@ public class VolunteerController {
     @PutMapping
     @Operation(summary = "Изменить волонтёра")
     public Volunteer update(@RequestParam @Parameter(description = "Телеграм id волонтёра") Long telegramId,
-                                         @RequestParam(required = false) @Parameter(description = "Имя") String firstName,
-                                         @RequestParam(required = false) @Parameter(description = "Фамилия") String lastName) {
+                            @RequestParam(required = false) @Parameter(description = "Имя") String firstName,
+                            @RequestParam(required = false) @Parameter(description = "Фамилия") String lastName) {
         return volunteerService.update(new Volunteer(telegramId, firstName, lastName));
     }
 

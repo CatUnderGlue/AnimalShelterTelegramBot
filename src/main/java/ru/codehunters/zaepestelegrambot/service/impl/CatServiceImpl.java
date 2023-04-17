@@ -7,7 +7,6 @@ import ru.codehunters.zaepestelegrambot.model.animals.Cat;
 import ru.codehunters.zaepestelegrambot.repository.CatRepo;
 import ru.codehunters.zaepestelegrambot.service.CatService;
 
-
 import java.util.List;
 import java.util.Optional;
 
@@ -32,7 +31,6 @@ public class CatServiceImpl implements CatService {
     }
 
 
-
     @Override
     public Cat getByUserId(Long id) {
         Optional<Cat> optionalCat = catRepo.findByOwnerId(id);
@@ -45,7 +43,7 @@ public class CatServiceImpl implements CatService {
     @Override
     public Cat update(Cat cat) {
         Optional<Cat> catId = catRepo.findById(cat.getId());
-        if (catId.isEmpty()){
+        if (catId.isEmpty()) {
             throw new NotFoundException("Кота нет");
         }
         Cat currentCat = catId.get();

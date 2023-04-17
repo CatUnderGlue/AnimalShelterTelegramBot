@@ -3,7 +3,6 @@ package ru.codehunters.zaepestelegrambot.service;
 import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.animals.Cat;
 
-
 import java.util.List;
 
 public interface CatService {

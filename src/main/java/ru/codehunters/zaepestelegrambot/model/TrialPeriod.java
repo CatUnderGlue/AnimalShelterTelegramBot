@@ -20,6 +20,7 @@ public class TrialPeriod {
         NOT_SUCCESSFUL,
         EXTENDED
     }
+
     public enum AnimalType {
         CAT,
         DOG

@@ -121,6 +121,7 @@ class CatOwnerServiceImplTest {
         assertThrows(NotFoundException.class, () -> catOwnerService.getById(telegramId));
         verify(catOwnerRepoMock, times(1)).findById(telegramId);
     }
+
     @Test
     @DisplayName("Возвращает список с владельцами котов")
     void shouldReturnListOfCatOwnersWhenGetAllCatOwner() {
@@ -144,7 +145,7 @@ class CatOwnerServiceImplTest {
         when(catOwnerRepoMock.save(thirdValidCatOwner)).thenReturn(thirdValidCatOwner);
         CatOwner actual = catOwnerService.update(secondValidCatOwner);
         assertEquals(thirdValidCatOwner, actual);
-        verify(catOwnerRepoMock, times( 1)).findById(telegramId);
+        verify(catOwnerRepoMock, times(1)).findById(telegramId);
         verify(catOwnerRepoMock, times(1)).save(thirdValidCatOwner);
     }
 
@@ -163,7 +164,6 @@ class CatOwnerServiceImplTest {
         assertThrows(NotFoundException.class, () -> catOwnerService.deleteById(telegramId));
         verify(catOwnerRepoMock, times(1)).findById(telegramId);
     }
-
 
 
     @Test

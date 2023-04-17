@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 import ru.codehunters.zaepestelegrambot.model.User;
 
 @Repository
-public interface UserRepo extends JpaRepository<User,Long> {
+public interface UserRepo extends JpaRepository<User, Long> {
 
 }
 
