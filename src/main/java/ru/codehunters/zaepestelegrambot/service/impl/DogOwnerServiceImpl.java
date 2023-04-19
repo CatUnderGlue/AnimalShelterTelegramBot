@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import ru.codehunters.zaepestelegrambot.exception.AlreadyExistsException;
 import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.TrialPeriod;
-import ru.codehunters.zaepestelegrambot.model.animals.Dog;
 import ru.codehunters.zaepestelegrambot.model.owners.DogOwner;
 import ru.codehunters.zaepestelegrambot.repository.DogOwnerRepo;
 import ru.codehunters.zaepestelegrambot.service.DogOwnerService;
@@ -55,7 +54,7 @@ public class DogOwnerServiceImpl implements DogOwnerService {
 
     @Override
     public DogOwner getById(Long id) {
-        Optional<DogOwner> optionalDogOwner = dogOwnerRepo.findById(id);
+        Optional<DogOwner> optionalDogOwner = dogOwnerRepo.findByTelegramId(id);
         if (optionalDogOwner.isEmpty()) {
             throw new NotFoundException("Хозяин собаки не найден!");
         }
@@ -73,23 +72,17 @@ public class DogOwnerServiceImpl implements DogOwnerService {
 
     @Override
     public DogOwner update(DogOwner dogOwner) {
-        Optional<DogOwner> optionalDogOwner = dogOwnerRepo.findById(dogOwner.getTelegramId());
-        if (optionalDogOwner.isEmpty()) {
-            throw new NotFoundException("Владелец собаки не найден!");
-        }
-        DogOwner currentDogOwner = optionalDogOwner.get();
+        DogOwner currentDogOwner = getById(dogOwner.getTelegramId());
         EntityUtils.copyNonNullFields(dogOwner, currentDogOwner);
         return dogOwnerRepo.save(currentDogOwner);
     }
 
     @Override
     public void delete(DogOwner dogOwner) {
-        if (dogOwner.getDogList() != null) {
-            for (Dog dog : dogOwner.getDogList()) {
-                dog.setOwnerId(null);
-                dogService.update(dog);
-            }
-        }
+        dogService.getAllByUserId(dogOwner.getTelegramId()).forEach(dog -> {
+            dog.setOwnerId(null);
+            dogService.update(dog);
+        });
         dogOwnerRepo.delete(getById(dogOwner.getTelegramId()));
     }
 

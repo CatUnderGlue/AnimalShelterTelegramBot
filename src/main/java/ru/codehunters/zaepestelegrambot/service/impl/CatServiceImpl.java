@@ -32,12 +32,12 @@ public class CatServiceImpl implements CatService {
 
 
     @Override
-    public Cat getByUserId(Long id) {
-        Optional<Cat> optionalCat = catRepo.findByOwnerId(id);
-        if (optionalCat.isEmpty()) {
-            throw new NotFoundException("Хозяин кота не найден!");
+    public List<Cat> getAllByUserId(Long id) {
+        List<Cat> catList = catRepo.findAllByOwnerId(id);
+        if (catList.isEmpty()) {
+            throw new NotFoundException("У хозяина нет котов");
         }
-        return optionalCat.get();
+        return catList;
     }
 
     @Override

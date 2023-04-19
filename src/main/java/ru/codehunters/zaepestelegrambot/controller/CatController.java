@@ -50,9 +50,9 @@ public class CatController {
     }
 
     @GetMapping("/ownerID")
-    @Operation(summary = "Получение информации о хозяине кота по ID")
-    public Cat getOwnerById(@RequestParam @Parameter(description = "ID хозяина") Long id) {
-        return catService.getByUserId(id);
+    @Operation(summary = "Получение списка котов по ID хозяина")
+    public List<Cat> getOwnerById(@RequestParam @Parameter(description = "ID хозяина") Long id) {
+        return catService.getAllByUserId(id);
     }
 
 

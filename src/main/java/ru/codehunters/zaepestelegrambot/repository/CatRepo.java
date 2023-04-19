@@ -5,11 +5,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import ru.codehunters.zaepestelegrambot.model.animals.Cat;
 
-import java.util.Optional;
+import java.util.List;
 
 @Repository
 public interface CatRepo extends JpaRepository<Cat, Long> {
 
-    Optional<Cat> findByOwnerId(Long id); // Поиск кота по telegramId пользователя
+    List<Cat> findAllByOwnerId(Long id); // Поиск котов по telegramId пользователя
 
 }

@@ -92,20 +92,19 @@ class CatControllerTest {
     }
 
     @Test
-    @DisplayName("Возвращает кота по id хозяина")
-    void getOwnerByIdShouldReturnCorrectCat() throws Exception {
-        when(catService.getByUserId(VALID_CAT.getOwnerId())).thenReturn(VALID_CAT);
+    @DisplayName("Возвращает список котов по id хозяина")
+    void getOwnerByIdShouldReturnCatList() throws Exception {
+        when(catService.getAllByUserId(VALID_CAT.getOwnerId())).thenReturn(List.of(VALID_CAT));
         mockMvc.perform(get("/cats/ownerID?id=1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("id").value(1))
-                .andExpect(jsonPath("name").value("Cat"))
-                .andExpect(jsonPath("age").value(12))
-                .andExpect(jsonPath("isHealthy").value(true))
-                .andExpect(jsonPath("vaccinated").value(true))
-                .andExpect(jsonPath("ownerId").value(1L))
-                .andExpect(jsonPath("shelterId").value(1L));
-
-        verify(catService, times(1)).getByUserId(VALID_CAT.getOwnerId());
+                .andExpect(jsonPath("$.[0].id").value(1))
+                .andExpect(jsonPath("$.[0].name").value("Cat"))
+                .andExpect(jsonPath("$.[0].age").value(12))
+                .andExpect(jsonPath("$.[0].isHealthy").value(true))
+                .andExpect(jsonPath("$.[0].vaccinated").value(true))
+                .andExpect(jsonPath("$.[0].ownerId").value(1L))
+                .andExpect(jsonPath("$.[0].shelterId").value(1L));
+        verify(catService, times(1)).getAllByUserId(VALID_CAT.getOwnerId());
 
     }
 

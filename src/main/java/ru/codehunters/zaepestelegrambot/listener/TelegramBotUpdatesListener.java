@@ -146,12 +146,26 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                             }
                             case Keyboard.LIST_OF_CATS -> {
                                 logger.info("Список кошек - ID:{}", chatId);
-                                List<Cat> catList = catShelterService.getShelterByName(user.getShelterName()).getList();
+                                List<Cat> catList = catShelterService.getShelterByName(user.getShelterName())
+                                        .getList().stream()
+                                        .filter(cat -> cat.getOwnerId() == null)
+                                        .toList();
+                                if (catList.isEmpty()) {
+                                    sendMessage(chatId, "Кошки кончились");
+                                    return;
+                                }
                                 sendMessage(chatId, getStringFromList(catList));
                             }
                             case Keyboard.LIST_OF_DOGS -> {
                                 logger.info("Список собак - ID:{}", chatId);
-                                List<Dog> dogList = dogShelterService.getShelterByName(user.getShelterName()).getList();
+                                List<Dog> dogList = dogShelterService.getShelterByName(user.getShelterName())
+                                        .getList().stream()
+                                        .filter(dog -> dog.getOwnerId() == null)
+                                        .toList();
+                                if (dogList.isEmpty()) {
+                                    sendMessage(chatId, "Собаки кончились");
+                                    return;
+                                }
                                 sendMessage(chatId, getStringFromList(dogList));
                             }
                             case Keyboard.ABOUT_THE_SHELTER -> {

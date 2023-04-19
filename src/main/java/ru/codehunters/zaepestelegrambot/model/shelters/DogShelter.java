@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "dog_Shelter")
+@Table(name = "dog_shelter")
 public class DogShelter {
     /**
      * id для приюта
