@@ -18,7 +18,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import ru.codehunters.zaepestelegrambot.model.Information;
+import ru.codehunters.zaepestelegrambot.constant.Information;
+import ru.codehunters.zaepestelegrambot.constant.Keyboard;
 import ru.codehunters.zaepestelegrambot.model.TrialPeriod;
 import ru.codehunters.zaepestelegrambot.model.User;
 import ru.codehunters.zaepestelegrambot.model.Volunteer;
@@ -117,9 +118,9 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                                 logger.info("Запустили бота/выбрали приют - ID:{}", chatId);
                                 replyMarkup.sendStartMenu(chatId);
                             }
-                            case "Приют для кошек" -> sendMenuStage("CAT", chatId);
-                            case "Приют для собак" -> sendMenuStage("DOG", chatId);
-                            case "Узнать информацию о приюте" -> {
+                            case Keyboard.CAT_SHELTER -> sendMenuStage("CAT", chatId);
+                            case Keyboard.DOG_SHELTER -> sendMenuStage("DOG", chatId);
+                            case Keyboard.INFORMATION_ABOUT_SHELTER -> {
                                 logger.info("Узнать информацию о приюте - ID:{}", chatId);
                                 shelterType = userService.getShelterById(chatId);
                                 if ("CAT".equals(shelterType)) {
@@ -128,14 +129,14 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                                     replyMarkup.sendListMenuDog(chatId);
                                 }
                             }
-                            case "Главное меню" -> {
+                            case Keyboard.MAIN_MENU -> {
                                 logger.info("Главное меню - ID:{}", chatId);
                                 user.setShelterType(null);
                                 user.setShelterName(null);
                                 userService.update(user);
                                 replyMarkup.sendStartMenu(chatId);
                             }
-                            case "Расписание работы" -> {
+                            case Keyboard.WORK_SCHEDULE -> {
                                 logger.info("Расписание работы - ID:{}", chatId);
                                 if (user.getShelterType().equals("CAT")) {
                                     sendMessage(chatId, catShelterService.getShelterByName(user.getShelterName()).getTimetable());
@@ -143,17 +144,17 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                                     sendMessage(chatId, dogShelterService.getShelterByName(user.getShelterName()).getTimetable());
                                 }
                             }
-                            case "Список кошек" -> {
+                            case Keyboard.LIST_OF_CATS -> {
                                 logger.info("Список кошек - ID:{}", chatId);
                                 List<Cat> catList = catShelterService.getShelterByName(user.getShelterName()).getList();
                                 sendMessage(chatId, getStringFromList(catList));
                             }
-                            case "Список собачек" -> {
+                            case Keyboard.LIST_OF_DOGS -> {
                                 logger.info("Список собак - ID:{}", chatId);
                                 List<Dog> dogList = dogShelterService.getShelterByName(user.getShelterName()).getList();
                                 sendMessage(chatId, getStringFromList(dogList));
                             }
-                            case "О приюте" -> {
+                            case Keyboard.ABOUT_THE_SHELTER -> {
                                 logger.info("О приюте - ID:{}", chatId);
                                 if (user.getShelterType().equals("CAT")) {
                                     sendMessage(chatId, catShelterService.getShelterByName(user.getShelterName()).getAboutMe());
@@ -161,7 +162,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                                     sendMessage(chatId, dogShelterService.getShelterByName(user.getShelterName()).getAboutMe());
                                 }
                             }
-                            case "Рекомендации о ТБ" -> {
+                            case Keyboard.TB_GUIDELINES -> {
                                 logger.info("Рекомендации о ТБ - ID:{}", chatId);
                                 if (user.getShelterType().equals("CAT")) {
                                     sendMessage(chatId, catShelterService.getShelterByName(user.getShelterName()).getSafetyAdvice());
@@ -169,12 +170,12 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                                     sendMessage(chatId, dogShelterService.getShelterByName(user.getShelterName()).getSafetyAdvice());
                                 }
                             }
-                            case "Как отправить свои данные для связи" -> {
+                            case Keyboard.CONTACT_DETAILS -> {
                                 logger.info("Как отправить свои данные для связи - ID:{}", chatId);
                                 sendMessage(chatId, "Введите номер телефона в формате: 89997776655");
                             }
 
-                            case "Контактные данные охраны" -> {
+                            case Keyboard.CONTACT_DETAILS_OF_THE_GUARD -> {
                                 logger.info("Контактные данные охраны - ID:{}", chatId);
                                 if (user.getShelterType().equals("CAT")) {
                                     sendMessage(chatId, catShelterService.getShelterByName(user.getShelterName()).getSecurity());
@@ -182,7 +183,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                                     sendMessage(chatId, dogShelterService.getShelterByName(user.getShelterName()).getSecurity());
                                 }
                             }
-                            case "Часто задаваемые вопросы" -> {
+                            case Keyboard.FAQ -> {
                                 logger.info("Часто задаваемые вопросы - ID:{}", chatId);
                                 if (user.getShelterType().equals("CAT")) {
                                     replyMarkup.menuCat(chatId);
@@ -190,64 +191,65 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                                     replyMarkup.menuDog(chatId);
                                 }
                             }
-                            case "Назад в \"Все о кошках\"" -> {
+                            case Keyboard.BACK_TO_ALL_ABOUT_CATS -> {
                                 logger.info("Все о кошках - ID:{}", chatId);
                                 replyMarkup.menuCat(chatId);
                             }
-                            case "Назад в \"Все о собаках\"" -> {
+                            case Keyboard.BACK_TO_ALL_ABOUT_DOGS -> {
                                 logger.info("Все о собаках - ID:{}", chatId);
                                 replyMarkup.menuDog(chatId);
                             }
-                            case "Правила знакомства c кошкой", "Правила знакомства c собакой" -> {
+                            case Keyboard.RULES_FOR_DATING_A_CAT, Keyboard.RULES_FOR_DATING_A_DOG -> {
                                 logger.info("Правила знакомства - ID:{}", chatId);
                                 sendMessage(chatId, Information.ANIMAL_DATING_RULES);
                             }
-                            case "Перевозка кошки", "Перевозка собаки" -> {
+                            case Keyboard.CAT_CARRIAGE, Keyboard.DOG_CARRIAGE -> {
                                 logger.info("Перевозка - ID:{}", chatId);
                                 sendMessage(chatId, Information.TRANSPORTATION_OF_THE_ANIMAL);
                             }
-                            case "Необходимые документы" -> {
+                            case Keyboard.REQUIRED_DOCUMENTS -> {
                                 logger.info("Необходимые документы - ID:{}", chatId);
                                 sendMessage(chatId, Information.LIST_OF_DOCUMENTS);
                             }
-                            case "Список причин для отказа выдачи питомца" -> {
+                            case Keyboard.LIST_OF_REASONS -> {
                                 logger.info("Список причин для отказа выдачи питомца - ID:{}", chatId);
                                 sendMessage(chatId, Information.LIST_OF_REASON_FOR_DENY);
                             }
-                            case "Рекомендации для собак" -> {
+                            case Keyboard.RECOMMENDATIONS_FOR_DOGS -> {
                                 logger.info("Рекомендации для собак - ID:{}", chatId);
                                 replyMarkup.rulesForDogs(chatId);
                             }
-                            case "Рекомендации для кошек" -> {
+                            case Keyboard.RECOMMENDATIONS_FOR_CATS -> {
                                 logger.info("Рекомендации для кошек - ID:{}", chatId);
                                 replyMarkup.rulesForCats(chatId);
                             }
-                            case "Обустройство щенка", "Обустройство котенка" -> {
+                            case Keyboard.PUPPY_SETUP, Keyboard.KITTEN_SETUP -> {
                                 logger.info("Обустройство щенка/котенка - ID:{}", chatId);
                                 sendMessage(chatId, Information.RECOMMENDATIONS_HOME_IMPROVEMENT_KITTEN_PUPPY);
                             }
-                            case "Обустройство взрослой собаки", "Обустройство взрослой кошки" -> {
+                            case Keyboard.ADULT_DOG_SETUP, Keyboard.ADULT_CAT_SETUP -> {
                                 logger.info("Обустройство взрослого животного - ID:{}", chatId);
                                 sendMessage(chatId, Information.RECOMMENDATIONS_HOME_IMPROVEMENT_ADULT_ANIMAL);
                             }
-                            case "Обустройство собаки с ограниченными возможностями", "Обустройство кошки с ограниченными возможностями" -> {
+                            case Keyboard.ARRANGEMENT_OF_DOG_WITH_DISABILITIES,
+                                    Keyboard.ARRANGEMENT_OF_CAT_WITH_DISABILITIES -> {
                                 logger.info("Обустройство животного с ограниченными возможностями - ID:{}", chatId);
                                 sendMessage(chatId, Information.RECOMMENDATIONS_HOME_IMPROVEMENT_DISABLED_ANIMAL);
                             }
-                            case "Советы кинолога" -> {
+                            case Keyboard.DOG_HANDLERS_ADVICE -> {
                                 logger.info("Советы кинолога - ID:{}", chatId);
                                 sendMessage(chatId, Information.DOG_HANDLERS_ADVICE);
                             }
-                            case "Проверенные кинологи для обращения" -> {
+                            case Keyboard.PROVEN_CYNOLOGISTS -> {
                                 logger.info("Проверенные кинологи для обращения - ID:{}", chatId);
                                 sendMessage(chatId, Information.DOG_HANDLERS_CONTACTS);
                             }
-                            case "Отправить форму отчёта" -> {
+                            case Keyboard.SEND_REPORT_FORM -> {
                                 logger.info("Отправить форму отчёта - ID:{}", chatId);
                                 sendReportExample(chatId);
                             }
-                            case "Позвать волонтёра", "Позвать волонтера" -> {
-                                logger.info("Позвать волонтера - ID:{}", chatId);
+                            case Keyboard.CALL_A_VOLUNTEER -> {
+                                logger.info("Позвать волонтёра - ID:{}", chatId);
                                 sendMessageToVolunteers(message);
                                 sendMessage(chatId, "Первый освободившийся волонтёр ответит вам в ближайшее время");
                             }

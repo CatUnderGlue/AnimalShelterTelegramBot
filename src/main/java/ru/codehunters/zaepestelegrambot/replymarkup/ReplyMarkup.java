@@ -6,6 +6,8 @@ import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.model.request.ReplyKeyboardMarkup;
 import com.pengrad.telegrambot.request.SendMessage;
 import lombok.RequiredArgsConstructor;
+import ru.codehunters.zaepestelegrambot.constant.Information;
+import ru.codehunters.zaepestelegrambot.constant.Keyboard;
 import ru.codehunters.zaepestelegrambot.model.shelters.CatShelter;
 import ru.codehunters.zaepestelegrambot.model.shelters.DogShelter;
 import ru.codehunters.zaepestelegrambot.service.impl.CatShelterServiceImpl;
@@ -21,28 +23,24 @@ public class ReplyMarkup {
     private final CatShelterServiceImpl catShelterService;
     private final DogShelterServiceImpl dogShelterService;
 
+
     public void sendStartMenu(long chatId) {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(
-                new KeyboardButton("Приют для кошек"),
-                new KeyboardButton("Приют для собак"));
-        replyKeyboardMarkup.addRow(new KeyboardButton("Позвать волонтёра"),
-                new KeyboardButton("Отправить форму отчёта"));
-        returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId,
-                """
-                        Рады приветствовать Вас в нашем боте!
-                        У нас здесь живут друзья разных пород и размеров - от веселых щенков до ласковых котиков.
-                        Мы надеемся, что ты найдешь своего идеального друга здесь
-                        Выберите приют:
-                        """);
+                new KeyboardButton(Keyboard.CAT_SHELTER),
+                new KeyboardButton(Keyboard.DOG_SHELTER));
+        replyKeyboardMarkup.addRow(new KeyboardButton(Keyboard.CALL_A_VOLUNTEER),
+                new KeyboardButton(Keyboard.SEND_REPORT_FORM));
+        returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, Information.WELCOME);
     }
+
 
     public void sendMenuStage(long chatId) {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(
-                new KeyboardButton("Узнать информацию о приюте"),
-                new KeyboardButton("Часто задаваемые вопросы"),
-                new KeyboardButton("Отправить форму отчёта"));
-        replyKeyboardMarkup.addRow(new KeyboardButton("Позвать волонтера"));
-        replyKeyboardMarkup.addRow(new KeyboardButton("Главное меню"));
+                new KeyboardButton(Keyboard.INFORMATION_ABOUT_SHELTER),
+                new KeyboardButton(Keyboard.FAQ),
+                new KeyboardButton(Keyboard.SEND_REPORT_FORM));
+        replyKeyboardMarkup.addRow(new KeyboardButton(Keyboard.CALL_A_VOLUNTEER));
+        replyKeyboardMarkup.addRow(new KeyboardButton(Keyboard.MAIN_MENU));
 
         returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, "Выберите:");
     }
@@ -52,7 +50,7 @@ public class ReplyMarkup {
         List<KeyboardButton> buttons = new ArrayList<>();
         shelters.forEach(shelter -> buttons.add(new KeyboardButton(shelter.getName())));
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(buttons.toArray(new KeyboardButton[0]));
-        replyKeyboardMarkup.addRow(new KeyboardButton("Главное меню"));
+        replyKeyboardMarkup.addRow(new KeyboardButton(Keyboard.MAIN_MENU));
         returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, "Список кошачьих приютов");
     }
 
@@ -61,105 +59,105 @@ public class ReplyMarkup {
         List<KeyboardButton> buttons = new ArrayList<>();
         shelters.forEach(shelter -> buttons.add(new KeyboardButton(shelter.getName())));
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(buttons.toArray(new KeyboardButton[0]));
-        replyKeyboardMarkup.addRow(new KeyboardButton("Главное меню"));
+        replyKeyboardMarkup.addRow(new KeyboardButton(Keyboard.MAIN_MENU));
         returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, "Список собачьих приютов");
     }
 
     public void sendMenuCat(long chatId) {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(
-                new KeyboardButton("Расписание работы"),
-                new KeyboardButton("Список кошек"),
-                new KeyboardButton("О приюте"));
+                new KeyboardButton(Keyboard.WORK_SCHEDULE),
+                new KeyboardButton(Keyboard.LIST_OF_CATS),
+                new KeyboardButton(Keyboard.ABOUT_THE_SHELTER));
         replyKeyboardMarkup.addRow(
-                new KeyboardButton("Рекомендации о ТБ"),
-                new KeyboardButton("Как отправить свои данные для связи"),
-                new KeyboardButton("Контактные данные охраны"));
-        replyKeyboardMarkup.addRow(new KeyboardButton("Позвать волонтера"));
-        replyKeyboardMarkup.addRow(new KeyboardButton("Главное меню"));
+                new KeyboardButton(Keyboard.TB_GUIDELINES),
+                new KeyboardButton(Keyboard.CONTACT_DETAILS),
+                new KeyboardButton(Keyboard.CONTACT_DETAILS_OF_THE_GUARD));
+        replyKeyboardMarkup.addRow(new KeyboardButton(Keyboard.CALL_A_VOLUNTEER));
+        replyKeyboardMarkup.addRow(new KeyboardButton(Keyboard.MAIN_MENU));
 
         returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, "Информация о кошачьем приюте");
     }
 
     public void sendMenuDog(long chatId) {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(
-                new KeyboardButton("Расписание работы"),
-                new KeyboardButton("Список собачек"),
-                new KeyboardButton("О приюте"));
+                new KeyboardButton(Keyboard.WORK_SCHEDULE),
+                new KeyboardButton(Keyboard.LIST_OF_DOGS),
+                new KeyboardButton(Keyboard.ABOUT_THE_SHELTER));
         replyKeyboardMarkup.addRow(
-                new KeyboardButton("Рекомендации о ТБ"),
-                new KeyboardButton("Как отправить свои данные для связи"),
-                new KeyboardButton("Контактные данные охраны"));
-        replyKeyboardMarkup.addRow(new KeyboardButton("Позвать волонтера"));
-        replyKeyboardMarkup.addRow(new KeyboardButton("Главное меню"));
+                new KeyboardButton(Keyboard.TB_GUIDELINES),
+                new KeyboardButton(Keyboard.CONTACT_DETAILS),
+                new KeyboardButton(Keyboard.CONTACT_DETAILS_OF_THE_GUARD));
+        replyKeyboardMarkup.addRow(new KeyboardButton(Keyboard.CALL_A_VOLUNTEER));
+        replyKeyboardMarkup.addRow(new KeyboardButton(Keyboard.MAIN_MENU));
 
         returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, "Информация о собачьем приюте");
     }
 
     public void menuCat(long chatId) {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(
-                new KeyboardButton("Необходимые документы"),
-                new KeyboardButton("Список причин для отказа выдачи питомца")
+                new KeyboardButton(Keyboard.REQUIRED_DOCUMENTS),
+                new KeyboardButton(Keyboard.LIST_OF_REASONS)
         );
         replyKeyboardMarkup.addRow(
-                new KeyboardButton("Рекомендации для кошек"),
-                new KeyboardButton("Позвать волонтера"),
-                new KeyboardButton("Как отправить свои данные для связи")
+                new KeyboardButton(Keyboard.RECOMMENDATIONS_FOR_CATS),
+                new KeyboardButton(Keyboard.CALL_A_VOLUNTEER),
+                new KeyboardButton(Keyboard.CONTACT_DETAILS)
         );
         replyKeyboardMarkup.addRow(
-                new KeyboardButton("Главное меню")
+                new KeyboardButton(Keyboard.MAIN_MENU)
         );
         returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, "Все о кошках");
     }
 
     public void menuDog(long chatId) {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(
-                new KeyboardButton("Необходимые документы"),
-                new KeyboardButton("Список причин для отказа выдачи питомца")
+                new KeyboardButton(Keyboard.REQUIRED_DOCUMENTS),
+                new KeyboardButton(Keyboard.LIST_OF_REASONS)
         );
         replyKeyboardMarkup.addRow(
-                new KeyboardButton("Рекомендации для собак"),
-                new KeyboardButton("Позвать волонтера"),
-                new KeyboardButton("Как отправить свои данные для связи")
+                new KeyboardButton(Keyboard.RECOMMENDATIONS_FOR_DOGS),
+                new KeyboardButton(Keyboard.CALL_A_VOLUNTEER),
+                new KeyboardButton(Keyboard.CONTACT_DETAILS)
         );
         replyKeyboardMarkup.addRow(
-                new KeyboardButton("Главное меню")
+                new KeyboardButton(Keyboard.MAIN_MENU)
         );
         returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, "Все о собаках");
     }
 
     public void rulesForDogs(long chatId) {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(
-                new KeyboardButton("Правила знакомства c собакой"),
-                new KeyboardButton("Перевозка собаки"),
-                new KeyboardButton("Обустройство щенка")
+                new KeyboardButton(Keyboard.RULES_FOR_DATING_A_DOG),
+                new KeyboardButton(Keyboard.DOG_CARRIAGE),
+                new KeyboardButton(Keyboard.PUPPY_SETUP)
         );
         replyKeyboardMarkup.addRow(
-                new KeyboardButton("Обустройство взрослой собаки"),
-                new KeyboardButton("Обустройство собаки с ограниченными возможностями")
-        );
+                new KeyboardButton(Keyboard.ADULT_DOG_SETUP),
+                new KeyboardButton(Keyboard.ARRANGEMENT_OF_DOG_WITH_DISABILITIES)
+                );
         replyKeyboardMarkup.addRow(
-                new KeyboardButton("Советы кинолога"),
-                new KeyboardButton("Проверенные кинологи для обращения"));
+                new KeyboardButton(Keyboard.DOG_HANDLERS_ADVICE),
+                new KeyboardButton(Keyboard.PROVEN_CYNOLOGISTS));
         replyKeyboardMarkup.addRow(
-                new KeyboardButton("Назад в \"Все о собаках\" ")
+                new KeyboardButton(Keyboard.BACK_TO_ALL_ABOUT_DOGS)
         );
-        returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, "Рекомендации для собак");
+        returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, Keyboard.RECOMMENDATIONS_FOR_DOGS);
     }
 
     public void rulesForCats(long chatId) {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(
-                new KeyboardButton("Правила знакомства c кошкой"),
-                new KeyboardButton("Перевозка кошки")
+                new KeyboardButton(Keyboard.RULES_FOR_DATING_A_CAT),
+                new KeyboardButton(Keyboard.CAT_CARRIAGE)
         );
         replyKeyboardMarkup.addRow(
-                new KeyboardButton("Обустройство взрослой кошки"),
-                new KeyboardButton("Обустройство котенка"),
-                new KeyboardButton("Обустройство кошки с ограниченными возможностями")
+                new KeyboardButton(Keyboard.ADULT_CAT_SETUP),
+                new KeyboardButton(Keyboard.KITTEN_SETUP),
+                new KeyboardButton(Keyboard.ARRANGEMENT_OF_CAT_WITH_DISABILITIES)
         );
         replyKeyboardMarkup.addRow(
-                new KeyboardButton("Назад в \"Все о кошках\" ")
+                new KeyboardButton(Keyboard.BACK_TO_ALL_ABOUT_CATS)
         );
-        returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, "Рекомендации для кошек");
+        returnResponseReplyKeyboardMarkup(replyKeyboardMarkup, chatId, Keyboard.RECOMMENDATIONS_FOR_CATS);
     }
 
     public void returnResponseReplyKeyboardMarkup(ReplyKeyboardMarkup replyKeyboardMarkup, Long chatId, String text) {
