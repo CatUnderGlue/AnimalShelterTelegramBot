@@ -10,6 +10,7 @@ import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.animals.Dog;
 import ru.codehunters.zaepestelegrambot.repository.DogRepo;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,21 +66,21 @@ class DogServiceImplTest {
         verify(dogRepoMock, times(1)).findById(ID);
     }
 
-    @DisplayName("Возвращает собаку по id хозяина")
+    @DisplayName("Возвращает список собак по id хозяина")
     @Test
-    void shouldReturnCatByOwnerId() {
-        when(dogRepoMock.findByOwnerId(OWNER_ID)).thenReturn(Optional.of(VALID_DOG));
-        Dog result = out.getByUserId(OWNER_ID);
-        verify(dogRepoMock).findByOwnerId(OWNER_ID);
-        assertEquals(VALID_DOG, result);
+    void shouldReturnCatListByOwnerId() {
+        when(dogRepoMock.findAllByOwnerId(OWNER_ID)).thenReturn(List.of(VALID_DOG));
+        List<Dog> result = out.getAllByUserId(OWNER_ID);
+        verify(dogRepoMock).findAllByOwnerId(OWNER_ID);
+        assertEquals(List.of(VALID_DOG), result);
     }
 
     @DisplayName("Выбрасывает ошибку, когда нет хозяина собаки по данному ID")
     @Test
     void shouldThrowNotFoundExceptionWhenReturnCatByOwnerId() {
-        when(dogRepoMock.findByOwnerId(OWNER_ID)).thenReturn(Optional.empty());
-        assertThrows(NotFoundException.class, () -> out.getByUserId(OWNER_ID));
-        verify(dogRepoMock, times(1)).findByOwnerId(OWNER_ID);
+        when(dogRepoMock.findAllByOwnerId(OWNER_ID)).thenReturn(new ArrayList<>());
+        assertThrows(NotFoundException.class, () -> out.getAllByUserId(OWNER_ID));
+        verify(dogRepoMock, times(1)).findAllByOwnerId(OWNER_ID);
     }
 
     @DisplayName("Обновляет и возвращает собаку по новому объекту, не принимая null поля")

@@ -3,7 +3,6 @@ package ru.codehunters.zaepestelegrambot.service.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 import java.lang.reflect.Field;
 
 public class EntityUtils {

@@ -16,7 +16,6 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(DogController.class)
@@ -95,18 +94,18 @@ class DogControllerTest {
     @Test
     @DisplayName("Возвращает собаку по id хозяина")
     void getOwnerByIdShouldReturnCorrectDog() throws Exception {
-        when(dogService.getByUserId(VALID_DOG.getOwnerId())).thenReturn(VALID_DOG);
+        when(dogService.getAllByUserId(VALID_DOG.getOwnerId())).thenReturn(List.of(VALID_DOG));
         mockMvc.perform(get("/dogs/ownerID?id=1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("id").value(1))
-                .andExpect(jsonPath("name").value("Dog"))
-                .andExpect(jsonPath("age").value(12))
-                .andExpect(jsonPath("isHealthy").value(true))
-                .andExpect(jsonPath("vaccinated").value(true))
-                .andExpect(jsonPath("ownerId").value(1L))
-                .andExpect(jsonPath("shelterId").value(1L));
+                .andExpect(jsonPath("$.[0].id").value(1))
+                .andExpect(jsonPath("$.[0].name").value("Dog"))
+                .andExpect(jsonPath("$.[0].age").value(12))
+                .andExpect(jsonPath("$.[0].isHealthy").value(true))
+                .andExpect(jsonPath("$.[0].vaccinated").value(true))
+                .andExpect(jsonPath("$.[0].ownerId").value(1L))
+                .andExpect(jsonPath("$.[0].shelterId").value(1L));
 
-        verify(dogService, times(1)).getByUserId(VALID_DOG.getOwnerId());
+        verify(dogService, times(1)).getAllByUserId(VALID_DOG.getOwnerId());
 
     }
 

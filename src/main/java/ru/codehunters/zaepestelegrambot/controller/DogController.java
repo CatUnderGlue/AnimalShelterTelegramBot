@@ -50,9 +50,9 @@ public class DogController {
     }
 
     @GetMapping("/ownerID")
-    @Operation(summary = "Получение собаки по ID хозяина")
-    public Dog getOwnerById(@RequestParam @Parameter(description = "ID хозяина собаки") Long id) {
-        return dogService.getByUserId(id);
+    @Operation(summary = "Получение списка собак по ID хозяина")
+    public List<Dog> getOwnerById(@RequestParam @Parameter(description = "ID хозяина собаки") Long id) {
+        return dogService.getAllByUserId(id);
     }
 
 

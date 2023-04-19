@@ -1,10 +1,7 @@
 <image src="https://cs11.pikabu.ru/post_img/big/2020/07/30/6/1596102657183361808.png" alt="logo.png">
 
-
-
-
-
 # Информация
+
 **Авторы:**<br>
 Максим Сыров ([CatUnderGlue](https://github.com/CatUnderGlue))<br>
 Ильяс Кучукбаев ([Ilyas344](https://github.com/Ilyas344))<br>

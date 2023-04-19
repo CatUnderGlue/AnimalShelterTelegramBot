@@ -11,8 +11,10 @@ import ru.codehunters.zaepestelegrambot.model.animals.Dog;
 import ru.codehunters.zaepestelegrambot.model.shelters.DogShelter;
 import ru.codehunters.zaepestelegrambot.repository.DogShelterRepo;
 
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;

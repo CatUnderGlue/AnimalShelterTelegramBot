@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "cat_Shelter")
+@Table(name = "cat_shelter")
 public class CatShelter {
     /**
      * id для приюта

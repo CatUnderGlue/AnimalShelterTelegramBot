@@ -28,10 +28,10 @@ public class Cat {
     @Column
     private Boolean vaccinated;
 
-    @Column
+    @Column(name = "owner_id")
     private Long ownerId;
 
-    @Column
+    @Column(name = "shelter_id")
     private Long shelterId;
 
     public Cat(String name, Integer age, Boolean isHealthy, Boolean vaccinated, Long shelterId) {

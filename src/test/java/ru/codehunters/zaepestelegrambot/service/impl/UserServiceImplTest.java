@@ -13,7 +13,8 @@ import ru.codehunters.zaepestelegrambot.repository.UserRepo;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -48,35 +49,35 @@ class UserServiceImplTest {
     @Test
     @DisplayName("Возвращает пользователя при поиске по id")
     void shouldReturnUserFoundById() {
-        when(userRepoMock.findById(telegramId)).thenReturn(Optional.of(validUser));
+        when(userRepoMock.findByTelegramId(telegramId)).thenReturn(Optional.of(validUser));
         User actual = userService.getById(telegramId);
         assertEquals(validUser, actual);
-        verify(userRepoMock, times(1)).findById(telegramId);
+        verify(userRepoMock, times(1)).findByTelegramId(telegramId);
     }
 
     @Test
     @DisplayName("Возвращает выбранный пользователем тип приюта при поиске по id пользователя")
     void shouldReturnShelterTypeFoundById() {
-        when(userRepoMock.findById(telegramId)).thenReturn(Optional.of(validUserWithShelterType));
+        when(userRepoMock.findByTelegramId(telegramId)).thenReturn(Optional.of(validUserWithShelterType));
         String actual = userService.getShelterById(telegramId);
         assertEquals(correctShelterType, actual);
-        verify(userRepoMock, times(1)).findById(telegramId);
+        verify(userRepoMock, times(1)).findByTelegramId(telegramId);
     }
 
     @Test
     @DisplayName("Выбрасывает ошибку, если при поиске типа приюта по указанному id пользователь не найден")
     void shouldThrowNotFoundExWhenGetShelterById() {
-        when(userRepoMock.findById(telegramId)).thenReturn(Optional.empty());
+        when(userRepoMock.findByTelegramId(telegramId)).thenReturn(Optional.empty());
         assertThrows(NotFoundException.class, () -> userService.getShelterById(telegramId));
-        verify(userRepoMock, times(1)).findById(telegramId);
+        verify(userRepoMock, times(1)).findByTelegramId(telegramId);
     }
 
     @Test
     @DisplayName("Выбрасывает ошибку, если по указанному id пользователь не найден")
     void shouldThrowNotFoundExWhenFindUserById() {
-        when(userRepoMock.findById(telegramId)).thenReturn(Optional.empty());
+        when(userRepoMock.findByTelegramId(telegramId)).thenReturn(Optional.empty());
         assertThrows(NotFoundException.class, () -> userService.getById(telegramId));
-        verify(userRepoMock, times(1)).findById(telegramId);
+        verify(userRepoMock, times(1)).findByTelegramId(telegramId);
     }
 
     @Test
@@ -91,35 +92,35 @@ class UserServiceImplTest {
     @Test
     @DisplayName("Изменяет и возвращает пользователя по новому объекту, не затрагивая null поля")
     void shouldUpdateUserWithoutNullFields() {
-        when(userRepoMock.findById(telegramId)).thenReturn(Optional.of(validUser));
+        when(userRepoMock.findByTelegramId(telegramId)).thenReturn(Optional.of(validUser));
         when(userRepoMock.save(thirdValidUser)).thenReturn(thirdValidUser);
         User actual = userService.update(secondValidUser);
         assertEquals(thirdValidUser, actual);
-        verify(userRepoMock, times(1)).findById(telegramId);
+        verify(userRepoMock, times(1)).findByTelegramId(telegramId);
         verify(userRepoMock, times(1)).save(thirdValidUser);
     }
 
     @Test
     @DisplayName("Выбрасывает ошибку, если по указанному объекту пользователь не найден. Изменение невозможно.")
     void shouldThrowNotFoundExWhenUpdatingUser() {
-        when(userRepoMock.findById(telegramId)).thenReturn(Optional.empty());
+        when(userRepoMock.findByTelegramId(telegramId)).thenReturn(Optional.empty());
         assertThrows(NotFoundException.class, () -> userService.update(validUser));
-        verify(userRepoMock, times(1)).findById(telegramId);
+        verify(userRepoMock, times(1)).findByTelegramId(telegramId);
     }
 
     @Test
     @DisplayName("Выбрасывает ошибку, если по указанному id пользователь не найден. Удаление невозможно.")
     void shouldThrowNotFoundExWhenDeletingUserById() {
-        when(userRepoMock.findById(telegramId)).thenReturn(Optional.empty());
+        when(userRepoMock.findByTelegramId(telegramId)).thenReturn(Optional.empty());
         assertThrows(NotFoundException.class, () -> userService.deleteById(telegramId));
-        verify(userRepoMock, times(1)).findById(telegramId);
+        verify(userRepoMock, times(1)).findByTelegramId(telegramId);
     }
 
     @Test
     @DisplayName("Выбрасывает ошибку, если по объекту пользователь не найден. Удаление невозможно.")
     void shouldThrowNotFoundExWhenDeletingUser() {
-        when(userRepoMock.findById(telegramId)).thenReturn(Optional.empty());
+        when(userRepoMock.findByTelegramId(telegramId)).thenReturn(Optional.empty());
         assertThrows(NotFoundException.class, () -> userService.delete(validUser));
-        verify(userRepoMock, times(1)).findById(telegramId);
+        verify(userRepoMock, times(1)).findByTelegramId(telegramId);
     }
 }
