@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("dogs/shelters")
+@RequestMapping("/dogs/shelters")
 @Tag(name = "Собачий приют", description = "CRUD-методы для работы с приютом")
 @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Всё хорошо, собачки довольны."),
@@ -25,18 +25,18 @@ import java.util.List;
 })
 public class DogSheltersController {
 
-    private final ShelterService<DogShelter,Dog> dogShelterService;
+    private final ShelterService<DogShelter, Dog> dogShelterService;
 
     @PostMapping("/")
     @Operation(
             summary = "Регистрация нового собачьего приюта."
     )
     public DogShelter create(@RequestParam @Parameter(description = "Название приюта") String name,
-                                         @RequestParam @Parameter(description = "Адрес и схема проезда") String location,
-                                         @RequestParam @Parameter(description = "Расписание работы приюта") String timetable,
-                                         @RequestParam @Parameter(description = "О приюте") String aboutMe,
-                                         @RequestParam @Parameter(description = "Способ связи с охраной") String security,
-                                         @RequestParam @Parameter(description = "Рекомендации о технике безопасности на территории приюта") String safetyAdvice
+                             @RequestParam @Parameter(description = "Адрес и схема проезда") String location,
+                             @RequestParam @Parameter(description = "Расписание работы приюта") String timetable,
+                             @RequestParam @Parameter(description = "О приюте") String aboutMe,
+                             @RequestParam @Parameter(description = "Способ связи с охраной") String security,
+                             @RequestParam @Parameter(description = "Рекомендации о технике безопасности на территории приюта") String safetyAdvice
     ) {
         return dogShelterService.addShelter(new DogShelter(name, location, timetable, aboutMe, security, safetyAdvice));
     }
@@ -46,18 +46,18 @@ public class DogSheltersController {
             summary = "Обновление информации о приюте"
     )
     public DogShelter update(@RequestParam @Parameter(description = "id приюта") long id,
-                                         @RequestParam(required = false)
-                                         @Parameter(description = "Название приюта") String name,
-                                         @RequestParam(required = false)
-                                             @Parameter(description = "Адрес и схема проезда") String location,
-                                         @RequestParam(required = false)
-                                             @Parameter(description = "Расписание работы приюта") String timetable,
-                                         @RequestParam(required = false)
-                                             @Parameter(description = "О приюте") String aboutMe,
-                                         @RequestParam(required = false)
-                                             @Parameter(description = "Способ связи с охраной") String security,
-                                         @RequestParam(required = false)
-                                             @Parameter(description = "Рекомендации о технике безопасности на территории приюта") String safetyAdvice) {
+                             @RequestParam(required = false)
+                             @Parameter(description = "Название приюта") String name,
+                             @RequestParam(required = false)
+                             @Parameter(description = "Адрес и схема проезда") String location,
+                             @RequestParam(required = false)
+                             @Parameter(description = "Расписание работы приюта") String timetable,
+                             @RequestParam(required = false)
+                             @Parameter(description = "О приюте") String aboutMe,
+                             @RequestParam(required = false)
+                             @Parameter(description = "Способ связи с охраной") String security,
+                             @RequestParam(required = false)
+                             @Parameter(description = "Рекомендации о технике безопасности на территории приюта") String safetyAdvice) {
         return dogShelterService.updateShelter((new DogShelter(id, name, location, timetable, aboutMe, security, safetyAdvice)));
     }
 

@@ -38,7 +38,7 @@ public class TrialPeriodServiceImpl implements TrialPeriodService {
     @Override
     public TrialPeriod getById(Long id) {
         Optional<TrialPeriod> optionalTrialPeriod = trialPeriodRepo.findById(id);
-        if (optionalTrialPeriod.isEmpty()){
+        if (optionalTrialPeriod.isEmpty()) {
             throw new NotFoundException("Испытательный срок не найден!");
         }
         return optionalTrialPeriod.get();

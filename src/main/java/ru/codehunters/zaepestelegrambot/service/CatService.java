@@ -3,7 +3,6 @@ package ru.codehunters.zaepestelegrambot.service;
 import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.animals.Cat;
 
-
 import java.util.List;
 
 public interface CatService {
@@ -21,10 +20,10 @@ public interface CatService {
      * Возвращает объект кота, принадлежащего хозяину с указанным идентификатором.
      *
      * @param id идентификатор хозяина кота в базе данных
-     * @return объект кота, принадлежащего указанному хозяину
+     * @return список котов указанного хозяина
      * @throws NotFoundException если кот с хозяином, имеющим указанный идентификатор, не найден в базе данных
      */
-    Cat getByUserId(Long id);
+    List<Cat> getAllByUserId(Long id);
 
     /**
      * Создает новую запись о коте в базе данных, используя переданный объект кота.

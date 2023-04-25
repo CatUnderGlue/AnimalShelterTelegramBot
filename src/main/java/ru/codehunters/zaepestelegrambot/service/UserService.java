@@ -8,6 +8,7 @@ public interface UserService {
 
     /**
      * Создание и сохранение пользователя в бд
+     *
      * @param user Пользователь для сохранения в бд
      * @return Сохранённый пользователь
      */
@@ -15,6 +16,7 @@ public interface UserService {
 
     /**
      * Получение пользователя по id
+     *
      * @param id Id пользователя
      * @return Полученный из бд пользователь
      */
@@ -22,6 +24,7 @@ public interface UserService {
 
     /**
      * Получение выбранного в боте приюта по id пользователя
+     *
      * @param id Id пользователя
      * @return "CAT" или "DOG"
      */
@@ -34,6 +37,7 @@ public interface UserService {
 
     /**
      * Изменение пользователя
+     *
      * @param user пользователь
      * @return Изменённый пользователь
      */
@@ -46,6 +50,7 @@ public interface UserService {
 
     /**
      * Удаление пользователя по id
+     *
      * @param id Id пользователя
      */
     void deleteById(Long id);

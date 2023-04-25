@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.codehunters.zaepestelegrambot.listener.TelegramBotUpdatesListener;
 import ru.codehunters.zaepestelegrambot.model.Report;
 import ru.codehunters.zaepestelegrambot.service.ReportService;
 
@@ -18,7 +19,6 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ReportController.class)
@@ -27,6 +27,9 @@ class ReportControllerTest {
 
     @Autowired
     MockMvc mockMvc;
+
+    @MockBean
+    TelegramBotUpdatesListener telegramBotUpdatesListener;
 
     @MockBean
     ReportService reportService;
@@ -167,5 +170,17 @@ class ReportControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string("Отчёт успешно удалён"));
         verify(reportService, times(1)).deleteById(1L);
+    }
+
+    @Test
+    @DisplayName("Выдаёт сообщение, после отправки фотографии волонтёру.")
+    void shouldReturnMessageWhenReportPhotoWasSend() throws Exception {
+        doNothing().when(telegramBotUpdatesListener).sendReportPhotoToVolunteer(1L, 1L);
+        mockMvc.perform(get("/reports/report-photo")
+                        .param("reportId", "1")
+                        .param("volunteerId", "1"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Фотография успешно отправлена"));
+        verify(telegramBotUpdatesListener, times(1)).sendReportPhotoToVolunteer(1L, 1L);
     }
 }

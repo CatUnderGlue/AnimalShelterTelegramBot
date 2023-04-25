@@ -29,52 +29,6 @@ create table reports
     trial_period_id  bigint
 );
 
-create table cat
-(
-    id         bigserial not null primary key,
-    name       varchar(255),
-    age        integer,
-    is_healthy boolean,
-    vaccinated boolean,
-    owner_id   bigint,
-    shelter_id bigint
-);
-
-create table dog
-(
-    id         bigserial not null primary key,
-    name       varchar(255),
-    age        integer,
-    is_healthy boolean,
-    vaccinated boolean,
-    owner_id   bigint,
-    shelter_id bigint
-);
-
-create table users
-(
-    telegram_id bigint not null primary key,
-    name        varchar(255),
-    last_name   varchar(255),
-    phone       varchar(255)
-);
-
-create table catowner
-(
-    telegram_id bigint not null primary key,
-    name        varchar(255),
-    last_name   varchar(255),
-    phone       varchar(255)
-);
-
-create table dogowner
-(
-    telegram_id bigint not null primary key,
-    name        varchar(255),
-    last_name   varchar(255),
-    phone       varchar(255)
-);
-
 create table cat_shelter
 (
     id            bigserial not null primary key,
@@ -88,11 +42,58 @@ create table cat_shelter
 
 create table dog_shelter
 (
-    id_shelter    bigserial not null primary key,
+    id            bigserial not null primary key,
     about_me      varchar(255),
     location      varchar(255),
     name          varchar(255),
     safety_advice varchar(255),
     security      varchar(255),
     timetable     varchar(255)
+);
+
+create table cat
+(
+    id         bigserial not null primary key,
+    name       varchar(255),
+    age        integer
+        constraint check_age check (age > 0),
+    is_healthy boolean,
+    vaccinated boolean,
+    owner_id   bigint,
+    shelter_id bigint
+        constraint cat_cat_shelter_id_fk
+            references cat_shelter
+);
+
+create table dog
+(
+    id         bigserial not null primary key,
+    name       varchar(255),
+    age        integer
+        constraint check_age
+            check (age > 0),
+    is_healthy boolean,
+    vaccinated boolean,
+    owner_id   bigint,
+    shelter_id bigint
+        constraint dog_dog_shelter_id_fk
+            references dog_shelter
+);
+
+create table users
+(
+    telegram_id bigint not null primary key,
+    first_name  varchar(255),
+    last_name   varchar(255),
+    phone       varchar(255)
+);
+
+create table owners
+(
+    id          bigserial primary key,
+    telegram_id bigint,
+    first_name  varchar(255),
+    last_name   varchar(255),
+    phone       varchar(255),
+    animal_type varchar(31) not null
 );

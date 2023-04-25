@@ -2,7 +2,8 @@ package ru.codehunters.zaepestelegrambot.controller;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.request.SendMessage;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,6 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -34,6 +34,7 @@ class VolunteerControllerTest {
     private static final Volunteer FIRST_VALID_VOLUNTEER = new Volunteer(1L, "Ivan", "Ivanov");
     private static final Volunteer SECOND_VALID_VOLUNTEER = new Volunteer(2L, "Petr", "Petrov");
     private static final List<Volunteer> VOLUNTEER_LIST = List.of(FIRST_VALID_VOLUNTEER, SECOND_VALID_VOLUNTEER);
+
     @Test
     @DisplayName("Должен создать и вернуть волонтёра с нужными параметрами")
     void shouldCreateAndReturnVolunteer() throws Exception {

@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import ru.codehunters.zaepestelegrambot.exception.AlreadyExistsException;
 import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.TrialPeriod;
-import ru.codehunters.zaepestelegrambot.model.animals.Cat;
 import ru.codehunters.zaepestelegrambot.model.owners.CatOwner;
 import ru.codehunters.zaepestelegrambot.repository.CatOwnerRepo;
 import ru.codehunters.zaepestelegrambot.service.CatOwnerService;
@@ -17,6 +16,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class CatOwnerServiceImpl implements CatOwnerService {
@@ -27,7 +27,7 @@ public class CatOwnerServiceImpl implements CatOwnerService {
     private final TrialPeriodService trialPeriodService;
 
     @Override
-    public CatOwner create(CatOwner catOwner, TrialPeriod.AnimalType animalType, Long animalId)  {
+    public CatOwner create(CatOwner catOwner, TrialPeriod.AnimalType animalType, Long animalId) {
         if (catService.getById(animalId).getOwnerId() != null) {
             throw new AlreadyExistsException("У этого кота уже есть хозяин!");
         }
@@ -53,7 +53,7 @@ public class CatOwnerServiceImpl implements CatOwnerService {
 
     @Override
     public CatOwner getById(Long id) {
-        Optional<CatOwner> optionalCatOwner = catOwnerRepo.findById(id);
+        Optional<CatOwner> optionalCatOwner = catOwnerRepo.findByTelegramId(id);
         if (optionalCatOwner.isEmpty()) {
             throw new NotFoundException("Хозяин кота не найден!");
         }
@@ -71,23 +71,17 @@ public class CatOwnerServiceImpl implements CatOwnerService {
 
     @Override
     public CatOwner update(CatOwner catOwner) {
-        Optional<CatOwner> optionalCatOwner = catOwnerRepo.findById(catOwner.getTelegramId());
-        if (optionalCatOwner.isEmpty()) {
-            throw new NotFoundException("Владелец кота не найден!");
-        }
-        CatOwner currentCatOwner = optionalCatOwner.get();
+        CatOwner currentCatOwner = getById(catOwner.getTelegramId());
         EntityUtils.copyNonNullFields(catOwner, currentCatOwner);
         return catOwnerRepo.save(currentCatOwner);
     }
 
     @Override
     public void delete(CatOwner catOwner) {
-        if (catOwner.getCatList() != null) {
-            for (Cat cat : catOwner.getCatList()) {
-                cat.setOwnerId(null);
-                catService.update(cat);
-            }
-        }
+        catService.getAllByUserId(catOwner.getTelegramId()).forEach(cat -> {
+            cat.setOwnerId(null);
+            catService.update(cat);
+        });
         catOwnerRepo.delete(getById(catOwner.getTelegramId()));
     }
 

@@ -31,21 +31,21 @@ public class DogServiceImpl implements DogService {
     }
 
     @Override
-    public Dog getByUserId(Long id) {
-        Optional<Dog> optionalDog = dogRepo.findByOwnerId(id);
-        if (optionalDog.isEmpty()) {
-            throw new NotFoundException("Хозяин собаки не найден!");
+    public List<Dog> getAllByUserId(Long id) {
+        List<Dog> dogList = dogRepo.findAllByOwnerId(id);
+        if (dogList.isEmpty()) {
+            throw new NotFoundException("У хозяина нет собак!");
         }
-        return optionalDog.get();
+        return dogList;
     }
 
     @Override
     public Dog update(Dog dog) {
         Optional<Dog> dogId = dogRepo.findById(dog.getId());
-        if (dogId.isEmpty()){
+        if (dogId.isEmpty()) {
             throw new NotFoundException("Пса нет");
         }
-        Dog currentDog = getById(dog.getId());
+        Dog currentDog = dogId.get();
         EntityUtils.copyNonNullFields(dog, currentDog);
         return dogRepo.save(currentDog);
     }
@@ -57,6 +57,6 @@ public class DogServiceImpl implements DogService {
 
     @Override
     public void remove(Long id) {
-        dogRepo.deleteById(id);
+        dogRepo.deleteById(getById(id).getId());
     }
 }

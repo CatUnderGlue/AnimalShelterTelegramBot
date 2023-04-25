@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
+import ru.codehunters.zaepestelegrambot.listener.TelegramBotUpdatesListener;
 import ru.codehunters.zaepestelegrambot.model.Report;
 import ru.codehunters.zaepestelegrambot.service.ReportService;
 
@@ -25,9 +26,11 @@ import java.util.List;
 public class ReportController {
 
     private final ReportService reportService;
+    private final TelegramBotUpdatesListener telegramBotUpdatesListener;
 
-    public ReportController(ReportService reportService) {
+    public ReportController(ReportService reportService, TelegramBotUpdatesListener telegramBotUpdatesListener) {
         this.reportService = reportService;
+        this.telegramBotUpdatesListener = telegramBotUpdatesListener;
     }
 
     @PostMapping
@@ -35,10 +38,10 @@ public class ReportController {
             summary = "Создать отчёт"
     )
     public Report create(@RequestParam @Parameter(description = "Id фотографии") String photoId,
-                                         @RequestParam @Parameter(description = "Рацион животного") String foodRation,
-                                         @RequestParam @Parameter(description = "Общее самочувствие и привыкание к новому месту") String generalHealth,
-                                         @RequestParam @Parameter(description = "Изменение в поведении") String behaviorChanges,
-                                         @RequestParam @Parameter(description = "Id испытательного срока") Long trialPeriodId) {
+                         @RequestParam @Parameter(description = "Рацион животного") String foodRation,
+                         @RequestParam @Parameter(description = "Общее самочувствие и привыкание к новому месту") String generalHealth,
+                         @RequestParam @Parameter(description = "Изменение в поведении") String behaviorChanges,
+                         @RequestParam @Parameter(description = "Id испытательного срока") Long trialPeriodId) {
         return reportService.create(new Report(photoId, foodRation, generalHealth, behaviorChanges, LocalDate.now(), trialPeriodId));
     }
 
@@ -77,7 +80,7 @@ public class ReportController {
     }
     )
     public Report getByDateAndTrialId(@RequestParam @Parameter(description = "Дата получения отчёта") LocalDate date,
-                                                      @RequestParam @Parameter(description = "id испытательного срока") Long id) {
+                                      @RequestParam @Parameter(description = "id испытательного срока") Long id) {
         return reportService.getByDateAndTrialId(date, id);
     }
 
@@ -92,12 +95,12 @@ public class ReportController {
             summary = "Изменить отчёт"
     )
     public Report update(@RequestParam @Parameter(description = "Id отчёта") Long id,
-                                         @RequestParam(required = false) @Parameter(description = "Id фотографии") String photoId,
-                                         @RequestParam(required = false) @Parameter(description = "Рацион животного") String foodRation,
-                                         @RequestParam(required = false) @Parameter(description = "Общее самочувствие и привыкание к новому месту") String generalHealth,
-                                         @RequestParam(required = false) @Parameter(description = "Изменение в поведении") String behaviorChanges,
-                                         @RequestParam(required = false) @Parameter(description = "Дата получения") LocalDate receiveDate,
-                                         @RequestParam(required = false) @Parameter(description = "Id испытательного срока") Long trialPeriodId) {
+                         @RequestParam(required = false) @Parameter(description = "Id фотографии") String photoId,
+                         @RequestParam(required = false) @Parameter(description = "Рацион животного") String foodRation,
+                         @RequestParam(required = false) @Parameter(description = "Общее самочувствие и привыкание к новому месту") String generalHealth,
+                         @RequestParam(required = false) @Parameter(description = "Изменение в поведении") String behaviorChanges,
+                         @RequestParam(required = false) @Parameter(description = "Дата получения") LocalDate receiveDate,
+                         @RequestParam(required = false) @Parameter(description = "Id испытательного срока") Long trialPeriodId) {
         return reportService.update(new Report(id, photoId, foodRation, generalHealth, behaviorChanges, receiveDate, trialPeriodId));
     }
 
@@ -113,5 +116,13 @@ public class ReportController {
     public String deleteById(@RequestParam Long id) {
         reportService.deleteById(id);
         return "Отчёт успешно удалён";
+    }
+
+    @GetMapping("report-photo")
+    @Operation(summary = "Отправить фото из отчёта волонтёру")
+    public String getReportPhoto(@RequestParam @Parameter(description = "Id отчёта") Long reportId,
+                                 @RequestParam @Parameter(description = "Id волонтёра") Long volunteerId) {
+        telegramBotUpdatesListener.sendReportPhotoToVolunteer(reportId, volunteerId);
+        return "Фотография успешно отправлена";
     }
 }

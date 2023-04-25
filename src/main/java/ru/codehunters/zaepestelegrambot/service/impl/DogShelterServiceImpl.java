@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class DogShelterServiceImpl implements ShelterService<DogShelter,Dog> {
+public class DogShelterServiceImpl implements ShelterService<DogShelter, Dog> {
 
     private final DogShelterRepo dogRepo;
 
@@ -42,7 +42,7 @@ public class DogShelterServiceImpl implements ShelterService<DogShelter,Dog> {
     @Override
     public DogShelter getShelterByName(String name) {
         Optional<DogShelter> shelterId = dogRepo.findByName(name);
-        if (shelterId.isEmpty()){
+        if (shelterId.isEmpty()) {
             throw new NotFoundException("Приют не найден. Собачки остались без дома");
         }
         return shelterId.get();

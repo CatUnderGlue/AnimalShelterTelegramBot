@@ -11,5 +11,6 @@ import java.util.Optional;
 @Repository
 public interface ReportRepo extends JpaRepository<Report, Long> {
     Optional<Report> findByReceiveDateAndTrialPeriodId(LocalDate date, Long id);
+
     List<Report> findAllByTrialPeriodId(Long trialPeriodId);
 }

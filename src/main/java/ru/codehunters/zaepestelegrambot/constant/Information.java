@@ -1,4 +1,4 @@
-package ru.codehunters.zaepestelegrambot.model;
+package ru.codehunters.zaepestelegrambot.constant;
 
 public class Information {
     public static final String HOW_TO_ADOPT_AN_ANIMAL = """
@@ -9,6 +9,13 @@ public class Information {
             отправлять им фото-приветы от хвостиков. Иногда могут заехать в гости, чтобы убедиться, что собака или
             кошка живут счастливо в новой семье.
             """;
+
+    public static final String WELCOME = """
+                        Рады приветствовать Вас в нашем боте!
+                        У нас здесь живут друзья разных пород и размеров - от веселых щенков до ласковых котиков.
+                        Мы надеемся, что ты найдешь своего идеального друга здесь
+                        Выберите приют:
+                        """;
     public static final String ANIMAL_DATING_RULES = """
             1. Никогда не подходите к животному сзади или сверху, это может их напугать и вызвать агрессивную реакцию.
             2. Поговорите с сотрудниками приюта, чтобы узнать, какое поведение у этого животного, и как наилучшим образом общаться с ним.

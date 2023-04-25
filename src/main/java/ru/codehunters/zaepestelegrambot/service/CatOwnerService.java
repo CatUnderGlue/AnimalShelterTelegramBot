@@ -9,6 +9,7 @@ public interface CatOwnerService {
 
     /**
      * Создание и сохранение хозяина кота в бд
+     *
      * @param catOwner Хозяин кота для сохранения в бд
      * @return Сохранённый хозяин кота
      */
@@ -16,6 +17,7 @@ public interface CatOwnerService {
 
     /**
      * Создание хозяина кота в бд из пользователя
+     *
      * @param id Пользователь из бота для сохранения в бд в качестве хозяина кота
      * @return Сохранённый хозяин кота
      */
@@ -23,6 +25,7 @@ public interface CatOwnerService {
 
     /**
      * Получение хозяина кота по id
+     *
      * @param id Id хозяина кота
      * @return Полученный из бд хозяин кота
      */
@@ -35,6 +38,7 @@ public interface CatOwnerService {
 
     /**
      * Изменение хозяина кота
+     *
      * @param catOwner хозяин кота
      * @return Изменённый хозяин кота
      */
@@ -47,6 +51,7 @@ public interface CatOwnerService {
 
     /**
      * Удаление хозяина кота по id
+     *
      * @param id Id хозяина кота
      */
     void deleteById(Long id);

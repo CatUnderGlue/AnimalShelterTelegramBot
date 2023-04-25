@@ -33,20 +33,20 @@ public class CatOwnerController {
             summary = "Создать владельца кота"
     )
     public CatOwner create(@RequestParam @Parameter(description = "Телеграм id владельца кота") Long telegramId,
-                                           @RequestParam @Parameter(description = "Имя") String firstName,
-                                           @RequestParam @Parameter(description = "Фамилия") String lastName,
-                                           @RequestParam @Parameter(description = "Телефон") String phone,
-                                           @RequestParam @Parameter(description = "Id кота") Long animalId) {
+                           @RequestParam @Parameter(description = "Имя") String firstName,
+                           @RequestParam @Parameter(description = "Фамилия") String lastName,
+                           @RequestParam @Parameter(description = "Телефон") String phone,
+                           @RequestParam @Parameter(description = "Id кота") Long animalId) {
         return catOwnerService.create(new CatOwner(telegramId, firstName, lastName, phone,
                 null, null), TrialPeriod.AnimalType.CAT, animalId);
     }
 
     @PostMapping("/user")
     @Operation(
-            summary = "Создать хозяина кота в бд из пользователя"
+            summary = "Создать владельца кота в бд из пользователя"
     )
     public CatOwner create(@RequestParam @Parameter(description = "Пользователь") Long id,
-                                           @RequestParam @Parameter(description = "Id кота") Long animalId) {
+                           @RequestParam @Parameter(description = "Id кота") Long animalId) {
         return catOwnerService.create(id, TrialPeriod.AnimalType.CAT, animalId);
     }
 
@@ -72,9 +72,9 @@ public class CatOwnerController {
             summary = "Изменить владельца кота"
     )
     public CatOwner update(@RequestParam @Parameter(description = "Телеграм id владельца кота") Long telegramId,
-                                         @RequestParam(required = false) @Parameter(description = "Имя") String firstName,
-                                         @RequestParam(required = false) @Parameter(description = "Фамилия") String lastName,
-                                         @RequestParam(required = false) @Parameter(description = "Телефон") String phone) {
+                           @RequestParam(required = false) @Parameter(description = "Имя") String firstName,
+                           @RequestParam(required = false) @Parameter(description = "Фамилия") String lastName,
+                           @RequestParam(required = false) @Parameter(description = "Телефон") String phone) {
         return catOwnerService.update(new CatOwner(telegramId, firstName, lastName, phone,
                 null, null));
     }

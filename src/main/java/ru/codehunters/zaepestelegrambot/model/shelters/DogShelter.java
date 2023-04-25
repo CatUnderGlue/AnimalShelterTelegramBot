@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "dog_Shelter")
+@Table(name = "dog_shelter")
 public class DogShelter {
     /**
      * id для приюта
@@ -43,7 +43,7 @@ public class DogShelter {
     /**
      * Список животных в приюте
      */
-    @OneToMany(mappedBy = "shelterId", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "shelterId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Dog> list;
     /**
      * Способ связи с охраной
@@ -58,7 +58,6 @@ public class DogShelter {
 
     /**
      * Конструктор для POST в БД (Без id, без List)
-     *
      */
     public DogShelter(Long idShelter, String name, String location, String timetable, String aboutMe, String security, String safetyAdvice) {
         this.id = idShelter;
@@ -72,7 +71,6 @@ public class DogShelter {
 
     /**
      * Конструктор для PUT в БД (c id, без List)
-     *
      */
     public DogShelter(String name, String location, String timetable, String aboutMe, String security, String safetyAdvice) {
         this.name = name;

@@ -15,29 +15,25 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepo userRepo;
+    private static final String EXCEPTION_NOT_FOUND_USER = "Пользователь не найден!";
 
     @Override
-    public User create(User user)  {
+    public User create(User user) {
         return userRepo.save(user);
     }
 
     @Override
     public User getById(Long id) {
-        Optional<User> optionalUser = userRepo.findById(id);
+        Optional<User> optionalUser = userRepo.findByTelegramId(id);
         if (optionalUser.isEmpty()) {
-            throw new NotFoundException("Пользователь не найден!");
+            throw new NotFoundException(EXCEPTION_NOT_FOUND_USER);
         }
         return optionalUser.get();
     }
 
     @Override
     public String getShelterById(Long id) {
-        Optional<User> optionalUser = userRepo.findById(id);
-        if (optionalUser.isEmpty()) {
-            throw new NotFoundException("Пользователь не найден!");
-        }
-        User user = optionalUser.get();
-        return user.getShelterType();
+        return getById(id).getShelterType();
     }
 
     @Override
@@ -47,11 +43,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User update(User user) {
-        Optional<User> optionalUser = userRepo.findById(user.getTelegramId());
-        if (optionalUser.isEmpty()){
-           throw new NotFoundException("Пользователь не найден!");
-        }
-        User currentUser = optionalUser.get();
+        User currentUser = getById(user.getTelegramId());
         EntityUtils.copyNonNullFields(user, currentUser);
         return userRepo.save(currentUser);
     }

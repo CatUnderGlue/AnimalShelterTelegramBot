@@ -11,8 +11,10 @@ import ru.codehunters.zaepestelegrambot.model.animals.Dog;
 import ru.codehunters.zaepestelegrambot.model.shelters.DogShelter;
 import ru.codehunters.zaepestelegrambot.repository.DogShelterRepo;
 
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -28,7 +30,7 @@ class DogShelterServiceImplTest {
     private DogShelterServiceImpl shelterService;
 
     private final DogShelter currentDogShelter = new DogShelter
-            (1L,"name","loc","tt","am","sec","sa");
+            (1L, "name", "loc", "tt", "am", "sec", "sa");
 
     @Test
     @DisplayName("Тест на сохранение в БД")
@@ -39,6 +41,7 @@ class DogShelterServiceImplTest {
         assertNotNull(result);
         assertEquals(currentDogShelter, result);
     }
+
     @Test
     @DisplayName("Тест метода update и поиск приюта по id," +
             "взяли приют по id, обновили объект и обновили в базе")
@@ -62,6 +65,7 @@ class DogShelterServiceImplTest {
         DogShelter actualShelter = shelterService.getSheltersId(currentDogShelter.getId());
         assertEquals(currentDogShelter, actualShelter);
     }
+
     @Test
     @DisplayName("Тест метода поиск приюта по id c появлением исключения")
     void testGetSheltersId_WhenShelterDoesNotExist() {
@@ -80,6 +84,7 @@ class DogShelterServiceImplTest {
         Optional<DogShelter> actualShelter = Optional.of(shelterService.getShelterByName("name"));
         assertEquals(expectedShelter, actualShelter);
     }
+
     @Test
     @DisplayName("Тест метода поиск приюта по имени c исключением")
     void getShelterByNameException() {
@@ -106,8 +111,8 @@ class DogShelterServiceImplTest {
     @Test
     @DisplayName("Тест метода выдача всех животных приюта ")
     void getAnimal() {
-        Dog dog1 = new Dog("1",1,true,true,1L);
-        Dog dog2 = new Dog("2",2,true,true,2L);
+        Dog dog1 = new Dog("1", 1, true, true, 1L);
+        Dog dog2 = new Dog("2", 2, true, true, 2L);
         List<Dog> testDogList = Arrays.asList(dog1, dog2);
         currentDogShelter.setList(testDogList);
         when(dogShelterRepo.findById(currentDogShelter.getId())).thenReturn(Optional.of(currentDogShelter));
@@ -127,6 +132,7 @@ class DogShelterServiceImplTest {
 
         assertThat(result).isEqualTo("Запись удалена");
     }
+
     @Test
     @DisplayName("Тест метода удаление по id с исключением")
     public void testDelShelter_Failure() {

@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import ru.codehunters.zaepestelegrambot.exception.AlreadyExistsException;
 import ru.codehunters.zaepestelegrambot.exception.NotFoundException;
 import ru.codehunters.zaepestelegrambot.model.TrialPeriod;
-import ru.codehunters.zaepestelegrambot.model.animals.Dog;
 import ru.codehunters.zaepestelegrambot.model.owners.DogOwner;
 import ru.codehunters.zaepestelegrambot.repository.DogOwnerRepo;
 import ru.codehunters.zaepestelegrambot.service.DogOwnerService;
@@ -17,6 +16,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class DogOwnerServiceImpl implements DogOwnerService {
@@ -25,6 +25,7 @@ public class DogOwnerServiceImpl implements DogOwnerService {
     private final UserService userService;
     private final DogService dogService;
     private final TrialPeriodService trialPeriodService;
+
 
     @Override
     public DogOwner create(DogOwner dogOwner, TrialPeriod.AnimalType animalType, Long animalId) {
@@ -53,9 +54,9 @@ public class DogOwnerServiceImpl implements DogOwnerService {
 
     @Override
     public DogOwner getById(Long id) {
-        Optional<DogOwner> optionalDogOwner = dogOwnerRepo.findById(id);
+        Optional<DogOwner> optionalDogOwner = dogOwnerRepo.findByTelegramId(id);
         if (optionalDogOwner.isEmpty()) {
-            throw new NotFoundException("Владелец собаки не найден!");
+            throw new NotFoundException("Хозяин собаки не найден!");
         }
         return optionalDogOwner.get();
     }
@@ -64,38 +65,30 @@ public class DogOwnerServiceImpl implements DogOwnerService {
     public List<DogOwner> getAll() {
         List<DogOwner> all = dogOwnerRepo.findAll();
         if (all.isEmpty()) {
-            throw new NotFoundException("Владелец собаки не найден!");
+            throw new NotFoundException("Владельцев собак нет!");
         }
         return all;
     }
 
     @Override
     public DogOwner update(DogOwner dogOwner) {
-        Optional<DogOwner> optionalDogOwner = dogOwnerRepo.findById(dogOwner.getTelegramId());
-        if (optionalDogOwner.isEmpty()) {
-            throw new NotFoundException("Владелец собаки не найден!");
-        }
-        DogOwner currentDogOwner = optionalDogOwner.get();
+        DogOwner currentDogOwner = getById(dogOwner.getTelegramId());
         EntityUtils.copyNonNullFields(dogOwner, currentDogOwner);
         return dogOwnerRepo.save(currentDogOwner);
     }
 
     @Override
     public void delete(DogOwner dogOwner) {
-        for (Dog dog : dogOwner.getDogList()) {
+        dogService.getAllByUserId(dogOwner.getTelegramId()).forEach(dog -> {
             dog.setOwnerId(null);
             dogService.update(dog);
-        }
+        });
         dogOwnerRepo.delete(getById(dogOwner.getTelegramId()));
     }
 
     @Override
     public void deleteById(Long id) {
-        for (Dog dog : getById(id).getDogList()) {
-            dog.setOwnerId(null);
-            dogService.update(dog);
-        }
-        dogOwnerRepo.deleteById(getById(id).getTelegramId());
+        delete(getById(id));
     }
 }
 

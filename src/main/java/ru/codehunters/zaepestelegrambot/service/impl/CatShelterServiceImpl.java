@@ -8,13 +8,12 @@ import ru.codehunters.zaepestelegrambot.model.shelters.CatShelter;
 import ru.codehunters.zaepestelegrambot.repository.CatShelterRepo;
 import ru.codehunters.zaepestelegrambot.service.ShelterService;
 
-
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class CatShelterServiceImpl implements ShelterService<CatShelter,Cat> {
+public class CatShelterServiceImpl implements ShelterService<CatShelter, Cat> {
 
 
     private final CatShelterRepo catRepo;
@@ -34,7 +33,7 @@ public class CatShelterServiceImpl implements ShelterService<CatShelter,Cat> {
     @Override
     public CatShelter getSheltersId(long id) {
         Optional<CatShelter> shelterId = catRepo.findById(id);
-        if (shelterId.isEmpty()){
+        if (shelterId.isEmpty()) {
             throw new NotFoundException("Приют не найден. Кошки остались без дома");
         }
         return shelterId.get();
@@ -43,7 +42,7 @@ public class CatShelterServiceImpl implements ShelterService<CatShelter,Cat> {
     @Override
     public CatShelter getShelterByName(String name) {
         Optional<CatShelter> shelterId = catRepo.findByName(name);
-        if (shelterId.isEmpty()){
+        if (shelterId.isEmpty()) {
             throw new NotFoundException("Приют не найден. Кошки остались без дома");
         }
         return shelterId.get();
