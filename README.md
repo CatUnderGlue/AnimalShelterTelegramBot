@@ -35,3 +35,6 @@
 + База данных: *PostgreSQL*
 + Контроль версий: *Git*
 + Работа с телеграм: *com.github.pengrad*
+# Возможности бота
+[Общий функционал](https://github.com/CatUnderGlue/AnimalShelterTelegramBot/wiki/Что-умеет-бот)<br>
+[Функционал волонтёров](https://github.com/CatUnderGlue/AnimalShelterTelegramBot/wiki/Функционал-волонтёров)
